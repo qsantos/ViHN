@@ -4,56 +4,39 @@ function thingDepth(thing) {
     return parseInt(thing.querySelector('td[indent]').getAttribute('indent'));
 }
 
+function gotoThing(thing) {
+    if (thing) {
+        document.location = '#' + thing.id;
+    }
+}
+
 document.addEventListener('keypress', (event) => {
+    const currentThing = document.querySelector('.athing:target');
+    const currentThingIndex = things.indexOf(currentThing);
     if (event.key == 'j') {
-        const currentThing = document.querySelector('.athing:target');
-        const currentThingIndex = things.indexOf(currentThing);
-        const nextThingIndex = currentThingIndex < 0 ? 0 : currentThingIndex + 1;
-        const nextThing = things[nextThingIndex];
-        if (nextThing) {
-            document.location = '#' + nextThing.id;
-        }
+        gotoThing(things[currentThingIndex < 0 ? 0 : currentThingIndex + 1]);
     } else if (event.key == 'k') {
-        const currentThing = document.querySelector('.athing:target');
-        const currentThingIndex = things.indexOf(currentThing);
-        const nextThingIndex = currentThingIndex <= 0 ? 0 : currentThingIndex - 1;
-        const nextThing = things[nextThingIndex];
-        document.location = '#' + nextThing.id;
+        gotoThing(things[currentThingIndex - 1]);
     } else if (event.key == 'J') {
-        const currentThing = document.querySelector('.athing:target');
-        const currentThingIndex = things.indexOf(currentThing);
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex + 1;
         while (nextThingIndex < things.length && thingDepth(things[nextThingIndex]) > currentDepth) {
             nextThingIndex++;
         }
-        const nextThing = things[nextThingIndex];
-        if (nextThing) {
-            document.location = '#' + nextThing.id;
-        }
+        gotoThing(things[nextThingIndex]);
     } else if (event.key == 'K') {
-        const currentThing = document.querySelector('.athing:target');
-        const currentThingIndex = things.indexOf(currentThing);
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex - 1;
         while (nextThingIndex > 0 && thingDepth(things[nextThingIndex]) > currentDepth) {
             nextThingIndex--;
         }
-        const nextThing = things[nextThingIndex];
-        if (nextThing) {
-            document.location = '#' + nextThing.id;
-        }
+        gotoThing(things[nextThingIndex]);
     } else if (event.key == 'h') {
-        const currentThing = document.querySelector('.athing:target');
-        const currentThingIndex = things.indexOf(currentThing);
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex - 1;
         while (nextThingIndex > 0 && thingDepth(things[nextThingIndex]) >= currentDepth) {
             nextThingIndex--;
         }
-        const nextThing = things[nextThingIndex];
-        if (nextThing) {
-            document.location = '#' + nextThing.id;
-        }
+        gotoThing(things[nextThingIndex]);
     }
 });
