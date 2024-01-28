@@ -16,7 +16,7 @@
                 "browser-polyfill.min.js",
                 "main.js"
             ],
-            "run_at": "document_start"
+            "run_at": "document_end"
         }
     ]
 }
