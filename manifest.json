@@ -1,0 +1,22 @@
+{
+    "description": "Quality of Life improvements for browsing Hacker News",
+    "author": "Quentin Santos",
+    "manifest_version": 3,
+    "name": "Quick Hacker News",
+    "version": "0.1.0",
+    "host_permissions": [
+        "https://news.ycombinator.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://news.ycombinator.com/*"
+            ],
+            "js": [
+                "browser-polyfill.min.js",
+                "main.js"
+            ],
+            "run_at": "document_start"
+        }
+    ]
+}
