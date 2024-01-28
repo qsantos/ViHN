@@ -6,7 +6,7 @@ function thingDepth(thing) {
 
 function gotoThing(thing) {
     if (thing) {
-        document.location = '#' + thing.id;
+        document.location.replace('#' + thing.id);
     }
 }
 
