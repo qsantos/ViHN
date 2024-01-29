@@ -59,7 +59,10 @@ document.addEventListener('keypress', (event) => {
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'm') {
-        document.querySelector('[id="' + currentThing.id + '"].togg').click();
+        const collapseToggle = document.querySelector('[id="' + currentThing.id + '"].togg')
+        if (collapseToggle) {
+            collapseToggle.click();
+        }
     } else if (event.key == 'l') {
         if (currentThing) {
             document.location = 'https://news.ycombinator.com/item?id=' + currentThing.id;
