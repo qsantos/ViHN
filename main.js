@@ -38,5 +38,7 @@ document.addEventListener('keypress', (event) => {
             nextThingIndex--;
         }
         gotoThing(things[nextThingIndex]);
+    } else if (event.key == 'm') {
+        document.querySelector('[id="' + currentThing.id + '"].togg').click();
     }
 });
