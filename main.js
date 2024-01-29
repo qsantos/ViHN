@@ -71,7 +71,9 @@ document.addEventListener('keypress', (event) => {
             collapseToggle.click();
         }
     } else if (event.key == 'l') {
-        if (currentThing) {
+        if (!currentThing || currentThingIndex == 0) {
+            document.querySelector('.titleline>a').click();
+        } else {
             document.location = 'https://news.ycombinator.com/item?id=' + currentThing.id;
         }
     } else if (event.key == 'g') {
