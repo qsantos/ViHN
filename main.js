@@ -12,14 +12,25 @@ function thingIsHidden(thing) {
     return thing.classList.contains('noshow');
 }
 
+let currentThing = document.querySelector('.athing:target');
+
+let historyUpdateTimer = null;
 function gotoThing(thing) {
     if (thing) {
-        document.location.replace('#' + thing.id);
+        // Defer history update to avoid too many uses of the API, when the
+        // user navigates through many things in a short amount of time
+        clearTimeout(historyUpdateTimer);
+        historyUpdateTimer = setTimeout(() => {
+            document.location.replace('#' + thing.id);
+            historyUpdateTimer = null;
+        }, 300);
+        // Immediately makes the change visible
+        thing.scrollIntoView(true);
+        currentThing = thing;
     }
 }
 
 document.addEventListener('keypress', (event) => {
-    const currentThing = document.querySelector('.athing:target');
     const currentThingIndex = things.indexOf(currentThing);
     if (event.key == 'j') {
         if (currentThingIndex < 0) {
