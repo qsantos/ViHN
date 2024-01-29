@@ -93,5 +93,27 @@ document.addEventListener('keypress', (event) => {
         const topThings = document.querySelectorAll('.athing:has([indent="0"])');
         const thing =  topThings[topThings.length - 1]
         gotoThing(thing);
+    } else if (event.key == 'u') {
+        const upArrow = document.getElementById('up_' + currentThing.id);
+        if (upArrow.classList.contains('nosee')) {
+            // upArrow hidden, we can only unvote
+            const unvoteLink = document.getElementById('un_' + currentThing.id);
+            if (unvoteLink) {
+                unvoteLink.click();
+            }
+        } else {
+            upArrow.click();
+        }
+    } else if (event.key == 'd') {
+        const downArrow = document.getElementById('down_' + currentThing.id);
+        if (downArrow.classList.contains('nosee')) {
+            // downArrow hidden, we can only undown
+            const unvoteLink = document.getElementById('un_' + currentThing.id);
+            if (unvoteLink) {
+                unvoteLink.click();
+            }
+        } else {
+            downArrow.click();
+        }
     }
 });
