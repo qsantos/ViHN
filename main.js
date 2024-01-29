@@ -1,7 +1,11 @@
 const things = Array(...document.querySelectorAll('.athing'));
 
 function thingDepth(thing) {
-    return parseInt(thing.querySelector('td[indent]').getAttribute('indent'));
+    const indentTd = thing.querySelector('td[indent]');
+    if (!indentTd) {
+        return 0;
+    }
+    return parseInt(indentTd.getAttribute('indent')) ||0;
 }
 
 function thingIsHidden(thing) {
