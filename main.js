@@ -52,6 +52,13 @@ document.addEventListener('keypress', (event) => {
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'h') {
+        if (!currentThing || currentThingIndex == 0) {
+            const parentLink = things[0].querySelector('.navs>a');
+            if (parentLink) {
+                parentLink.click();
+            }
+            return;
+        }
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex - 1;
         while (nextThingIndex > 0 && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) >= currentDepth)) {
