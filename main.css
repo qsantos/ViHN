@@ -1,0 +1,30 @@
+.fatitem:has(.activething) {
+    /* Remove the spacing between TDs to gain 2px between votelinks and default */
+    border-spacing: 0px;
+    /* Compensate for the removed border spacing around the table */
+    margin: 1px;
+}
+.fatitem:has(.activething) td {
+    /* Compensate for the removed border spacing between cells */
+    padding: 2px;
+}
+.fatitem:has(.activething) textarea {
+    /* The textarea margins merges with the cell's padding, fix that too */
+    margin-top: 3px;
+}
+.fatitem .activething .votelinks {
+    /* Insert an orange bar by eating the right padding */
+    padding-right: 0px;
+    border-right: 2px solid #ff6600;
+}
+
+.comment-tree .activething .votelinks+td {
+    /* Display an orange bar on the left */
+    border-left: 2px solid #ff6600;
+    /* Add 2px of left padding let the text breathe */
+    padding-left: 3px;
+    /* Needed to set the margin */
+    display: block;
+    /* Compensate for the additional 2px from the border and 2px from the padding */
+    margin-left: -4px;
+}

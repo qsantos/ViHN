@@ -13,6 +13,9 @@ function thingIsHidden(thing) {
 }
 
 let currentThing = document.querySelector('.athing:target');
+if (currentThing) {
+    currentThing.classList.add('activething');
+}
 
 let historyUpdateTimer = null;
 function gotoThing(thing) {
@@ -26,7 +29,11 @@ function gotoThing(thing) {
         }, 300);
         // Immediately makes the change visible
         thing.scrollIntoView(true);
+        if (currentThing) {
+            currentThing.classList.remove('activething');
+        }
         currentThing = thing;
+        currentThing.classList.add('activething');
     }
 }
 
