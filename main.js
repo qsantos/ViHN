@@ -74,5 +74,11 @@ document.addEventListener('keypress', (event) => {
         if (currentThing) {
             document.location = 'https://news.ycombinator.com/item?id=' + currentThing.id;
         }
+    } else if (event.key == 'g') {
+        gotoThing(things[0]);
+    } else if (event.key == 'G') {
+        const topThings = document.querySelectorAll('.athing:has([indent="0"])');
+        const thing =  topThings[topThings.length - 1]
+        gotoThing(thing);
     }
 });
