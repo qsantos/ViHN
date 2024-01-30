@@ -65,6 +65,11 @@ function initQuickReplyForm() {
     quickReplyFormTextarea.addEventListener('keypress', (event) => {
         event.stopPropagation();
     });
+    quickReplyFormTextarea.addEventListener('keydown', (event) => {
+        if (event.key == 'Escape') {
+            quickReplyFormTextarea.blur();
+        }
+    });
 }
 
 document.addEventListener('keypress', (event) => {
