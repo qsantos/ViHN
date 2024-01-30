@@ -37,6 +37,33 @@ function gotoThing(thing) {
     }
 }
 
+let quickReplyForm = null;
+let quickReplyFormTextarea = null;
+function initQuickReplyForm() {
+    if (quickReplyForm != null) {
+        return;
+    }
+    const container = document.createElement('tbody');
+    container.innerHTML = `
+        <tr>
+            <td colspan="2"></td>
+            <td>
+                <form action="comment" method="post">
+                    <input type="hidden" name="parent" value="TODO">
+                    <input type="hidden" name="goto" value="item?id=TOREMOVE#TOREMOVE">
+                    <input type="hidden" name="hmac" value="TODO">
+                    <textarea name="text" rows="8" cols="80" wrap="virtual" autofocus="true"></textarea>
+                    <br>
+                    <br>
+                    <input type="submit" value="reply">
+                </form>
+            </td>
+        </tr>
+    `.trim();
+    quickReplyForm = container.firstChild;
+    quickReplyFormTextarea = container.querySelector('textarea');
+}
+
 document.addEventListener('keypress', (event) => {
     const currentThingIndex = things.indexOf(currentThing);
     if (event.key == 'j') {
@@ -123,29 +150,12 @@ document.addEventListener('keypress', (event) => {
             downArrow.click();
         }
     } else if (event.key == 'r') {
-        const newRow = document.createElement('tbody');
-        newRow.innerHTML = `
-            <tr>
-                <td colspan="2"></td>
-                <td>
-                    <form action="comment" method="post">
-                        <input type="hidden" name="parent" value="TODO">
-                        <input type="hidden" name="goto" value="item?id=TOREMOVE#TOREMOVE">
-                        <input type="hidden" name="hmac" value="TODO">
-                        <textarea name="text" rows="8" cols="80" wrap="virtual" autofocus="true"></textarea>
-                        <br>
-                        <br>
-                        <input type="submit" value="reply">
-                    </form>
-                </td>
-            </tr>
-        `.trim();
+        initQuickReplyForm();
         if (currentThingIndex == 0) {
             document.querySelector('textarea').focus();
         } else if (currentThing) {
-            // NOTE: the root thing already has a textarea, no need to insert one
-            currentThing.querySelector('tbody').appendChild(newRow.firstChild);
-            currentThing.querySelector('textarea').focus();
+            currentThing.querySelector('tbody').appendChild(quickReplyForm);
+            quickReplyFormTextarea.focus();
         }
     }
 });
