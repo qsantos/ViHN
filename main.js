@@ -37,6 +37,18 @@ function gotoThing(thing) {
     }
 }
 
+let newCommentTextrea = document.querySelector('textarea');
+if (newCommentTextrea) {
+    newCommentTextrea.addEventListener('keypress', (event) => {
+        event.stopPropagation();
+    });
+    newCommentTextrea.addEventListener('keydown', (event) => {
+        if (event.key == 'Escape') {
+            newCommentTextrea.blur();
+        }
+    });
+}
+
 let quickReplyForm = null;
 let quickReplyFormTextarea = null;
 function initQuickReplyForm() {
