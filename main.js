@@ -62,6 +62,9 @@ function initQuickReplyForm() {
     `.trim();
     quickReplyForm = container.firstChild;
     quickReplyFormTextarea = container.querySelector('textarea');
+    quickReplyFormTextarea.addEventListener('keypress', (event) => {
+        event.stopPropagation();
+    });
 }
 
 document.addEventListener('keypress', (event) => {
