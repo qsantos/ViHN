@@ -26,7 +26,7 @@ function gotoThing(thing) {
         historyUpdateTimer = setTimeout(() => {
             document.location.replace('#' + thing.id);
             historyUpdateTimer = null;
-        }, 300);
+        }, 50);
         // Immediately makes the change visible
         thing.scrollIntoView(true);
         if (currentThing) {
