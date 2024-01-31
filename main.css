@@ -2,11 +2,11 @@
     /* overflow: hidden hides the ::before element of the sibling */
     overflow: visible;
 }
-.activething .votelinks+td,
+.activething td+td:last-child,
 .activething:has(.title) + tr td:last-child {
     position: relative;
 }
-.activething .votelinks+td::before,
+.activething td+td:last-child::before,
 .activething:has(.title) + tr td:last-child::before {
     content: " ";
     display: block;
