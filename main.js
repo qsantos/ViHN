@@ -50,7 +50,11 @@ if (newCommentTextrea) {
 }
 
 let quickReplyForm = null;
+let quickReplyFormParent = null;
+let quickReplyFormGoto = null;
+let quickReplyFormHmac = null;
 let quickReplyFormTextarea = null;
+let quickReplyFormSubmit = null;
 function initQuickReplyForm() {
     if (quickReplyForm != null) {
         return;
@@ -61,9 +65,9 @@ function initQuickReplyForm() {
             <td colspan="2"></td>
             <td>
                 <form action="comment" method="post">
-                    <input type="hidden" name="parent" value="TODO">
-                    <input type="hidden" name="goto" value="item?id=TOREMOVE#TOREMOVE">
-                    <input type="hidden" name="hmac" value="TODO">
+                    <input type="hidden" name="parent" value="">
+                    <input type="hidden" name="goto" value="">
+                    <input type="hidden" name="hmac" value="">
                     <textarea name="text" rows="8" cols="80" wrap="virtual" autofocus="true"></textarea>
                     <br>
                     <br>
@@ -73,7 +77,19 @@ function initQuickReplyForm() {
         </tr>
     `.trim();
     quickReplyForm = container.firstChild;
+    quickReplyFormParent = container.querySelector('[name="parent"]');
+    quickReplyFormGoto = container.querySelector('[name="goto"]');
+    quickReplyFormHmac = container.querySelector('[name="hmac"]');
     quickReplyFormTextarea = container.querySelector('textarea');
+    quickReplyFormSubmit = container.querySelector('[type="submit"]');
+    quickReplyForm.addEventListener('submit', event => {
+        fetch('https://news.ycombinator.com/comment', {
+            body: new FormData(quickReplyForm),
+        }).then(() => {
+            alert('ok!');
+            quickReplyForm.parent.removeChild(quickReplyForm);
+        });
+    });
     quickReplyFormTextarea.addEventListener('keypress', (event) => {
         event.stopPropagation();
     });
@@ -174,6 +190,23 @@ document.addEventListener('keypress', (event) => {
         if (currentThingIndex == 0) {
             document.querySelector('textarea').focus();
         } else if (currentThing) {
+            quickReplyFormSubmit.disabled = true;
+            const loc = document.location;
+            const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
+            // NOTE: fetch only accepts absolute URLs
+            const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
+            fetch(url).then(response => {
+                response.text().then(html => {
+                    const parent_match = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
+                    const parent = parent_match[1];
+                    quickReplyFormParent.value = parent;
+                    const hmac_match = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                    const hmac = hmac_match[1];
+                    quickReplyFormHmac.value = hmac;
+                    quickReplyFormSubmit.disabled = false;
+                });
+            });
+            quickReplyFormGoto.value = goto;
             currentThing.querySelector('tbody').appendChild(quickReplyForm);
             quickReplyFormTextarea.focus();
         }
