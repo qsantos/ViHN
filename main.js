@@ -139,7 +139,7 @@ document.addEventListener('keypress', (event) => {
         if (!currentThing || currentThingIndex == 0) {
             document.querySelector('.titleline>a').click();
         } else {
-            document.location = 'https://news.ycombinator.com/item?id=' + currentThing.id;
+            document.location = 'item?id=' + currentThing.id;
         }
     } else if (event.key == 'g') {
         gotoThing(things[0]);
