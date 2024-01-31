@@ -152,11 +152,9 @@ document.addEventListener('keypress', (event) => {
             collapseToggle.click();
         }
     } else if (event.key == 'l') {
-        if (!currentThing || currentThingIndex == 0) {
-            document.querySelector('.titleline>a').click();
-        } else {
-            document.location = 'item?id=' + currentThing.id;
-        }
+        const anchor = (currentThing || document).querySelector('.titleline>a');
+        const url = anchor ? anchor.href : 'item?id=' + currentThing.id;
+        open(url, '_blank');
     } else if (event.key == 'g') {
         gotoThing(things[0]);
     } else if (event.key == 'G') {
