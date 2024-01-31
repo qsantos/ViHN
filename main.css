@@ -1,20 +1,24 @@
-.activething .votelinks+td {
-    /* Display an orange bar on the left */
-    border-left: 2px solid #ff6600;
-    /* Add 2px of left padding let the text breathe */
-    padding-left: 2px;
-    /* Needed to set the margin */
+.title {
+    /* overflow: hidden hides the ::before element of the sibling */
+    overflow: visible;
+}
+.activething .votelinks+td,
+.activething:has(.title) + tr td:last-child {
+    position: relative;
+}
+.activething .votelinks+td::before,
+.activething:has(.title) + tr td:last-child::before {
+    content: " ";
     display: block;
-    /* Compensate for not being a table-cell anymore */
-    padding-top: 1px;
-    /* Compensate for the additional 2px from the border and 2px from the padding */
-    margin-left: -4px;
+    background-color:#ff6600;
+    position: absolute;
+    left:-4px;
+    width:2px;
+    /* Extend the bar slightly upwards and downwards to bridge the table cell borders between <tr>s */
+    top:-1px;
+    bottom:-1px;
 }
-.fatitem .activething .votelinks+td {
-    /* The root thing in comment threads has one more pixel on top */
-    padding-top: 2px;
-}
-.fatitem .activething .votelinks+td, .comtr.activething .votelinks+td {
-    /* The root thing in comment threads, and comments have one more pixel on the left */
-    padding-left: 3px;
+.fatitem td:has(form)::before {
+    /* Cover the empty <tr> before the reply form if there is one */
+    top:-13px !important;
 }
