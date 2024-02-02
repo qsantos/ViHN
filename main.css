@@ -1,6 +1,6 @@
 .title {
     /* overflow: hidden hides the ::before element of the sibling */
-    overflow: visible;
+    overflow: visible !important;
 }
 .activething td+td:last-child,
 .activething:has(.title) + tr td:last-child {
