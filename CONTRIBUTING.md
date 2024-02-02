@@ -36,6 +36,3 @@ If a feature did warrant an external library, it should be vendored and served a
 
 TypeScript or JSDoc is not worth it here.
 Adding automated testing in the CI would be acceptable.
-
-**Note:**
-There *is* an additional file `browser-polyfill.min.js` for compatibility with Chrome.

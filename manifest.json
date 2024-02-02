@@ -6,16 +6,9 @@
     "version": "0.1.0",
     "content_scripts": [
         {
-            "matches": [
-                "https://news.ycombinator.com/*"
-            ],
-            "js": [
-                "browser-polyfill.min.js",
-                "main.js"
-            ],
-            "css": [
-                "main.css"
-            ],
+            "matches": ["https://news.ycombinator.com/*"],
+            "js": ["main.js"],
+            "css": ["main.css"],
             "run_at": "document_end"
         }
     ]
