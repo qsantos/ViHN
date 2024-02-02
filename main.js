@@ -1,4 +1,4 @@
-const things = Array(...document.querySelectorAll('.athing'));
+const things = Array(...document.getElementsByClassName('athing'));
 
 function thingDepth(thing) {
     const indentTd = thing.querySelector('td[indent]');
@@ -37,7 +37,7 @@ function gotoThing(thing) {
     }
 }
 
-let newCommentTextrea = document.querySelector('textarea');
+let newCommentTextrea = document.getElementsByTagName('textarea')[0];
 if (newCommentTextrea) {
     newCommentTextrea.addEventListener('keypress', (event) => {
         event.stopPropagation();
@@ -80,7 +80,7 @@ function initQuickReplyForm() {
     quickReplyFormParent = container.querySelector('[name="parent"]');
     quickReplyFormGoto = container.querySelector('[name="goto"]');
     quickReplyFormHmac = container.querySelector('[name="hmac"]');
-    quickReplyFormTextarea = container.querySelector('textarea');
+    quickReplyFormTextarea = container.getElementsByTagName('textarea')[0];
     quickReplyFormSubmit = container.querySelector('[type="submit"]');
     quickReplyForm.addEventListener('submit', event => {
         fetch('https://news.ycombinator.com/comment', {
@@ -186,7 +186,7 @@ document.addEventListener('keypress', (event) => {
     } else if (event.key == 'r') {
         initQuickReplyForm();
         if (currentThingIndex == 0) {
-            document.querySelector('textarea').focus();
+            document.getElementsByTagName('textarea')[0].focus();
         } else if (currentThing) {
             quickReplyFormSubmit.disabled = true;
             const loc = document.location;
@@ -205,7 +205,7 @@ document.addEventListener('keypress', (event) => {
                 });
             });
             quickReplyFormGoto.value = goto;
-            currentThing.querySelector('tbody').appendChild(quickReplyForm);
+            currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
             quickReplyFormTextarea.focus();
         }
     } else {
