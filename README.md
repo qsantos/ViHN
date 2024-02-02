@@ -1,0 +1,24 @@
+# ViHN
+
+Vi-style key bindings for browsing Hacker News.
+
+It's fast. If you have to wait a perceptible amount of time, that's a bug.
+
+## Features
+
+Key bindings:
+
+| Key          | Action
+| ------------ | ------
+| <kbd>j</kbd> | Next comment/story
+| <kbd>k</kbd> | Previous comment/story
+| <kbd>J</kbd> | Next sibling comment
+| <kbd>K</kbd> | Previous sibling comment
+| <kbd>h</kbd> | Parent comment
+| <kbd>l</kbd> | Follow story link/comment permalink
+| <kbd>m</kbd> | Toggle comment tree
+| <kbd>g</kbd> | Go to top story/comment
+| <kbd>G</kbd> | Go to last story/comment
+| <kbd>u</kbd> | Upvote story/comment, or cancel vote
+| <kbd>d</kbd> | Downvote story/comment, or cancel vote
+| <kbd>r</kbd> | Comment on story, or reply to comment
