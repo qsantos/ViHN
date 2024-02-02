@@ -208,5 +208,9 @@ document.addEventListener('keypress', (event) => {
             currentThing.querySelector('tbody').appendChild(quickReplyForm);
             quickReplyFormTextarea.focus();
         }
+    } else {
+        return;
     }
+    event.stopPropagation();
+    event.preventDefault();
 });
