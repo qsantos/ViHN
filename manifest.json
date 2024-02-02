@@ -1,12 +1,15 @@
 {
     "description": "Vi-style key bindings for browsing Hacker News",
     "author": "Quentin Santos",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "ViHN",
     "version": "0.1.0",
-    "host_permissions": [
-        "https://news.ycombinator.com/*"
-    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "vihn.03dcbafe-7fc0-4ed8-99dc-95c50a886410@qsantos.fr",
+            "strict_min_version": "52.0"
+        }
+    },
     "content_scripts": [
         {
             "matches": [
