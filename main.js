@@ -1,5 +1,8 @@
 const things = Array(...document.getElementsByClassName('athing'));
 
+const thingIndexes = [];
+things.forEach((thing, index) => thingIndexes[thing.id] = index);
+
 function thingDepth(thing) {
     const indentTd = thing.querySelector('td[indent]');
     if (!indentTd) {
@@ -101,7 +104,7 @@ function initQuickReplyForm() {
 }
 
 document.addEventListener('keypress', (event) => {
-    const currentThingIndex = things.indexOf(currentThing);
+    const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
     if (event.key == 'j') {
         if (currentThingIndex < 0) {
             gotoThing(things[0]);
