@@ -114,7 +114,7 @@ document.addEventListener('keypress', (event) => {
         }
     } else if (event.key == 'k') {
         let nextThingIndex = currentThingIndex - 1;
-        while (nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
+        while (nextThingIndex > 0 && nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
             nextThingIndex--;
         }
         gotoThing(things[nextThingIndex]);
