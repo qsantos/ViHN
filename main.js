@@ -51,14 +51,14 @@ function gotoThing(thing) {
     }
 }
 
-let newCommentTextrea = document.getElementsByTagName('textarea')[0];
-if (newCommentTextrea) {
-    newCommentTextrea.addEventListener('keypress', (event) => {
+let newCommentTextarea = document.getElementsByTagName('textarea')[0];
+if (newCommentTextarea) {
+    newCommentTextarea.addEventListener('keypress', (event) => {
         event.stopPropagation();
     });
-    newCommentTextrea.addEventListener('keydown', (event) => {
+    newCommentTextarea.addEventListener('keydown', (event) => {
         if (event.key == 'Escape') {
-            newCommentTextrea.blur();
+            newCommentTextarea.blur();
         }
     });
 }
