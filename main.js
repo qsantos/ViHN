@@ -59,6 +59,8 @@ if (newCommentTextarea) {
     newCommentTextarea.addEventListener('keydown', (event) => {
         if (event.key == 'Escape') {
             newCommentTextarea.blur();
+        } else if (event.ctrlKey && event.key == 'Enter') {
+            newCommentTextarea.parentNode.submit();
         }
     });
 }
@@ -110,6 +112,8 @@ function initQuickReplyForm() {
     quickReplyFormTextarea.addEventListener('keydown', (event) => {
         if (event.key == 'Escape') {
             quickReplyFormTextarea.blur();
+        } else if (event.ctrlKey && event.key == 'Enter') {
+            quickReplyFormTextarea.parentNode.submit();
         }
     });
 }
