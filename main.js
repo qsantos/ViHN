@@ -150,9 +150,11 @@ document.addEventListener('keypress', (event) => {
             nextThingIndex--;
         }
         gotoThing(things[nextThingIndex]);
-    } else if (event.key == 'h') {
+    } else if (event.key == 'h' || event.key == 'p') {
         if (!currentThing || currentThingIndex == 0) {
-            const parentLink = things[0].querySelector('.navs>a');
+            // Use context link for h, and parent link for p
+            const selector = event.key == 'h' ? '.navs>a+a' : '.navs>a';
+            const parentLink = things[0].querySelector('.navs>a+a');
             if (parentLink) {
                 parentLink.click();
             }

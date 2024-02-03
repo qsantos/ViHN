@@ -14,7 +14,8 @@ Key bindings:
 | <kbd>k</kbd> | Previous comment/story
 | <kbd>J</kbd> | Next sibling comment
 | <kbd>K</kbd> | Previous sibling comment
-| <kbd>h</kbd> | Parent comment
+| <kbd>h</kbd> | Parent comment (stay in context when changing page)
+| <kbd>p</kbd> | Parent comment (always go directly to parent)
 | <kbd>l</kbd> | Follow story link/comment permalink
 | <kbd>m</kbd> | Toggle comment tree
 | <kbd>g</kbd> | Go to top story/comment
