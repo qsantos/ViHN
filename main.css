@@ -1,3 +1,4 @@
+/* Orange bar left to the active thing */
 .title {
     /* overflow: hidden hides the ::before element of the sibling */
     overflow: visible !important;
@@ -21,4 +22,12 @@
 .fatitem td:has(form)::before {
     /* Cover the empty <tr> before the reply form if there is one */
     top:-13px !important;
+}
+
+/* Highlight op */
+.op {
+    color: #ff6600 !important;
+}
+.op::after {
+    content: " [op]";
 }

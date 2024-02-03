@@ -3,6 +3,17 @@ const things = Array(...document.getElementsByClassName('athing'));
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
+const op = document.querySelector('.fatitem .hnuser');
+if (op) {
+    const opUsername = op.textContent;
+    const hnusers = document.getElementsByClassName('hnuser');
+    for (const hnuser of hnusers) {
+        if (hnuser.textContent == opUsername) {
+            hnuser.classList.add('op');
+        }
+    }
+}
+
 function thingDepth(thing) {
     const indentTd = thing.querySelector('td[indent]');
     if (!indentTd) {
