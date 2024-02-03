@@ -202,10 +202,10 @@ document.addEventListener('keypress', (event) => {
             downArrow.click();
         }
     } else if (event.key == 'r') {
-        initQuickReplyForm();
         if (currentThingIndex == 0) {
             document.getElementsByTagName('textarea')[0].focus();
         } else if (currentThing) {
+            initQuickReplyForm();
             quickReplyFormSubmit.disabled = true;
             const loc = document.location;
             const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
