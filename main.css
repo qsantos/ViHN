@@ -31,3 +31,28 @@
 .op::after {
     content: " [op]";
 }
+
+/* List of comments from latest to oldest*/
+#latest-comments {
+    position: fixed;
+    top:0;
+    left:0;
+    height:100%;
+    overflow:scroll;
+    font-size: 8pt;
+    /* Seem to be enough for the default scrollbar gutter, but tell me if you know of a more reliable way */
+    padding-left:7px;
+    /* Put the scrollbar on the left */
+    direction: rtl;
+}
+#latest-comments * {
+    /* Restore the left-to-right text direction (see above) */
+    direction: ltr;
+}
+#latest-comments ul {
+    list-style: none;
+    padding:0;
+}
+#latest-comments li {
+    padding:0;
+}

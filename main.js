@@ -22,6 +22,37 @@ if (morelink) {
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
+// Newest Comments
+{
+    const datedIndexes = Array(...document.getElementsByClassName('age'))
+        .map((age , index)=> [age.title, index])
+        .sort()
+        .reverse();
+    const div = document.createElement('DIV');
+    div.id = 'latest-comments';
+    const h3 = document.createElement('H3');
+    const u = document.createElement('U');
+    u.textContent = 'N';
+    h3.appendChild(u);
+    h3.appendChild(document.createTextNode('ewest Comments'));
+    div.appendChild(h3);
+    const ul = document.createElement('UL');
+    for (const [date, index] of datedIndexes) {
+        const li = document.createElement('LI');
+        li.addEventListener('click', () => {
+            gotoThing(things[index]);
+        });
+        li.textContent = date;
+        ul.appendChild(li);
+    }
+    const previousLatestComment = document.getElementById('latest-comments');
+    if (previousLatestComment) {
+        previousLatestComment.remove();
+    }
+    div.appendChild(ul);
+    document.body.appendChild(div);
+}
+
 const op = document.querySelector('.fatitem .hnuser');
 if (op) {
     const opUsername = op.textContent;
