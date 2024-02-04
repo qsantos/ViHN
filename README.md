@@ -23,3 +23,4 @@ Key bindings:
 | <kbd>u</kbd> | Upvote story/comment, or cancel vote
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
 | <kbd>r</kbd> | Comment on story, or reply to comment
+| <kbd>Ctrl</kbd>+<kbd>Return</kbd> | Submit current form
