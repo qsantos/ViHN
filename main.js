@@ -191,8 +191,8 @@ document.addEventListener('keypress', (event) => {
             morelink.click();
         } else {
             const anchor = (currentThing || document).querySelector('.titleline>a');
-            const relative_url = anchor ? anchor.href : 'item?id=' + currentThing.id;
-            const url = new URL(relative_url, document.location).href;
+            const relativeUrl = anchor ? anchor.href : 'item?id=' + currentThing.id;
+            const url = new URL(relativeUrl, document.location).href;
             chrome.runtime.sendMessage({
                 action: 'open',
                 url,
@@ -207,8 +207,8 @@ document.addEventListener('keypress', (event) => {
                 const subtext = currentThing.nextElementSibling;
                 if (subtext && !subtext.classList.contains('athing')) {
                     const anchor = subtext.querySelector('.age>a');
-                    const relative_url = anchor.href;
-                    const url = new URL(relative_url, document.location).href;
+                    const relativeUrl = anchor.href;
+                    const url = new URL(relativeUrl, document.location).href;
                     chrome.runtime.sendMessage({
                         action: 'open',
                         url,
@@ -259,11 +259,11 @@ document.addEventListener('keypress', (event) => {
             const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
             fetch(url).then(response => {
                 response.text().then(html => {
-                    const parent_match = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-                    const parent = parent_match[1];
+                    const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
+                    const parent = parentMatch[1];
                     quickReplyFormParent.value = parent;
-                    const hmac_match = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    const hmac = hmac_match[1];
+                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                    const hmac = hmacMatch[1];
                     quickReplyFormHmac.value = hmac;
                     quickReplyFormSubmit.disabled = false;
                 });
