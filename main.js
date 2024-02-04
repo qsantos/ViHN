@@ -116,7 +116,7 @@ function initQuickReplyForm() {
         fetch('https://news.ycombinator.com/comment', {
             body: new FormData(quickReplyForm),
         }).then(() => {
-            quickReplyForm.parent.removeChild(quickReplyForm);
+            quickReplyForm.remove();
         });
     });
     quickReplyFormTextarea.addEventListener('keypress', (event) => {
