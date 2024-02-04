@@ -26,30 +26,27 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
 {
     const datedIndexes = Array(...document.getElementsByClassName('age'))
         .map((age , index)=> [age.title, index])
-        .sort()
+        // Chrome is very slow without an explicit comparison function
+        .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
         .reverse();
     const div = document.createElement('DIV');
     div.id = 'latest-comments';
-    const h3 = document.createElement('H3');
-    const u = document.createElement('U');
-    u.textContent = 'N';
-    h3.appendChild(u);
-    h3.appendChild(document.createTextNode('ewest Comments'));
-    div.appendChild(h3);
-    const ul = document.createElement('UL');
-    for (const [date, index] of datedIndexes) {
-        const li = document.createElement('LI');
-        li.addEventListener('click', () => {
-            gotoThing(things[index]);
-        });
-        li.textContent = date;
-        ul.appendChild(li);
-    }
+    // Setting innerHTML is still faster than doing DOM
+    div.innerHTML = (
+        '<h3><u>N</u>ewest Comments</u></h3><ul>'
+        + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
+        + '</ul>'
+    );
     const previousLatestComment = document.getElementById('latest-comments');
     if (previousLatestComment) {
         previousLatestComment.remove();
     }
-    div.appendChild(ul);
+    div.addEventListener('click', event => {
+        const index = event.target.dataset.index;
+        if (index) {
+            gotoThing(things[index]);
+        }
+    });
     document.body.appendChild(div);
 }
 
