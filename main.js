@@ -116,7 +116,6 @@ function initQuickReplyForm() {
         fetch('https://news.ycombinator.com/comment', {
             body: new FormData(quickReplyForm),
         }).then(() => {
-            alert('ok!');
             quickReplyForm.parent.removeChild(quickReplyForm);
         });
     });
