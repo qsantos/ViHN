@@ -121,7 +121,7 @@ function initQuickReplyForm() {
 document.addEventListener('keypress', (event) => {
     const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
     if (event.key == 'j') {
-        if (currentThingIndex < 0) {
+        if (currentThingIndex == undefined) {
             gotoThing(things[0]);
         } else {
             let nextThingIndex = currentThingIndex + 1;
