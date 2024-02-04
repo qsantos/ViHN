@@ -43,9 +43,36 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
     }
     div.addEventListener('click', event => {
         const index = event.target.dataset.index;
-        if (index) {
-            gotoThing(things[index]);
+        if (!index) {
+            return;
         }
+        const thing = things[index];
+        // Uncollapse all the ancestors to make the thing visible
+        let currentDepth = thingDepth(thing);
+        let otherIndex = index - 1;
+        // We need to uncollapse ancestors in descending order to avoid showing children of other collapsed things
+        const ancestorsToUncollapse = [];
+        while (currentDepth > 0) {
+            // Find previous ancestor
+            while (otherIndex > 0) {
+                const otherDepth = thingDepth(things[otherIndex]);
+                if (otherDepth < currentDepth) {
+                    currentDepth = otherDepth;
+                    break;
+                }
+                otherIndex--;
+            }
+            const otherThing = things[otherIndex];
+            if (otherThing.classList.contains('coll')) {
+                ancestorsToUncollapse.push(otherThing);
+            }
+        }
+        // Uncollapse ancestors in descending order
+        for (const ancestor of ancestorsToUncollapse.reverse()) {
+            ancestor.getElementsByClassName('togg')[0].click();
+        }
+        // The thing is now visible, we can navigate to it
+        gotoThing(thing);
     });
     document.body.appendChild(div);
 }
