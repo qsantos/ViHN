@@ -171,10 +171,18 @@ document.addEventListener('keypress', (event) => {
         if (collapseToggle) {
             collapseToggle.click();
         }
-    } else if (event.key == 'l') {
+    } else if (event.key == 'l' || event.key == 'L') {
         const anchor = (currentThing || document).querySelector('.titleline>a');
         const url = anchor ? anchor.href : 'item?id=' + currentThing.id;
         open(url, '_blank');
+        // Let the link open in the background if using the uppercase key binding
+        if (event.key == 'L') {
+            // NOTE: This is not perfect, as the focus switches to the new tab and
+            // back within a few dozen milliseconds. However, doing this properly
+            // would require adding a background script and asking for the tabs
+            // permission, to be able to use tabs.create().
+            focus();
+        }
     } else if (event.key == 'g') {
         gotoThing(things[0]);
     } else if (event.key == 'G') {
