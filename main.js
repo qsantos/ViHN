@@ -251,26 +251,32 @@ document.addEventListener('keypress', (event) => {
         if (currentThingIndex == 0) {
             document.getElementsByTagName('textarea')[0].focus();
         } else if (currentThing) {
-            initQuickReplyForm();
-            quickReplyFormSubmit.disabled = true;
-            const loc = document.location;
-            const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
-            // NOTE: fetch only accepts absolute URLs
-            const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-            fetch(url).then(response => {
-                response.text().then(html => {
-                    const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-                    const parent = parentMatch[1];
-                    quickReplyFormParent.value = parent;
-                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    const hmac = hmacMatch[1];
-                    quickReplyFormHmac.value = hmac;
-                    quickReplyFormSubmit.disabled = false;
+            const replyDiv = currentThing.getElementsByClassName('reply')[0];
+            // <div class="reply"><p><font><u><a>reply
+            // or
+            // <div class="reply"><p><font>
+            if (replyDiv?.firstElementChild?.firstElementChild?.firstElementChild) {
+                initQuickReplyForm();
+                quickReplyFormSubmit.disabled = true;
+                const loc = document.location;
+                const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
+                // NOTE: fetch only accepts absolute URLs
+                const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
+                fetch(url).then(response => {
+                    response.text().then(html => {
+                        const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
+                        const parent = parentMatch[1];
+                        quickReplyFormParent.value = parent;
+                        const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                        const hmac = hmacMatch[1];
+                        quickReplyFormHmac.value = hmac;
+                        quickReplyFormSubmit.disabled = false;
+                    });
                 });
-            });
-            quickReplyFormGoto.value = goto;
-            currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
-            quickReplyFormTextarea.focus();
+                quickReplyFormGoto.value = goto;
+                currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
+                quickReplyFormTextarea.focus();
+            }
         }
     } else {
         return;
