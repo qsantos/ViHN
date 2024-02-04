@@ -27,3 +27,6 @@ Key bindings:
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
 | <kbd>r</kbd> | Comment on story, or reply to comment
 | <kbd>Ctrl</kbd>+<kbd>Return</kbd> | Submit current form
+
+**Note:**
+When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.

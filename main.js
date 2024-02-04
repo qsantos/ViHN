@@ -1,5 +1,24 @@
 const things = Array(...document.getElementsByClassName('athing'));
 
+let currentThing = document.querySelector('.athing:target');
+if (currentThing) {
+    currentThing.classList.add('activething');
+}
+
+// handle the “XXX more comments” link like a thing
+// <tr><td><table><tbody><tr><td><a href="item?id=XXXXXXXX&amp;p=2" class="morelink">
+const morelink = document.getElementsByClassName('morelink')[0];
+const morelinkThing = morelink ? morelink.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement : null;
+if (morelink) {
+    morelinkThing.id = 'morelink';
+    things.push(morelinkThing);
+    if (document.location.hash == '#morelink') {
+        currentThing = morelinkThing;
+        currentThing.classList.add('activething');
+        currentThing.scrollIntoView(true);
+    }
+}
+
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
@@ -24,11 +43,6 @@ function thingDepth(thing) {
 
 function thingIsHidden(thing) {
     return thing.classList.contains('noshow');
-}
-
-let currentThing = document.querySelector('.athing:target');
-if (currentThing) {
-    currentThing.classList.add('activething');
 }
 
 let historyUpdateTimer = null;
@@ -174,37 +188,46 @@ document.addEventListener('keypress', (event) => {
             }
         }
     } else if (event.key == 'l' || event.key == 'L') {
-        const anchor = (currentThing || document).querySelector('.titleline>a');
-        const relative_url = anchor ? anchor.href : 'item?id=' + currentThing.id;
-        const url = new URL(relative_url, document.location).href;
-        chrome.runtime.sendMessage({
-            action: 'open',
-            url,
-            active: event.key == 'l',
-        });
+        if (currentThing == morelinkThing) {
+            morelink.click();
+        } else {
+            const anchor = (currentThing || document).querySelector('.titleline>a');
+            const relative_url = anchor ? anchor.href : 'item?id=' + currentThing.id;
+            const url = new URL(relative_url, document.location).href;
+            chrome.runtime.sendMessage({
+                action: 'open',
+                url,
+                active: event.key == 'l',
+            });
+        }
     } else if (event.key == 'c' || event.key == 'C') {
         if (currentThing) {
-            const subtext = currentThing.nextElementSibling;
-            if (!subtext.classList.contains('athing')) {
-                const anchor = subtext.querySelector('.age>a');
-                const relative_url = anchor.href;
-                const url = new URL(relative_url, document.location).href;
-                chrome.runtime.sendMessage({
-                    action: 'open',
-                    url,
-                    active: event.key == 'c',
-                });
+            if (currentThing == morelinkThing) {
+                morelink.click();
+            } else {
+                const subtext = currentThing.nextElementSibling;
+                if (subtext && !subtext.classList.contains('athing')) {
+                    const anchor = subtext.querySelector('.age>a');
+                    const relative_url = anchor.href;
+                    const url = new URL(relative_url, document.location).href;
+                    chrome.runtime.sendMessage({
+                        action: 'open',
+                        url,
+                        active: event.key == 'c',
+                    });
+                }
             }
         }
     } else if (event.key == 'g') {
         gotoThing(things[0]);
     } else if (event.key == 'G') {
-        const topThings = document.querySelectorAll('.athing:has([indent="0"])');
+        const topThings = document.querySelectorAll('.athing:has([indent="0"]),#morelink');
         const thing =  topThings[topThings.length - 1]
         gotoThing(thing);
     } else if (event.key == 'u') {
         const upArrow = document.getElementById('up_' + currentThing.id);
-        if (upArrow.classList.contains('nosee')) {
+        if (!upArrow) {
+        } else if (upArrow.classList.contains('nosee')) {
             // upArrow hidden, we can only unvote
             const unvoteLink = document.getElementById('un_' + currentThing.id);
             if (unvoteLink) {
@@ -215,7 +238,8 @@ document.addEventListener('keypress', (event) => {
         }
     } else if (event.key == 'd') {
         const downArrow = document.getElementById('down_' + currentThing.id);
-        if (downArrow.classList.contains('nosee')) {
+        if (!downArrow) {
+        } else if (downArrow.classList.contains('nosee')) {
             // downArrow hidden, we can only undown
             const unvoteLink = document.getElementById('un_' + currentThing.id);
             if (unvoteLink) {
