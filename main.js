@@ -167,9 +167,11 @@ document.addEventListener('keypress', (event) => {
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'm') {
-        const collapseToggle = document.querySelector('[id="' + currentThing.id + '"].togg')
-        if (collapseToggle) {
-            collapseToggle.click();
+        if (currentThing) {
+            const collapseToggle = currentThing.getElementsByClassName('togg')[0];
+            if (collapseToggle) {
+                collapseToggle.click();
+            }
         }
     } else if (event.key == 'l' || event.key == 'L') {
         const anchor = (currentThing || document).querySelector('.titleline>a');
