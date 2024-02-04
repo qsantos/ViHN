@@ -180,6 +180,20 @@ document.addEventListener('keypress', (event) => {
             url,
             active: event.key == 'l',
         });
+    } else if (event.key == 'c' || event.key == 'C') {
+        if (currentThing) {
+            const subtext = currentThing.nextElementSibling;
+            if (!subtext.classList.contains('athing')) {
+                const anchor = subtext.querySelector('.age>a');
+                const relative_url = anchor.href;
+                const url = new URL(relative_url, document.location).href;
+                chrome.runtime.sendMessage({
+                    action: 'open',
+                    url,
+                    active: event.key == 'c',
+                });
+            }
+        }
     } else if (event.key == 'g') {
         gotoThing(things[0]);
     } else if (event.key == 'G') {

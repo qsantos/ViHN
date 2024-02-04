@@ -18,6 +18,8 @@ Key bindings:
 | <kbd>p</kbd> | Parent comment (always go directly to parent)
 | <kbd>l</kbd> | Open story link/comment permalink
 | <kbd>L</kbd> | Open story link/comment permalink in background
+| <kbd>c</kbd> | Open comments
+| <kbd>C</kbd> | Open comments in background
 | <kbd>m</kbd> | Toggle comment tree
 | <kbd>g</kbd> | Go to top story/comment
 | <kbd>G</kbd> | Go to last story/comment
