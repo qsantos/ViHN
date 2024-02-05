@@ -144,9 +144,6 @@ function gotoThing(thing) {
 let newCommentTextarea = document.getElementsByTagName('textarea')[0];
 if (newCommentTextarea) {
     newCommentTextarea.addEventListener('keydown', (event) => {
-        event.stopPropagation();
-    });
-    newCommentTextarea.addEventListener('keydown', (event) => {
         if (event.key == 'Escape') {
             newCommentTextarea.blur();
         } else if (event.ctrlKey && event.key == 'Enter') {
@@ -194,9 +191,6 @@ function initQuickReplyForm() {
         }).then(() => {
             quickReplyForm.remove();
         });
-    });
-    quickReplyFormTextarea.addEventListener('keydown', (event) => {
-        event.stopPropagation();
     });
     quickReplyFormTextarea.addEventListener('keydown', (event) => {
         if (event.key == 'Escape') {
@@ -389,7 +383,9 @@ function newestEvent(event) {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (focusNewest) {
+    if (event.target != document.body) {
+        return;
+    } else if (focusNewest) {
         newestEvent(event);
     } else {
         thingEvent(event);
