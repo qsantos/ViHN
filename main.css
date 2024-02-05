@@ -32,8 +32,8 @@
     content: " [op]";
 }
 
-/* List of comments from latest to oldest*/
-#latest-comments {
+/* List of comments from newest to oldest*/
+#newest-items {
     position: fixed;
     top:0;
     left:0;
@@ -45,14 +45,14 @@
     /* Put the scrollbar on the left */
     direction: rtl;
 }
-#latest-comments * {
+#newest-items * {
     /* Restore the left-to-right text direction (see above) */
     direction: ltr;
 }
-#latest-comments ul {
+#newest-items ul {
     list-style: none;
     padding:0;
 }
-#latest-comments li {
+#newest-items li {
     padding:0;
 }

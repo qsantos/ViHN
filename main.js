@@ -30,7 +30,7 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
         .reverse();
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     const div = document.createElement('DIV');
-    div.id = 'latest-comments';
+    div.id = 'newest-items';
     // Setting innerHTML is still faster than doing DOM
     div.innerHTML = (
         '<h3><u>N</u>ewest Items</u></h3>'
@@ -39,7 +39,7 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
         + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
         + '</ul>'
     );
-    const previousLatestComment = document.getElementById('latest-comments');
+    const previousLatestComment = document.getElementById('newest-items');
     if (previousLatestComment) {
         previousLatestComment.remove();
     }
