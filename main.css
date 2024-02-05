@@ -41,7 +41,7 @@
     overflow:auto;
     font-size: 8pt;
     /* Seem to be enough for the default scrollbar gutter, but tell me if you know of a more reliable way */
-    padding-left:7px;
+    padding-left:5px;
     /* Put the scrollbar on the left */
     direction: rtl;
 }
