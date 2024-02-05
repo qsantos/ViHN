@@ -29,11 +29,13 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
         // Chrome is very slow without an explicit comparison function
         .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
         .reverse();
+    const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     const div = document.createElement('DIV');
     div.id = 'latest-comments';
     // Setting innerHTML is still faster than doing DOM
     div.innerHTML = (
         '<h3><u>N</u>ewest Comments</u></h3><ul>'
+        + (hasOtherPages ? '(comments on this page)<br><br>' : '')
         + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
         + '</ul>'
     );
