@@ -39,6 +39,7 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
         + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
         + '</ul>'
     );
+    // Make the addition of Newest Comments idempotent (useful for extension reloading when debugging)
     const previousLatestComment = document.getElementById('newest-items');
     if (previousLatestComment) {
         previousLatestComment.remove();
