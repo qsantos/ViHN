@@ -21,7 +21,7 @@ if (morelink) {
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
-// Newest Comments
+// Newest Items
 {
     const datedIndexes = Array(...document.getElementsByClassName('age'))
         .map((age , index)=> [age.title, index])
@@ -33,8 +33,8 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
     div.id = 'latest-comments';
     // Setting innerHTML is still faster than doing DOM
     div.innerHTML = (
-        '<h3><u>N</u>ewest Comments</u></h3><ul>'
-        + (hasOtherPages ? '(comments on this page)<br><br>' : '')
+        '<h3><u>N</u>ewest Items</u></h3><ul>'
+        + (hasOtherPages ? '(items on this page)<br><br>' : '')
         + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
         + '</ul>'
     );
