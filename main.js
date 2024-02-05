@@ -143,7 +143,7 @@ function gotoThing(thing) {
 
 let newCommentTextarea = document.getElementsByTagName('textarea')[0];
 if (newCommentTextarea) {
-    newCommentTextarea.addEventListener('keypress', (event) => {
+    newCommentTextarea.addEventListener('keydown', (event) => {
         event.stopPropagation();
     });
     newCommentTextarea.addEventListener('keydown', (event) => {
@@ -195,7 +195,7 @@ function initQuickReplyForm() {
             quickReplyForm.remove();
         });
     });
-    quickReplyFormTextarea.addEventListener('keypress', (event) => {
+    quickReplyFormTextarea.addEventListener('keydown', (event) => {
         event.stopPropagation();
     });
     quickReplyFormTextarea.addEventListener('keydown', (event) => {
@@ -388,7 +388,7 @@ function newestEvent(event) {
     event.preventDefault();
 }
 
-document.addEventListener('keypress', (event) => {
+document.addEventListener('keydown', (event) => {
     if (focusNewest) {
         newestEvent(event);
     } else {
