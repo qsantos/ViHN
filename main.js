@@ -174,13 +174,6 @@ function initQuickReplyForm() {
     quickReplyFormHmac = container.querySelector('[name="hmac"]');
     quickReplyFormTextarea = container.getElementsByTagName('textarea')[0];
     quickReplyFormSubmit = container.querySelector('[type="submit"]');
-    quickReplyForm.addEventListener('submit', event => {
-        fetch('https://news.ycombinator.com/comment', {
-            body: new FormData(quickReplyForm),
-        }).then(() => {
-            quickReplyForm.remove();
-        });
-    });
 }
 
 function thingEvent(event) {
