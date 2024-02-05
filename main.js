@@ -33,8 +33,9 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
     div.id = 'latest-comments';
     // Setting innerHTML is still faster than doing DOM
     div.innerHTML = (
-        '<h3><u>N</u>ewest Items</u></h3><ul>'
-        + (hasOtherPages ? '(items on this page)<br><br>' : '')
+        '<h3><u>N</u>ewest Items</u></h3>'
+        + (hasOtherPages ? '<p>(items on this page)</p>' : '')
+        + '<ul>'
         + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
         + '</ul>'
     );
