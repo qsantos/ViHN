@@ -56,3 +56,9 @@
 #newest-items li {
     padding:0;
 }
+.activenewestlist {
+    border-right:1px solid #ff6600;
+}
+.activenewest {
+    color:#ff6600;
+}

@@ -22,12 +22,12 @@ const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
 // Newest Items
+const datedIndexes = Array(...document.getElementsByClassName('age'))
+    .map((age , index)=> [age.title, index])
+    // Chrome is very slow without an explicit comparison function
+    .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
+    .reverse();
 {
-    const datedIndexes = Array(...document.getElementsByClassName('age'))
-        .map((age , index)=> [age.title, index])
-        // Chrome is very slow without an explicit comparison function
-        .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
-        .reverse();
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     const div = document.createElement('DIV');
     div.id = 'newest-items';
@@ -45,39 +45,56 @@ things.forEach((thing, index) => thingIndexes[thing.id] = index);
         previousLatestComment.remove();
     }
     div.addEventListener('click', event => {
-        const index = event.target.dataset.index;
-        if (!index) {
-            return;
-        }
-        const thing = things[index];
-        // Uncollapse all the ancestors to make the thing visible
-        let currentDepth = thingDepth(thing);
-        let otherIndex = index - 1;
-        // We need to uncollapse ancestors in descending order to avoid showing children of other collapsed things
-        const ancestorsToUncollapse = [];
-        while (currentDepth > 0) {
-            // Find previous ancestor
-            while (otherIndex > 0) {
-                const otherDepth = thingDepth(things[otherIndex]);
-                if (otherDepth < currentDepth) {
-                    currentDepth = otherDepth;
-                    break;
-                }
-                otherIndex--;
-            }
-            const otherThing = things[otherIndex];
-            if (otherThing.classList.contains('coll')) {
-                ancestorsToUncollapse.push(otherThing);
-            }
-        }
-        // Uncollapse ancestors in descending order
-        for (const ancestor of ancestorsToUncollapse.reverse()) {
-            ancestor.getElementsByClassName('togg')[0].click();
-        }
-        // The thing is now visible, we can navigate to it
-        gotoThing(thing);
+        gotoThingFromIndex(event.target.dataset.index);
     });
     document.body.appendChild(div);
+}
+const newestList = document.querySelector('#newest-items ul')
+let focusNewest = false;
+let currentNewestIndex = 0;
+
+function gotoNewestIndex(index) {
+    newestList.children[currentNewestIndex].classList.remove('activenewest');
+    currentNewestIndex = index;
+    newestList.children[currentNewestIndex].classList.add('activenewest');
+}
+
+function gotoThingFromNewestIndex(newestIndex) {
+    const thingIndex = datedIndexes[newestIndex][1];
+    gotoThingFromIndex(thingIndex);
+}
+
+function gotoThingFromIndex(index) {
+    if (!index) {
+        return;
+    }
+    const thing = things[index];
+    // Uncollapse all the ancestors to make the thing visible
+    let currentDepth = thingDepth(thing);
+    let otherIndex = index - 1;
+    // We need to uncollapse ancestors in descending order to avoid showing children of other collapsed things
+    const ancestorsToUncollapse = [];
+    while (currentDepth > 0) {
+        // Find previous ancestor
+        while (otherIndex > 0) {
+            const otherDepth = thingDepth(things[otherIndex]);
+            if (otherDepth < currentDepth) {
+                currentDepth = otherDepth;
+                break;
+            }
+            otherIndex--;
+        }
+        const otherThing = things[otherIndex];
+        if (otherThing.classList.contains('coll')) {
+            ancestorsToUncollapse.push(otherThing);
+        }
+    }
+    // Uncollapse ancestors in descending order
+    for (const ancestor of ancestorsToUncollapse.reverse()) {
+        ancestor.getElementsByClassName('togg')[0].click();
+    }
+    // The thing is now visible, we can navigate to it
+    gotoThing(thing);
 }
 
 const op = document.querySelector('.fatitem .hnuser');
@@ -189,7 +206,7 @@ function initQuickReplyForm() {
     });
 }
 
-document.addEventListener('keypress', (event) => {
+function thingEvent(event) {
     const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
     if (event.key == 'j') {
         if (currentThingIndex == undefined) {
@@ -336,9 +353,46 @@ document.addEventListener('keypress', (event) => {
                 quickReplyFormTextarea.focus();
             }
         }
+    } else if (event.key == 'n') {
+        focusNewest = true;
+        newestList.classList.add('activenewestlist');
+        gotoNewestIndex(currentNewestIndex);
     } else {
         return;
     }
     event.stopPropagation();
     event.preventDefault();
+}
+
+function newestEvent(event) {
+    if (event.key == 'n') {
+        focusNewest = false;
+        newestList.classList.remove('activenewestlist');
+    } else if (event.key == 'j') {
+        if (currentNewestIndex < newestList.childElementCount - 1) {
+            gotoNewestIndex(currentNewestIndex + 1);
+        }
+    } else if (event.key == 'k') {
+        if (currentNewestIndex > 0) {
+            gotoNewestIndex(currentNewestIndex - 1);
+        }
+    } else if (event.key == 'l' || event.key == 'c') {
+        gotoThingFromNewestIndex(currentNewestIndex);
+    } else if (event.key == 'g') {
+        gotoNewestIndex(0);
+    } else if (event.key == 'G') {
+        gotoNewestIndex(newestList.childElementCount - 1);
+    } else {
+        return;
+    }
+    event.stopPropagation();
+    event.preventDefault();
+}
+
+document.addEventListener('keypress', (event) => {
+    if (focusNewest) {
+        newestEvent(event);
+    } else {
+        thingEvent(event);
+    }
 });
