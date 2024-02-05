@@ -1,4 +1,4 @@
-# ViHN
+<img src="icon.svg" width="128" height="128" alt="ViHN">
 
 Vi-style key bindings for browsing Hacker News.
 
