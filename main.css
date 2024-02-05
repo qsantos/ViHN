@@ -34,16 +34,28 @@
 
 /* List of comments from newest to oldest*/
 #newest-items {
-    position: fixed;
-    top:0;
-    left:0;
     height:100%;
     overflow:auto;
     font-size: 8pt;
-    /* Seem to be enough for the default scrollbar gutter, but tell me if you know of a more reliable way */
-    padding-left:5px;
-    /* Put the scrollbar on the left */
-    direction: rtl;
+}
+@media (min-width:1800px) {
+    #newest-items {
+        position: fixed;
+        top:0;
+        left:0;
+        /* Seem to be enough for the default scrollbar gutter, but tell me if you know of a more reliable way */
+        padding-left:5px;
+        /* Put the scrollbar on the left */
+        direction: rtl;
+    }
+}
+@media (max-width:1799px) {
+    #newest-items:has(.activenewestlist) {
+        position:fixed;
+        top:0;
+        right:0;
+        background-color:white;
+    }
 }
 #newest-items * {
     /* Restore the left-to-right text direction (see above) */
