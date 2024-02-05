@@ -141,17 +141,6 @@ function gotoThing(thing) {
     }
 }
 
-let newCommentTextarea = document.getElementsByTagName('textarea')[0];
-if (newCommentTextarea) {
-    newCommentTextarea.addEventListener('keydown', (event) => {
-        if (event.key == 'Escape') {
-            newCommentTextarea.blur();
-        } else if (event.ctrlKey && event.key == 'Enter') {
-            newCommentTextarea.parentNode.submit();
-        }
-    });
-}
-
 let quickReplyForm = null;
 let quickReplyFormParent = null;
 let quickReplyFormGoto = null;
@@ -191,13 +180,6 @@ function initQuickReplyForm() {
         }).then(() => {
             quickReplyForm.remove();
         });
-    });
-    quickReplyFormTextarea.addEventListener('keydown', (event) => {
-        if (event.key == 'Escape') {
-            quickReplyFormTextarea.blur();
-        } else if (event.ctrlKey && event.key == 'Enter') {
-            quickReplyFormTextarea.parentNode.submit();
-        }
     });
 }
 
@@ -383,8 +365,12 @@ function newestEvent(event) {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (event.target != document.body) {
-        return;
+    if (event.target.tagName == 'TEXTAREA') {
+        if (event.key == 'Escape') {
+            event.target.blur();
+        } else if (event.ctrlKey && event.key == 'Enter') {
+            event.target.parentNode.submit();
+        }
     } else if (focusNewest) {
         newestEvent(event);
     } else {
