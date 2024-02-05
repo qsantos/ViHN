@@ -26,7 +26,20 @@ Key bindings:
 | <kbd>u</kbd> | Upvote story/comment, or cancel vote
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
 | <kbd>r</kbd> | Comment on story, or reply to comment
+| <kbd>n</kbd> | Switch to Newest Items
 | <kbd>Ctrl</kbd>+<kbd>Return</kbd> | Submit current form
 
 **Note:**
 When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.
+
+### Newest Items
+
+In the Newest Items list, the following key bindings are available:
+
+| Key          | Action
+| ------------ | ------
+| <kbd>j</kbd> | Next comment/story
+| <kbd>k</kbd> | Previous comment/story
+| <kbd>g</kbd> | Go to top story/comment
+| <kbd>G</kbd> | Go to last story/comment
+| <kbd>n</kbd> | Switch back to Newest Items
