@@ -38,7 +38,7 @@
     top:0;
     left:0;
     height:100%;
-    overflow:scroll;
+    overflow:auto;
     font-size: 8pt;
     /* Seem to be enough for the default scrollbar gutter, but tell me if you know of a more reliable way */
     padding-left:7px;
