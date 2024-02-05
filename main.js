@@ -6,9 +6,8 @@ if (currentThing) {
 }
 
 // handle the “XXX more comments” link like a thing
-// <tr><td><table><tbody><tr><td><a href="item?id=XXXXXXXX&amp;p=2" class="morelink">
 const morelink = document.getElementsByClassName('morelink')[0];
-const morelinkThing = morelink ? morelink.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement : null;
+const morelinkThing = morelink ? morelink.parentElement.parentElement : null;
 if (morelink) {
     morelinkThing.id = 'morelink';
     things.push(morelinkThing);
