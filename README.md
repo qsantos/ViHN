@@ -21,8 +21,8 @@ Key bindings:
 | <kbd>c</kbd> | Open comments
 | <kbd>C</kbd> | Open comments in background
 | <kbd>m</kbd> | Toggle comment tree
-| <kbd>g</kbd> | Go to top story/comment
-| <kbd>G</kbd> | Go to last story/comment
+| <kbd>g</kbd> | Go to first story/comment
+| <kbd>G</kbd> | Go to last story, last root comment or “More” link
 | <kbd>u</kbd> | Upvote story/comment, or cancel vote
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
 | <kbd>r</kbd> | Comment on story, or reply to comment
