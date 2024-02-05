@@ -1,4 +1,4 @@
-const things = Array(...document.getElementsByClassName('athing'));
+const things = Array.from(document.getElementsByClassName('athing'));
 
 let currentThing = document.querySelector('.athing:target');
 if (currentThing) {
@@ -22,7 +22,7 @@ const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
 // Newest Items
-const datedIndexes = Array(...document.getElementsByClassName('age'))
+const datedIndexes = Array.from(document.getElementsByClassName('age'))
     .map((age , index)=> [age.title, index])
     // Chrome is very slow without an explicit comparison function
     .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
