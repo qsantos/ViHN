@@ -364,6 +364,9 @@ document.addEventListener('keydown', (event) => {
         } else if (event.ctrlKey && event.key == 'Enter') {
             event.target.parentNode.submit();
         }
+    } else if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        // do not capture Ctrl+r and such
+        return;
     } else if (focusNewest) {
         newestEvent(event);
     } else {
