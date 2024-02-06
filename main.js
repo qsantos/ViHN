@@ -327,11 +327,9 @@ function thingEvent(event) {
                 fetch(url).then(response => {
                     response.text().then(html => {
                         const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-                        const parent = parentMatch[1];
-                        quickReplyFormParent.value = parent;
+                        quickReplyFormParent.value = parentMatch[1];
                         const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                        const hmac = hmacMatch[1];
-                        quickReplyFormHmac.value = hmac;
+                        quickReplyFormHmac.value = hmacMatch[1];
                         quickReplyFormSubmit.disabled = false;
                     });
                 });
@@ -339,6 +337,38 @@ function thingEvent(event) {
                 currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
                 quickReplyFormTextarea.focus();
             }
+        }
+    } else if (event.key == 'D') {
+        /* Delete */
+        const deleteLink = currentThing.querySelector('a[href^="delete-confirm"]');
+        if (deleteLink && confirm('Are you sure you want to delete this comment?')) {
+            deleteLink.textContent = '…';
+            const loc = document.location;
+            const goto = loc.pathname.substr(1) + loc.search;
+            // NOTE: fetch only accepts absolute URLs
+            // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
+            const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
+            fetch(url).then(response => {
+                response.text().then(html => {
+                    const formData = new URLSearchParams();
+                    formData.append('id', currentThing.id);
+                    formData.append('goto', goto);
+                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                    formData.append('hmac', hmacMatch[1]);
+                    formData.append('d', 'Yes');
+                    fetch('https://news.ycombinator.com/xdelete', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then(response => {
+                        if (response.url) {
+                            document.location = response.url;
+                        }
+                    });
+                });
+            });
         }
     } else if (event.key == 'f') {
         /* Favorite */
