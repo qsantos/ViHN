@@ -161,6 +161,9 @@ function initQuickReplyForm() {
                     <input type="hidden" name="goto" value="">
                     <input type="hidden" name="hmac" value="">
                     <textarea name="text" rows="8" cols="80" wrap="virtual" autofocus="true"></textarea>
+                    <a href="formatdoc" tabindex="-1">
+                        <font size="-2" color="#afafaf">help</font>
+                    </a>
                     <br>
                     <br>
                     <input type="submit" value="reply">
