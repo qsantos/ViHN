@@ -24,6 +24,21 @@ function htmlDecode(input) {
   return doc.documentElement.textContent;
 }
 
+function formatComment(comment) {
+    return comment.split('\n\n').map(paragraph => {
+        if (paragraph.startsWith('  ')) {
+            return '<code><pre>' + paragraph + '</code></pre>';
+        }
+        const htmlEscaped = paragraph.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
+        // replaces *something*, but not **something**, \*something\*, \*something**, etc.
+        const italicized = htmlEscaped.replace(/(?<!\\|\*)\*((?!\*).*?(?<!\\|\*))\*(?!\*)/sg, '<i>$1</i>');
+        // URL regex inspired from https://stackoverflow.com/a/6041965/4457767
+        // plus ugly hack at the end to avoid parsing escaped '>' as part of search parameters
+        const linkified = italicized.replace(/https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])(?!(?<=&gt);|(?<=&g)t;|(?<=&)gt;)/g, '<a href="$&">$&</a>');
+        return '<p>' + linkified + '</p>';
+    }).join('');
+}
+
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
@@ -171,6 +186,7 @@ function initQuickReplyForm() {
                         <font size="-2" color="#afafaf">help</font>
                     </a>
                     <br>
+                    <div class="preview"/></div>
                     <br>
                     <input type="submit" value="reply">
                 </form>
@@ -182,7 +198,11 @@ function initQuickReplyForm() {
     quickReplyFormGoto = container.querySelector('[name="goto"]');
     quickReplyFormHmac = container.querySelector('[name="hmac"]');
     quickReplyFormTextarea = container.getElementsByTagName('textarea')[0];
+    quickReplyFormPreview = container.getElementsByClassName('preview')[0];
     quickReplyFormSubmit = container.querySelector('[type="submit"]');
+    quickReplyFormTextarea.addEventListener('input', event => {
+        quickReplyFormPreview.innerHTML = formatComment(quickReplyFormTextarea.value);
+    });
 }
 
 let editForm = null;
@@ -207,6 +227,8 @@ function initEditForm() {
                         <font size="-2" color="#afafaf">help</font>
                     </a>
                     <br>
+                    <div class="preview"/></div>
+                    <br>
                     <input type="submit" value="update"><br><br>
                 </form>
             </td>
@@ -216,7 +238,11 @@ function initEditForm() {
     editFormId = container.querySelector('[name="id"]');
     editFormHmac = container.querySelector('[name="hmac"]');
     editFormTextarea = container.getElementsByTagName('textarea')[0];
+    editFormPreview = container.getElementsByClassName('preview')[0];
     editFormSubmit = container.querySelector('[type="submit"]');
+    editFormTextarea.addEventListener('input', event => {
+        editFormPreview.innerHTML = formatComment(editFormTextarea.value);
+    });
 }
 
 function thingEvent(event) {
@@ -396,7 +422,9 @@ function thingEvent(event) {
                     const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
                     editFormHmac.value = hmacMatch[1];
                     const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
-                    editFormTextarea.value = htmlDecode(textMatch[1]);
+                    const content = htmlDecode(textMatch[1]);
+                    editFormTextarea.value = content;
+                    editFormPreview.innerHTML = formatComment(content);
                     editFormSubmit.disabled = false;
                     editFormTextarea.disabled = false;
                     editFormTextarea.focus();

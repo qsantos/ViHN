@@ -25,11 +25,11 @@ Key bindings:
 | <kbd>G</kbd> | Go to last story, last root comment or “More” link
 | <kbd>u</kbd> | Upvote story/comment, or cancel vote
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
-| <kbd>r</kbd> | Comment on story, or reply to comment
+| <kbd>r</kbd> | Comment on story, or reply to comment (with preview)
 | <kbd>n</kbd> | Switch to Newest Items
 | <kbd>f</kbd> | Favorite/un-favorite story/comment of the current page
 | <kbd>F</kbd> | Flag/unflag story/comment of the current page
-| <kbd>e</kbd> | Edit comment
+| <kbd>e</kbd> | Edit comment (with preview)
 | <kbd>D</kbd> | Delete comment
 | <kbd>Ctrl</kbd>+<kbd>Return</kbd> | Submit current form
 
