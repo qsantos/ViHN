@@ -44,4 +44,4 @@ In the Newest Items list, the following key bindings are available:
 | <kbd>k</kbd> | Previous comment/story
 | <kbd>g</kbd> | Go to top story/comment
 | <kbd>G</kbd> | Go to last story/comment
-| <kbd>n</kbd> | Switch back to Newest Items
+| <kbd>n</kbd> | Switch back from Newest Items
