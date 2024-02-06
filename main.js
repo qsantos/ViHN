@@ -179,6 +179,7 @@ function initQuickReplyForm() {
 function thingEvent(event) {
     const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
     if (event.key == 'j') {
+        /* Next thing */
         if (currentThingIndex == undefined) {
             gotoThing(things[0]);
         } else {
@@ -189,12 +190,14 @@ function thingEvent(event) {
             gotoThing(things[nextThingIndex]);
         }
     } else if (event.key == 'k') {
+        /* Previous thing */
         let nextThingIndex = currentThingIndex - 1;
         while (nextThingIndex > 0 && nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
             nextThingIndex--;
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'J') {
+        /* Next sibling thing */
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex + 1;
         while (nextThingIndex < things.length && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) > currentDepth)) {
@@ -202,6 +205,7 @@ function thingEvent(event) {
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'K') {
+        /* Previous sibling thing */
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex - 1;
         while (nextThingIndex > 0 && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) > currentDepth)) {
@@ -209,6 +213,7 @@ function thingEvent(event) {
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'h' || event.key == 'p') {
+        /* Parent comment (h: say in context when changing page, p: directly go to comment) */
         if (!currentThing || currentThingIndex == 0) {
             // Use context link for h, and parent link for p
             const selector = event.key == 'h' ? '.navs>a+a' : '.navs>a';
@@ -225,6 +230,7 @@ function thingEvent(event) {
         }
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'm') {
+        /* Toggle comment tree */
         if (currentThing) {
             const collapseToggle = currentThing.getElementsByClassName('togg')[0];
             if (collapseToggle) {
@@ -232,6 +238,7 @@ function thingEvent(event) {
             }
         }
     } else if (event.key == 'l' || event.key == 'L') {
+        /* Open thing permalink (l: foreground, L: background) */
         if (currentThing == morelinkThing) {
             morelink.click();
         } else {
@@ -245,6 +252,7 @@ function thingEvent(event) {
             });
         }
     } else if (event.key == 'c' || event.key == 'C') {
+        /* Open comments (c: foreground, C: background) */
         if (currentThing) {
             if (currentThing == morelinkThing) {
                 morelink.click();
@@ -263,12 +271,15 @@ function thingEvent(event) {
             }
         }
     } else if (event.key == 'g') {
+        /* Go to last thing */
         gotoThing(things[0]);
     } else if (event.key == 'G') {
+        /* Go to first thing */
         const topThings = document.querySelectorAll('.athing:has([indent="0"]),#morelink');
         const thing =  topThings[topThings.length - 1]
         gotoThing(thing);
     } else if (event.key == 'u') {
+        /* Upvote */
         const upArrow = document.getElementById('up_' + currentThing.id);
         if (!upArrow) {
         } else if (upArrow.classList.contains('nosee')) {
@@ -281,6 +292,7 @@ function thingEvent(event) {
             upArrow.click();
         }
     } else if (event.key == 'd') {
+        /* Downvote */
         const downArrow = document.getElementById('down_' + currentThing.id);
         if (!downArrow) {
         } else if (downArrow.classList.contains('nosee')) {
@@ -293,6 +305,7 @@ function thingEvent(event) {
             downArrow.click();
         }
     } else if (event.key == 'r') {
+        /* Comment on story, or reply to comment */
         if (!currentThing || currentThingIndex == 0) {
             const newCommentTextarea = document.getElementsByTagName('textarea')[0];
             if (newCommentTextarea) {
@@ -365,6 +378,7 @@ function thingEvent(event) {
             });
         }
     } else if (event.key == 'n') {
+        /* Switch to Newest Items */
         focusNewest = true;
         newestList.classList.add('activenewestlist');
         gotoNewestIndex(currentNewestIndex);
@@ -377,19 +391,24 @@ function thingEvent(event) {
 
 function newestEvent(event) {
     if (event.key == 'n') {
+        /* Switch back from Newest Items */
         focusNewest = false;
         newestList.classList.remove('activenewestlist');
     } else if (event.key == 'j') {
+        /* Next newest */
         if (currentNewestIndex < newestList.childElementCount - 1) {
             gotoNewestIndex(currentNewestIndex + 1);
         }
     } else if (event.key == 'k') {
+        /* Previous newest */
         if (currentNewestIndex > 0) {
             gotoNewestIndex(currentNewestIndex - 1);
         }
     } else if (event.key == 'g') {
+        /* First newest */
         gotoNewestIndex(0);
     } else if (event.key == 'G') {
+        /* Last newest */
         gotoNewestIndex(newestList.childElementCount - 1);
     } else {
         return;
