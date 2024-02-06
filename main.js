@@ -18,6 +18,12 @@ if (morelink) {
     }
 }
 
+// from https://stackoverflow.com/a/34064434/4457767
+function htmlDecode(input) {
+  var doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
+}
+
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
@@ -389,8 +395,8 @@ function thingEvent(event) {
                 response.text().then(html => {
                     const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
                     editFormHmac.value = hmacMatch[1];
-                    const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/);
-                    editFormTextarea.value = textMatch[1];
+                    const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
+                    editFormTextarea.value = htmlDecode(textMatch[1]);
                     editFormSubmit.disabled = false;
                     editFormTextarea.disabled = false;
                     editFormTextarea.focus();
