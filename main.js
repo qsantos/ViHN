@@ -362,21 +362,21 @@ function thingEvent(event) {
     } else if (event.key == 'F') {
         /* Flag */
         const thing = currentThing || things[0];
-        const faveLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
-        if (faveLink) {
-            const url = faveLink.href;
-            faveLink.textContent = '…';
+        const flagLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
+        if (flagLink) {
+            const url = flagLink.href;
+            flagLink.textContent = '…';
             fetch(url).then(response => {
                 /* Switch URL between flag/unflag and update link label */
                 const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
                 if (searchParams.get('un')) {
                     searchParams.delete('un');
-                    faveLink.textContent = 'flag';
+                    flagLink.textContent = 'flag';
                 } else {
                     searchParams.set('un', 't');
-                    faveLink.textContent = 'unflag';
+                    flagLink.textContent = 'unflag';
                 }
-                faveLink.href = 'flag?' + searchParams.toString();
+                flagLink.href = 'flag?' + searchParams.toString();
             });
         }
     } else if (event.key == 'n') {
