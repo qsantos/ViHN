@@ -176,6 +176,40 @@ function initQuickReplyForm() {
     quickReplyFormSubmit = container.querySelector('[type="submit"]');
 }
 
+let editForm = null;
+let editFormId = null;
+let editFormHmac = null;
+let editFormTextarea = null;
+let editFormSubmit = null;
+function initEditForm() {
+    if (editForm != null) {
+        return;
+    }
+    const container = document.createElement('tbody');
+    container.innerHTML = `
+        <tr>
+            <td colspan="2"></td>
+            <td>
+                <form class="itemform" action="/xedit" method="post">
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="hmac" value="">
+                    <textarea name="text" rows="5" cols="60" wrap="virtual"></textarea>
+                    <a href="formatdoc" tabindex="-1">
+                        <font size="-2" color="#afafaf">help</font>
+                    </a>
+                    <br>
+                    <input type="submit" value="update"><br><br>
+                </form>
+            </td>
+        </tr>
+    `.trim();
+    editForm = container.firstChild;
+    editFormId = container.querySelector('[name="id"]');
+    editFormHmac = container.querySelector('[name="hmac"]');
+    editFormTextarea = container.getElementsByTagName('textarea')[0];
+    editFormSubmit = container.querySelector('[type="submit"]');
+}
+
 function thingEvent(event) {
     const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
     if (event.key == 'j') {
@@ -337,6 +371,30 @@ function thingEvent(event) {
                 currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
                 quickReplyFormTextarea.focus();
             }
+        }
+    } else if (event.key == 'e') {
+        /* Edit */
+        const editLink = currentThing.querySelector('a[href^="edit"]');
+        if (editLink) {
+            const replyDiv = currentThing.getElementsByClassName('reply')[0];
+            initEditForm();
+            editFormSubmit.disabled = true;
+            editFormTextarea.disabled = true;
+            editFormTextarea.value = 'loading…';
+            const url = 'https://news.ycombinator.com/edit?id=' + currentThing.id;
+            fetch(url).then(response => {
+                response.text().then(html => {
+                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                    editFormHmac.value = hmacMatch[1];
+                    const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/);
+                    editFormTextarea.value = textMatch[1];
+                    editFormSubmit.disabled = false;
+                    editFormTextarea.disabled = false;
+                    editFormTextarea.focus();
+                });
+            });
+            editFormId.value = currentThing.id;
+            currentThing.getElementsByTagName('tbody')[0].appendChild(editForm);
         }
     } else if (event.key == 'D') {
         /* Delete */

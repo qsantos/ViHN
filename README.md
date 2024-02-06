@@ -29,6 +29,7 @@ Key bindings:
 | <kbd>n</kbd> | Switch to Newest Items
 | <kbd>f</kbd> | Favorite/un-favorite story/comment of the current page
 | <kbd>F</kbd> | Flag/unflag story/comment of the current page
+| <kbd>e</kbd> | Edit comment
 | <kbd>D</kbd> | Delete comment
 | <kbd>Ctrl</kbd>+<kbd>Return</kbd> | Submit current form
 
