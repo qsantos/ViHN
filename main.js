@@ -326,6 +326,25 @@ function thingEvent(event) {
                 quickReplyFormTextarea.focus();
             }
         }
+    } else if (event.key == 'f') {
+        /* Favorite */
+        if (!currentThing || currentThingIndex == 0) {
+            const faveLink = things[0].nextSibling.querySelector('a[href^="fave"]');
+            const url = faveLink.href;
+            faveLink.textContent = '…';
+            fetch(url).then(response => {
+                /* Switch URL between favorite/un-favorite and update link label */
+                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                if (searchParams.get('un')) {
+                    searchParams.delete('un');
+                    faveLink.textContent = 'favorite';
+                } else {
+                    searchParams.set('un', 't');
+                    faveLink.textContent = 'un-favorite';
+                }
+                faveLink.href = 'fave?' + searchParams.toString();
+            });
+        }
     } else if (event.key == 'n') {
         focusNewest = true;
         newestList.classList.add('activenewestlist');

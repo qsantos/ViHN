@@ -27,6 +27,7 @@ Key bindings:
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
 | <kbd>r</kbd> | Comment on story, or reply to comment
 | <kbd>n</kbd> | Switch to Newest Items
+| <kbd>f</kbd> | Favorite/un-favorite story/comment of the current page
 | <kbd>Ctrl</kbd>+<kbd>Return</kbd> | Submit current form
 
 **Note:**
