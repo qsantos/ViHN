@@ -341,8 +341,9 @@ function thingEvent(event) {
         }
     } else if (event.key == 'f') {
         /* Favorite */
-        if (!currentThing || currentThingIndex == 0) {
-            const faveLink = things[0].nextSibling.querySelector('a[href^="fave"]');
+        const thing = currentThing || things[0];
+        const faveLink = thing.nextSibling?.querySelector('a[href^="fave"]');
+        if (faveLink) {
             const url = faveLink.href;
             faveLink.textContent = '…';
             fetch(url).then(response => {
@@ -360,8 +361,9 @@ function thingEvent(event) {
         }
     } else if (event.key == 'F') {
         /* Flag */
-        if (!currentThing || currentThingIndex == 0) {
-            const faveLink = things[0].nextSibling.querySelector('a[href^="flag"]');
+        const thing = currentThing || things[0];
+        const faveLink = thing.nextSibling?.querySelector('a[href^="flag"]');
+        if (faveLink) {
             const url = faveLink.href;
             faveLink.textContent = '…';
             fetch(url).then(response => {
