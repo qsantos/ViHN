@@ -394,7 +394,8 @@ function thingEvent(event) {
                 });
             });
             editFormId.value = currentThing.id;
-            currentThing.getElementsByTagName('tbody')[0].appendChild(editForm);
+            const tbody = currentThing.getElementsByTagName('tbody')[0] || currentThing.parentElement;
+            tbody.appendChild(editForm);
         }
     } else if (event.key == 'D') {
         /* Delete */
