@@ -345,6 +345,25 @@ function thingEvent(event) {
                 faveLink.href = 'fave?' + searchParams.toString();
             });
         }
+    } else if (event.key == 'F') {
+        /* Flag */
+        if (!currentThing || currentThingIndex == 0) {
+            const faveLink = things[0].nextSibling.querySelector('a[href^="flag"]');
+            const url = faveLink.href;
+            faveLink.textContent = '…';
+            fetch(url).then(response => {
+                /* Switch URL between flag/unflag and update link label */
+                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                if (searchParams.get('un')) {
+                    searchParams.delete('un');
+                    faveLink.textContent = 'flag';
+                } else {
+                    searchParams.set('un', 't');
+                    faveLink.textContent = 'unflag';
+                }
+                faveLink.href = 'flag?' + searchParams.toString();
+            });
+        }
     } else if (event.key == 'n') {
         focusNewest = true;
         newestList.classList.add('activenewestlist');
