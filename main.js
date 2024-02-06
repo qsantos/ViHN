@@ -293,9 +293,12 @@ function thingEvent(event) {
             downArrow.click();
         }
     } else if (event.key == 'r') {
-        if (currentThingIndex == 0) {
-            document.getElementsByTagName('textarea')[0].focus();
-        } else if (currentThing) {
+        if (!currentThing || currentThingIndex == 0) {
+            const newCommentTextarea = document.getElementsByTagName('textarea')[0];
+            if (newCommentTextarea) {
+                newCommentTextarea.focus();
+            }
+        } else {
             const replyDiv = currentThing.getElementsByClassName('reply')[0];
             // <div class="reply"><p><font><u><a>reply
             // or
