@@ -322,6 +322,7 @@ function thingEvent(event) {
                 const loc = document.location;
                 const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
                 // NOTE: fetch only accepts absolute URLs
+                // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
                 const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
                 fetch(url).then(response => {
                     response.text().then(html => {
