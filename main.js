@@ -342,7 +342,7 @@ function thingEvent(event) {
     } else if (event.key == 'f') {
         /* Favorite */
         const thing = currentThing || things[0];
-        const faveLink = thing.nextSibling?.querySelector('a[href^="fave"]');
+        const faveLink = thing.querySelector('a[href^="fave"]') || thing.nextSibling?.querySelector?.('a[href^="fave"]');
         if (faveLink) {
             const url = faveLink.href;
             faveLink.textContent = '…';
@@ -362,7 +362,7 @@ function thingEvent(event) {
     } else if (event.key == 'F') {
         /* Flag */
         const thing = currentThing || things[0];
-        const faveLink = thing.nextSibling?.querySelector('a[href^="flag"]');
+        const faveLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
         if (faveLink) {
             const url = faveLink.href;
             faveLink.textContent = '…';
