@@ -39,6 +39,51 @@ function formatComment(comment) {
     }).join('');
 }
 
+// We assume the queue is always pretty short, so using an Array should be okay
+let requestQueue = [];
+let lastRequestTime = null;
+let requestTimer = null;
+function hnfetch(url, options) {
+    // Note: There are no race conditions because this is JavaScript
+    const now = new Date();
+    // We always make a new Promise, so that we can delay the request if we get 503
+    const promise = new Promise((resolve, reject) => {
+        requestQueue.push([url, options, resolve, reject]);
+    });
+    // Start a timer to handle the next request if there is not one already
+    if (!requestTimer) {
+        const remaining = lastRequestTime ? Math.max(lastRequestTime - now + 2000, 0) : 0;
+        requestTimer = setTimeout(handleRequest, remaining);
+    }
+    return promise;
+}
+function handleRequest() {
+    const request = requestQueue.shift();
+    if (!request) {
+        console.warn('No reqest to handle!');
+        return;
+    }
+    const [url, options, resolve, reject] = request;
+    lastRequestTime = new Date();
+    fetch(url, options).then(response => {
+        if (response.status == 503) {
+            // Still too fast, try again
+            requestQueue.unshift([url, options, resolve, reject]);
+            if (!requestTimer) {
+                requestTimer = setTimeout(handleRequest, 2000);
+            }
+        } else {
+            resolve(response);
+        }
+    }).catch(reject);
+    // Program handling the next request, if any
+    if (requestQueue.length > 0) {
+        requestTimer = setTimeout(handleRequest, 2000);
+    } else {
+        requestTimer = null;
+    }
+}
+
 const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
@@ -396,7 +441,7 @@ function thingEvent(event) {
                 // NOTE: fetch only accepts absolute URLs
                 // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
                 const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-                fetch(url).then(response => {
+                hnfetch(url).then(response => {
                     if (response.status != 200) {
                         quickReplyFormError.innerText = 'Unexpected error (' + response.status + ')';
                         return;
@@ -437,7 +482,7 @@ function thingEvent(event) {
             editFormTextarea.disabled = true;
             editFormTextarea.value = 'loading…';
             const url = 'https://news.ycombinator.com/edit?id=' + currentThing.id;
-            fetch(url).then(response => {
+            hnfetch(url).then(response => {
                 if (response.status != 200) {
                     editFormTextarea.value = 'Unexpected error (' + response.status + ')';
                     return;
@@ -476,7 +521,7 @@ function thingEvent(event) {
             // NOTE: fetch only accepts absolute URLs
             // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
             const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-            fetch(url).then(response => {
+            hnfetch(url).then(response => {
                 if (response.status !== 200) {
                     deleteLink.textContent = 'delete';
                     alert('Unexpected error (' + response.status + ')');
@@ -490,7 +535,7 @@ function thingEvent(event) {
                         formData.append('goto', goto);
                         formData.append('hmac', hmacMatch[1]);
                         formData.append('d', 'Yes');
-                        fetch('https://news.ycombinator.com/xdelete', {
+                        hnfetch('https://news.ycombinator.com/xdelete', {
                             method: 'POST',
                             body: formData,
                             headers: {
@@ -533,7 +578,7 @@ function thingEvent(event) {
             const url = faveLink.href;
             const originalLinkLabel = faveLink.textContent;
             faveLink.textContent = '…';
-            fetch(url).then(response => {
+            hnfetch(url).then(response => {
                 if (response.status !== 200) {
                     faveLink.textContent = originalLinkLabel;
                     alert('Unexpected error (' + response.status + ')');
@@ -572,7 +617,7 @@ function thingEvent(event) {
             const url = flagLink.href;
             const originalLinkLabel = flagLink.textContent;
             flagLink.textContent = '…';
-            fetch(url).then(response => {
+            hnfetch(url).then(response => {
                 if (response.status !== 200) {
                     flagLink.textContent = originalLinkLabel;
                     alert('Unexpected error (' + response.status + ')');
