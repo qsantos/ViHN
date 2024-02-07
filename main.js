@@ -438,17 +438,29 @@ function thingEvent(event) {
             editFormTextarea.value = 'loading…';
             const url = 'https://news.ycombinator.com/edit?id=' + currentThing.id;
             fetch(url).then(response => {
+                if (response.status != 200) {
+                    editFormTextarea.value = 'Unexpected error (' + response.status + ')';
+                    return;
+                }
                 response.text().then(html => {
                     const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    editFormHmac.value = hmacMatch[1];
                     const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
-                    const content = htmlDecode(textMatch[1]);
-                    editFormTextarea.value = content;
-                    editFormPreview.innerHTML = formatComment(content);
-                    editFormSubmit.disabled = false;
-                    editFormTextarea.disabled = false;
-                    editFormTextarea.focus();
+                    if (hmacMatch && textMatch) {
+                        const content = htmlDecode(textMatch[1]);
+                        editFormHmac.value = hmacMatch[1];
+                        editFormTextarea.value = content;
+                        editFormPreview.innerHTML = formatComment(content);
+                        editFormSubmit.disabled = false;
+                        editFormTextarea.disabled = false;
+                        editFormTextarea.focus();
+                    } else {
+                        editFormTextarea.value = 'You cannot edit this';
+                    }
+                }).catch(() => {
+                    editFormTextarea.value = 'Failed to read response; are you connected to the Internet?';
                 });
+            }).catch(() => {
+                editFormTextarea.value = 'Connection failure; are you connected to the Internet?';
             });
             editFormId.value = currentThing.id;
             const tbody = currentThing.getElementsByTagName('tbody')[0] || currentThing.parentElement;
