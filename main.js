@@ -381,11 +381,11 @@ function thingEvent(event) {
                 newCommentTextarea.focus();
             }
         } else {
+            // can comment:    <div class="reply"><p><font><u><a>reply
+            // cannot comment: <div class="reply"><p><font>
             const replyDiv = currentThing.getElementsByClassName('reply')[0];
-            // <div class="reply"><p><font><u><a>reply
-            // or
-            // <div class="reply"><p><font>
-            if (replyDiv?.firstElementChild?.firstElementChild?.firstElementChild) {
+            const canReply = replyDiv?.firstElementChild?.firstElementChild?.firstElementChild !== null;
+            if (canReply) {
                 initQuickReplyForm();
                 quickReplyFormSubmit.disabled = true;
                 const loc = document.location;
