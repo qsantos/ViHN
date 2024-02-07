@@ -524,18 +524,37 @@ function thingEvent(event) {
         const faveLink = thing.querySelector('a[href^="fave"]') || thing.nextSibling?.querySelector?.('a[href^="fave"]');
         if (faveLink) {
             const url = faveLink.href;
+            const originalLinkLabel = faveLink.textContent;
             faveLink.textContent = '…';
             fetch(url).then(response => {
-                /* Switch URL between favorite/un-favorite and update link label */
-                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                if (searchParams.get('un')) {
-                    searchParams.delete('un');
-                    faveLink.textContent = 'favorite';
-                } else {
-                    searchParams.set('un', 't');
-                    faveLink.textContent = 'un-favorite';
+                if (response.status !== 200) {
+                    faveLink.textContent = originalLinkLabel;
+                    alert('Unexpected error (' + response.status + ')');
+                    return;
                 }
-                faveLink.href = 'fave?' + searchParams.toString();
+                response.text().then(html => {
+                    if (html.match('Please log in.<br>')) {
+                        faveLink.textContent = originalLinkLabel;
+                        alert('You are not connected');
+                    } else {
+                        /* Switch URL between favorite/un-favorite and update link label */
+                        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                        if (searchParams.get('un')) {
+                            searchParams.delete('un');
+                            faveLink.textContent = 'favorite';
+                        } else {
+                            searchParams.set('un', 't');
+                            faveLink.textContent = 'un-favorite';
+                        }
+                        faveLink.href = 'fave?' + searchParams.toString();
+                    }
+                }).catch(() => {
+                    faveLink.textContent = originalLinkLabel;
+                    alert('Failed to read response; are you connected to the Internet?');
+                });
+            }).catch(() => {
+                faveLink.textContent = originalLinkLabel;
+                alert('Connection failure; are you connected to the Internet?');
             });
         }
     } else if (event.key == 'F') {
@@ -544,18 +563,37 @@ function thingEvent(event) {
         const flagLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
         if (flagLink) {
             const url = flagLink.href;
+            const originalLinkLabel = flagLink.textContent;
             flagLink.textContent = '…';
             fetch(url).then(response => {
-                /* Switch URL between flag/unflag and update link label */
-                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                if (searchParams.get('un')) {
-                    searchParams.delete('un');
-                    flagLink.textContent = 'flag';
-                } else {
-                    searchParams.set('un', 't');
-                    flagLink.textContent = 'unflag';
+                if (response.status !== 200) {
+                    flagLink.textContent = originalLinkLabel;
+                    alert('Unexpected error (' + response.status + ')');
+                    return;
                 }
-                flagLink.href = 'flag?' + searchParams.toString();
+                response.text().then(html => {
+                    if (html.match('Please log in.<br>')) {
+                        flagLink.textContent = originalLinkLabel;
+                        alert('You are not connected');
+                    } else {
+                        /* Switch URL between flag/unflag and update link label */
+                        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                        if (searchParams.get('un')) {
+                            searchParams.delete('un');
+                            flagLink.textContent = 'flag';
+                        } else {
+                            searchParams.set('un', 't');
+                            flagLink.textContent = 'unflag';
+                        }
+                        flagLink.href = 'flag?' + searchParams.toString();
+                    }
+                }).catch(() => {
+                    flagLink.textContent = originalLinkLabel;
+                    alert('Failed to read response; are you connected to the Internet?');
+                });
+            }).catch(() => {
+                flagLink.textContent = originalLinkLabel;
+                alert('Connection failure; are you connected to the Internet?');
             });
         }
     } else if (event.key == 'n') {
