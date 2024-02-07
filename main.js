@@ -469,7 +469,7 @@ function thingEvent(event) {
     } else if (event.key == 'D') {
         /* Delete */
         const deleteLink = currentThing.querySelector('a[href^="delete-confirm"]');
-        if (deleteLink && confirm('Are you sure you want to delete this comment?')) {
+        if (deleteLink && deleteLink.textContent != '…' && confirm('Are you sure you want to delete this comment?')) {
             deleteLink.textContent = '…';
             const loc = document.location;
             const goto = loc.pathname.substr(1) + loc.search;
@@ -529,7 +529,7 @@ function thingEvent(event) {
         /* Favorite */
         const thing = currentThing || things[0];
         const faveLink = thing.querySelector('a[href^="fave"]') || thing.nextSibling?.querySelector?.('a[href^="fave"]');
-        if (faveLink) {
+        if (faveLink && faveLink.textContent != '…') {
             const url = faveLink.href;
             const originalLinkLabel = faveLink.textContent;
             faveLink.textContent = '…';
@@ -568,7 +568,7 @@ function thingEvent(event) {
         /* Flag */
         const thing = currentThing || things[0];
         const flagLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
-        if (flagLink) {
+        if (flagLink && flagLink.textContent != '…') {
             const url = flagLink.href;
             const originalLinkLabel = flagLink.textContent;
             flagLink.textContent = '…';
