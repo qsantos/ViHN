@@ -478,6 +478,7 @@ function thingEvent(event) {
             const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
             fetch(url).then(response => {
                 if (response.status !== 200) {
+                    deleteLink.textContent = 'delete';
                     alert('Unexpected error (' + response.status + ')');
                     return;
                 }
@@ -500,21 +501,27 @@ function thingEvent(event) {
                                 document.location = response.url;
                             } else {
                                 console.warn(response);
+                                deleteLink.textContent = 'delete';
                                 alert('Unexpected response while deleting comment');
                             }
                         }).catch(() => {
+                            deleteLink.textContent = 'delete';
                             alert('Second connection failure; are you connected to the Internet?');
                         });
                     } else if (html == "You can't delete that.")  {
+                        deleteLink.textContent = 'delete';
                         alert('You cannot delete this comment');
                     } else {
                         console.warn(html);
+                        deleteLink.textContent = 'delete';
                         alert('Unexpected error while deleting comment');
                     }
                 }).catch(() => {
+                    deleteLink.textContent = 'delete';
                     alert('Failed to read response; are you connected to the Internet?');
                 });
             }).catch(() => {
+                deleteLink.textContent = 'delete';
                 alert('Connection failure; are you connected to the Internet?');
             });
         }
