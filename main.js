@@ -189,6 +189,7 @@ function initQuickReplyForm() {
                     <div class="preview"/></div>
                     <br>
                     <input type="submit" value="reply">
+                    <span class="error"></span>
                 </form>
             </td>
         </tr>
@@ -200,6 +201,7 @@ function initQuickReplyForm() {
     quickReplyFormTextarea = container.getElementsByTagName('textarea')[0];
     quickReplyFormPreview = container.getElementsByClassName('preview')[0];
     quickReplyFormSubmit = container.querySelector('[type="submit"]');
+    quickReplyFormError = container.getElementsByClassName('error')[0];
     quickReplyFormTextarea.addEventListener('input', event => {
         quickReplyFormPreview.innerHTML = formatComment(quickReplyFormTextarea.value);
     });
@@ -388,19 +390,37 @@ function thingEvent(event) {
             if (canReply) {
                 initQuickReplyForm();
                 quickReplyFormSubmit.disabled = true;
+                quickReplyFormError.innerText = '';
                 const loc = document.location;
                 const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
                 // NOTE: fetch only accepts absolute URLs
                 // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
                 const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
                 fetch(url).then(response => {
+                    if (response.status != 200) {
+                        quickReplyFormError.innerText = 'Unexpected error (' + response.status + ')';
+                        return;
+                    }
                     response.text().then(html => {
                         const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-                        quickReplyFormParent.value = parentMatch[1];
                         const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                        quickReplyFormHmac.value = hmacMatch[1];
-                        quickReplyFormSubmit.disabled = false;
+                        if (parentMatch && hmacMatch) {
+                            quickReplyFormParent.value = parentMatch[1];
+                            quickReplyFormHmac.value = hmacMatch[1];
+                            quickReplyFormSubmit.disabled = false;
+                        } else if (html.match('You have to be logged in to reply.<br>')) {
+                            quickReplyFormError.innerText = 'You need to be logged in to reply';
+                        } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
+                            quickReplyFormError.innerText = 'Cannot reply to this anymore (thread locked or comment deleted)';
+                        } else {
+                            console.warn(html);
+                            quickReplyFormError.innerText = 'Unexpected error';
+                        }
+                    }).catch(() => {
+                        quickReplyFormError.innerText = 'Failed to read response; are you connected to the Internet?';
                     });
+                }).catch(() => {
+                    quickReplyFormError.innerText = 'Connection failure; are you connected to the Internet?';
                 });
                 quickReplyFormGoto.value = goto;
                 currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
