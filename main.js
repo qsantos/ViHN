@@ -477,25 +477,45 @@ function thingEvent(event) {
             // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
             const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
             fetch(url).then(response => {
+                if (response.status !== 200) {
+                    alert('Unexpected error (' + response.status + ')');
+                    return;
+                }
                 response.text().then(html => {
-                    const formData = new URLSearchParams();
-                    formData.append('id', currentThing.id);
-                    formData.append('goto', goto);
                     const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    formData.append('hmac', hmacMatch[1]);
-                    formData.append('d', 'Yes');
-                    fetch('https://news.ycombinator.com/xdelete', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    }).then(response => {
-                        if (response.url) {
-                            document.location = response.url;
-                        }
-                    });
+                    if (hmacMatch) {
+                        const formData = new URLSearchParams();
+                        formData.append('id', currentThing.id);
+                        formData.append('goto', goto);
+                        formData.append('hmac', hmacMatch[1]);
+                        formData.append('d', 'Yes');
+                        fetch('https://news.ycombinator.com/xdelete', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        }).then(response => {
+                            if (response.url) {
+                                document.location = response.url;
+                            } else {
+                                console.warn(response);
+                                alert('Unexpected response while deleting comment');
+                            }
+                        }).catch(() => {
+                            alert('Second connection failure; are you connected to the Internet?');
+                        });
+                    } else if (html == "You can't delete that.")  {
+                        alert('You cannot delete this comment');
+                    } else {
+                        console.warn(html);
+                        alert('Unexpected error while deleting comment');
+                    }
+                }).catch(() => {
+                    alert('Failed to read response; are you connected to the Internet?');
                 });
+            }).catch(() => {
+                alert('Connection failure; are you connected to the Internet?');
             });
         }
     } else if (event.key == 'f') {
