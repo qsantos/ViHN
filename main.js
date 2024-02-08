@@ -383,7 +383,7 @@ function thingEvent(event) {
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'H') {
         /* Focus on thing at top of screen (high) */
-        let el = document.elementFromPoint(visualViewport.width / 2, 0);
+        let el = document.elementFromPoint(visualViewport.width / 5, 1);
         do {
             if (el.classList.contains('athing')) {
                 gotoThing(el);
@@ -392,7 +392,7 @@ function thingEvent(event) {
         } while (el = el.parentElement);
     } else if (event.key == 'M') {
         /* Focus on thing in the **middle** of the screen */
-        let el = document.elementFromPoint(visualViewport.width / 2, visualViewport.height  / 2);
+        let el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height  / 2);
         do {
             if (el.classList.contains('athing')) {
                 gotoThing(el);
@@ -401,7 +401,7 @@ function thingEvent(event) {
         } while (el = el.parentElement);
     } else if (event.key == 'L') {
         /* Focus on thing at bottom of screen (low) */
-        let el = document.elementFromPoint(visualViewport.width / 2, visualViewport.height - 1);
+        let el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height - 2);
         do {
             if (el.classList.contains('athing')) {
                 gotoThing(el);
