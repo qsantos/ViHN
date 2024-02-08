@@ -429,7 +429,7 @@ function thingEvent(event) {
         if (currentThing) {
             toggleCollapse(currentThing);
         }
-    } else if (event.key == 'l' || event.key == 'L') {
+    } else if (event.key == 'l' || event.key == 'o') {
         /* Open thing permalink (l: foreground, L: background) */
         if (currentThing == morelinkThing) {
             morelink.click();

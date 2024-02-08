@@ -24,7 +24,7 @@ In addition, the quick-reply and quick-edit forms let you see a preview of the c
 | <kbd>h</kbd> | Parent comment (stay in context when changing page)
 | <kbd>p</kbd> | Parent comment (always go directly to parent)
 | <kbd>l</kbd> | Open story link/comment permalink
-| <kbd>L</kbd> | Open story link/comment permalink in background
+| <kbd>b</kbd> | Open story link/comment permalink in **b**ackground
 | <kbd>c</kbd> | Open comments
 | <kbd>C</kbd> | Open comments in background
 | <kbd>m</kbd> | Toggle comment tree
