@@ -27,10 +27,10 @@ function htmlDecode(input) {
 
 function formatComment(comment) {
     return comment.split('\n\n').map(paragraph => {
-        if (paragraph.startsWith('  ')) {
-            return '<code><pre>' + paragraph + '</code></pre>';
-        }
         const htmlEscaped = paragraph.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
+        if (paragraph.startsWith('  ')) {
+            return '<code><pre>' + htmlEscaped + '</code></pre>';
+        }
         // replaces *something*, but not **something**, \*something\*, \*something**, etc.
         const italicized = htmlEscaped.replace(/(?<!\\|\*)\*((?!\*).*?(?<!\\|\*))\*(?!\*)/sg, '<i>$1</i>');
         // URL regex inspired from https://stackoverflow.com/a/6041965/4457767
