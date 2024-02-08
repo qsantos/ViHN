@@ -6,7 +6,14 @@ It's fast. If you have to wait a perceptible amount of time, that's a bug.
 
 ## Features
 
-Key bindings:
+Use the key bindings similar to Vi to navigate Hacker News stories and comments.
+It should work on story listings (front page, /new, /newest, /best, user submissions, etc.), comment threads, and comment listings (user comments, etc.).
+
+Also, you can quickly find new comments by hitting “n” to browse comments in inverse chronological order.
+
+In addition, the quick-reply and quick-edit forms let you see a preview of the comment you are writing.
+
+## Key bindings
 
 | Key          | Action
 | ------------ | ------
@@ -39,7 +46,7 @@ Key bindings:
 **Note:**
 When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.
 
-### Newest Items
+## Key Bindings in Newest Items
 
 In the Newest Items list, the following key bindings are available:
 
