@@ -247,11 +247,11 @@ function gotoThing(thing) {
         // user navigates through many things in a short amount of time
         clearTimeout(historyUpdateTimer);
         historyUpdateTimer = setTimeout(() => {
-            document.location.replace('#' + thing.id);
+            history.replaceState(null, '', '#' + thing.id);
             historyUpdateTimer = null;
         }, 50);
         // Immediately makes the change visible
-        thing.scrollIntoView(true);
+        thing.scrollIntoView({block: 'nearest'});
         if (currentThing) {
             currentThing.classList.remove('activething');
         }
