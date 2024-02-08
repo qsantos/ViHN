@@ -162,10 +162,56 @@ function gotoThingFromIndex(index) {
     gotoThing(thing);
 }
 
+// From Hacker News's JavaScript
+function nextcomm(el) {
+  while (el = el.nextElementSibling) {
+    if (el.classList.contains('comtr')) return el;
+  }
+}
+
+function setClassIf(el, className, condition) {
+    if (condition) {
+        el.classList.add(className);
+    } else {
+        el.classList.remove(className);
+    }
+}
+
+// Basically from Hacker News's JavaScript
 function toggleCollapse(thing) {
     const collapseToggle = thing.getElementsByClassName('togg')[0];
-    if (collapseToggle) {
-        collapseToggle.click();
+    let coll = !thing.classList.contains('coll');
+
+    // This is non critical, so no point in blocking the collapsing on getting
+    // a result. We just do best effort. Do use hnfetch() to handle the user
+    // {,un}collapsing many things in a row.
+    hnfetch('https://news.ycombinator.com/collapse?id=' + thing.id + (coll ? '' : '&un=true'));
+
+    // The thing itself
+    setClassIf(thing, 'coll', coll);
+    setClassIf(thing.getElementsByClassName('votelinks')[0], 'nosee', coll);
+    setClassIf(thing.getElementsByClassName('comment')[0], 'noshow', coll);
+    const el = thing.getElementsByClassName('togg')[0];
+    el.textContent = coll ? ('[' + el.getAttribute('n') + ' more]') : '[–]';
+
+    // Descendants
+    let show = !coll;
+    const n0 = thingDepth(thing)
+    const n = thingDepth(nextcomm(thing))
+    let coll2 = false;
+    if (n > n0) {
+        while (thing = nextcomm(thing)) {
+            if (thingDepth(thing) <= n0) {
+                break;
+            } else if (!show) {
+                thing.classList.add('noshow');
+            } else if (thingDepth(thing) == n) {
+                coll2 = thing.classList.contains('coll');
+                thing.classList.remove('noshow');
+            } else if (!coll2) {
+                thing.classList.remove('noshow');
+            }
+        }
     }
 }
 
