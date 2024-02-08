@@ -1,3 +1,4 @@
+const loggedIn = document.getElementById('logout') != null;
 const things = Array.from(document.getElementsByClassName('athing'));
 
 let currentThing = document.querySelector('.athing:target');
@@ -182,10 +183,12 @@ function toggleCollapse(thing) {
     const collapseToggle = thing.getElementsByClassName('togg')[0];
     let coll = !thing.classList.contains('coll');
 
-    // This is non critical, so no point in blocking the collapsing on getting
-    // a result. We just do best effort. Do use hnfetch() to handle the user
-    // {,un}collapsing many things in a row.
-    hnfetch('https://news.ycombinator.com/collapse?id=' + thing.id + (coll ? '' : '&un=true'));
+    if (loggedIn) {
+        // This is non critical, so no point in blocking the collapsing on getting
+        // a result. We just do best effort. Do use hnfetch() to handle the user
+        // {,un}collapsing many things in a row.
+        hnfetch('https://news.ycombinator.com/collapse?id=' + thing.id + (coll ? '' : '&un=true'));
+    }
 
     // The thing itself
     setClassIf(thing, 'coll', coll);
