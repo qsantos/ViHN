@@ -23,6 +23,9 @@ Key bindings:
 | <kbd>m</kbd> | Toggle comment tree
 | <kbd>g</kbd> | Go to first story/comment
 | <kbd>G</kbd> | Go to last story, last root comment or “More” link
+| <kbd>H</kbd> | Focus on story/comment at the top of the screen (**h**igh)
+| <kbd>M</kbd> | Focus on story/comment in the **m**iddle of the screen
+| <kbd>L</kbd> | Focus on story/comment at the bottom of the screen (**l**ow)
 | <kbd>u</kbd> | Upvote story/comment, or cancel vote
 | <kbd>d</kbd> | Downvote story/comment, or cancel vote
 | <kbd>r</kbd> | Comment on story, or reply to comment (with preview)
