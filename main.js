@@ -157,11 +157,16 @@ function gotoThingFromIndex(index) {
         }
     }
     // Uncollapse ancestors in descending order
-    for (const ancestor of ancestorsToUncollapse.reverse()) {
-        ancestor.getElementsByClassName('togg')[0].click();
-    }
+    ancestorsToUncollapse.reverse().forEach(toggleCollapse);
     // The thing is now visible, we can navigate to it
     gotoThing(thing);
+}
+
+function toggleCollapse(thing) {
+    const collapseToggle = thing.getElementsByClassName('togg')[0];
+    if (collapseToggle) {
+        collapseToggle.click();
+    }
 }
 
 const op = document.querySelector('.fatitem .hnuser');
@@ -348,10 +353,7 @@ function thingEvent(event) {
     } else if (event.key == 'm') {
         /* Toggle comment tree */
         if (currentThing) {
-            const collapseToggle = currentThing.getElementsByClassName('togg')[0];
-            if (collapseToggle) {
-                collapseToggle.click();
-            }
+            toggleCollapse(currentThing);
         }
     } else if (event.key == 'l' || event.key == 'L') {
         /* Open thing permalink (l: foreground, L: background) */
