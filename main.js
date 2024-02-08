@@ -137,8 +137,8 @@ function gotoThingFromIndex(index) {
     }
     const thing = things[index];
     // Uncollapse all the ancestors to make the thing visible
-    let currentDepth = thingDepth(thing);
-    let otherIndex = index - 1;
+    let currentDepth = thingDepth(thing) + 1; // hack to include the thing itself
+    let otherIndex = index;
     // We need to uncollapse ancestors in descending order to avoid showing children of other collapsed things
     const ancestorsToUncollapse = [];
     while (currentDepth > 0) {
