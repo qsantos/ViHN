@@ -260,6 +260,20 @@ function gotoThing(thing) {
     }
 }
 
+function gotoThingByDescendant(el) {
+    do {
+        if (el.classList.contains('athing')) {
+            // Story or comment
+            gotoThing(el);
+            break;
+        } else if (el.classList.contains('subtext')) {
+            // Metadata on story
+            gotoThing(el.parentElement.previousElementSibling);
+            break;
+        }
+    } while (el = el.parentElement);
+}
+
 let quickReplyForm = null;
 let quickReplyFormParent = null;
 let quickReplyFormGoto = null;
@@ -383,31 +397,16 @@ function thingEvent(event) {
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'H') {
         /* Focus on thing at top of screen (high) */
-        let el = document.elementFromPoint(visualViewport.width / 5, 1);
-        do {
-            if (el.classList.contains('athing')) {
-                gotoThing(el);
-                break;
-            }
-        } while (el = el.parentElement);
+        const el = document.elementFromPoint(visualViewport.width / 5, 1);
+        gotoThingByDescendant(el);
     } else if (event.key == 'M') {
         /* Focus on thing in the **middle** of the screen */
-        let el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height  / 2);
-        do {
-            if (el.classList.contains('athing')) {
-                gotoThing(el);
-                break;
-            }
-        } while (el = el.parentElement);
+        const el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height / 2);
+        gotoThingByDescendant(el);
     } else if (event.key == 'L') {
         /* Focus on thing at bottom of screen (low) */
-        let el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height - 2);
-        do {
-            if (el.classList.contains('athing')) {
-                gotoThing(el);
-                break;
-            }
-        } while (el = el.parentElement);
+        const el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height - 2);
+        gotoThingByDescendant(el);
     } else if (event.key == 'h' || event.key == 'p') {
         /* Parent comment (h: say in context when changing page, p: directly go to comment) */
         if (!currentThing || currentThingIndex == 0) {
