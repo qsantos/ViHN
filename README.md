@@ -42,6 +42,7 @@ In the Newest Items list, the following key bindings are available:
 
 | Key          | Action
 | ------------ | ------
+| <kbd>l</kbd> | Show selected comment/story
 | <kbd>j</kbd> | Next comment/story
 | <kbd>k</kbd> | Previous comment/story
 | <kbd>g</kbd> | Go to top story/comment

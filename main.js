@@ -124,7 +124,6 @@ function gotoNewestIndex(index) {
     newestList.children[currentNewestIndex].classList.remove('activenewest');
     currentNewestIndex = index;
     newestList.children[currentNewestIndex].classList.add('activenewest');
-    gotoThingFromNewestIndex(currentNewestIndex);
 }
 
 function gotoThingFromNewestIndex(newestIndex) {
@@ -732,6 +731,8 @@ function newestEvent(event) {
     } else if (event.key == 'G') {
         /* Last newest */
         gotoNewestIndex(newestList.childElementCount - 1);
+    } else if (event.key == 'l' ) {
+        gotoThingFromNewestIndex(currentNewestIndex);
     } else {
         return;
     }
