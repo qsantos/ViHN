@@ -121,10 +121,10 @@ let focusNewest = false;
 let currentNewestIndex = 0;
 
 function gotoNewestIndex(index) {
-    newestList.children[currentNewestIndex].classList.remove('activenewest');
+    newestList.children[currentNewestIndex].classList.remove('active-newest');
     currentNewestIndex = index;
     const newest = newestList.children[currentNewestIndex];
-    newest.classList.add('activenewest');
+    newest.classList.add('active-newest');
     newest.scrollIntoView({block: 'nearest'});
 }
 

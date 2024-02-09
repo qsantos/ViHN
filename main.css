@@ -47,7 +47,7 @@
 #newest-items li {
     padding:0;
 }
-.activenewest {
+.active-newest {
     position: relative;
     color:#ff6600;
 }
@@ -70,7 +70,7 @@
     #newest-items.active-newest-items {
         border-left:2px solid #ff6600;
     }
-    .activenewest::after {
+    .active-newest::after {
         content: " ";
         display: block;
         background-color: #ff6600;
@@ -96,7 +96,7 @@
     #newest-items li {
         border-left: 2px solid white;
     }
-    #newest-items li.activenewest {
+    #newest-items li.active-newest {
         border-left: 2px solid #ff6600;
     }
 }
