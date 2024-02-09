@@ -89,6 +89,7 @@ const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
 // Newest Items
+const newestItems = document.createElement('DIV');
 const datedIndexes = Array.from(document.getElementsByClassName('age'))
     .map((age , index)=> [age.title, index])
     // Chrome is very slow without an explicit comparison function
@@ -96,10 +97,9 @@ const datedIndexes = Array.from(document.getElementsByClassName('age'))
     .reverse();
 {
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
-    const div = document.createElement('DIV');
-    div.id = 'newest-items';
+    newestItems.id = 'newest-items';
     // Setting innerHTML is still faster than doing DOM
-    div.innerHTML = (
+    newestItems.innerHTML = (
         '<h3><u>N</u>ewest Items</u></h3>'
         + (hasOtherPages ? '<p>(items on this page)</p>' : '')
         + '<ul>'
@@ -111,12 +111,12 @@ const datedIndexes = Array.from(document.getElementsByClassName('age'))
     if (previousLatestComment) {
         previousLatestComment.remove();
     }
-    div.addEventListener('click', event => {
+    newestItems.addEventListener('click', event => {
         gotoThingFromIndex(event.target.dataset.index);
     });
-    document.body.appendChild(div);
+    document.body.appendChild(newestItems);
 }
-const newestList = document.querySelector('#newest-items ul')
+const newestList = newestItems.getElementsByTagName('ul')[0];
 let focusNewest = false;
 let currentNewestIndex = 0;
 
@@ -729,7 +729,7 @@ function thingEvent(event) {
     } else if (event.key == 'n') {
         /* Switch to Newest Items */
         focusNewest = true;
-        newestList.classList.add('activenewestlist');
+        newestItems.classList.add('active-newest-items');
         gotoNewestIndex(currentNewestIndex);
     } else {
         return;
@@ -742,7 +742,7 @@ function newestEvent(event) {
     if (event.key == 'n') {
         /* Switch back from Newest Items */
         focusNewest = false;
-        newestList.classList.remove('activenewestlist');
+        newestItems.classList.remove('active-newest-items');
     } else if (event.key == 'j') {
         /* Next newest */
         if (currentNewestIndex < newestList.childElementCount - 1) {

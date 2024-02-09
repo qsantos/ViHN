@@ -51,7 +51,7 @@
     position: relative;
     color:#ff6600;
 }
-#newest-items:has(.activenewestlist) h3 {
+#newest-items.active-newest-items h3 {
     color: #ff6600;
 }
 @media (min-width:1600px) {
@@ -67,7 +67,7 @@
         /* Restore the left-to-right text direction (see above) */
         direction: ltr;
     }
-    #newest-items:has(.activenewestlist) {
+    #newest-items.active-newest-items {
         border-left:2px solid #ff6600;
     }
     .activenewest::after {
@@ -86,7 +86,7 @@
         display: none;
         border-right: 2px solid #ff6600;
     }
-    #newest-items:has(.activenewestlist) {
+    #newest-items.active-newest-items {
         display: block;
         position:fixed;
         top:0;
