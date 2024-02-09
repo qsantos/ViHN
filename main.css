@@ -36,6 +36,7 @@
 #newest-items {
     height:100%;
     overflow:auto;
+    scrollbar-width:none;
     font-size: 8pt;
 }
 @media (min-width:1800px) {
@@ -43,8 +44,6 @@
         position: fixed;
         top:0;
         left:0;
-        /* Seem to be enough for the default scrollbar gutter, but tell me if you know of a more reliable way */
-        padding-left:5px;
         /* Put the scrollbar on the left */
         direction: rtl;
     }
@@ -59,9 +58,10 @@
         top:0;
         right:0;
         background-color:white;
+        padding:1px;
     }
 }
-#newest-items * {
+#newest-items h3, #newest-items p {
     /* Restore the left-to-right text direction (see above) */
     direction: ltr;
 }
