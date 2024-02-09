@@ -95,7 +95,7 @@ const datedIndexes = Array.from(document.getElementsByClassName('age'))
     // Chrome is very slow without an explicit comparison function
     .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
     .reverse();
-{
+if (datedIndexes.length != 0) {
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     newestItems.id = 'newest-items';
     // Setting innerHTML is still faster than doing DOM
