@@ -123,7 +123,9 @@ let currentNewestIndex = 0;
 function gotoNewestIndex(index) {
     newestList.children[currentNewestIndex].classList.remove('activenewest');
     currentNewestIndex = index;
-    newestList.children[currentNewestIndex].classList.add('activenewest');
+    const newest = newestList.children[currentNewestIndex];
+    newest.classList.add('activenewest');
+    newest.scrollIntoView({block: 'nearest'});
 }
 
 function gotoThingFromNewestIndex(newestIndex) {
