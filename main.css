@@ -38,32 +38,7 @@
     overflow:auto;
     scrollbar-width:none;
     font-size: 8pt;
-}
-@media (min-width:1600px) {
-    #newest-items {
-        position: fixed;
-        top:0;
-        left:0;
-        /* Put the scrollbar on the left */
-        direction: rtl;
-    }
-}
-@media (max-width:1599px) {
-    #newest-items {
-        display: none;
-    }
-    #newest-items:has(.activenewestlist) {
-        display: block;
-        position:fixed;
-        top:0;
-        right:0;
-        background-color:white;
-        padding:1px;
-    }
-}
-#newest-items h3, #newest-items p {
-    /* Restore the left-to-right text direction (see above) */
-    direction: ltr;
+    padding:2px;
 }
 #newest-items ul {
     list-style: none;
@@ -72,9 +47,56 @@
 #newest-items li {
     padding:0;
 }
-.activenewestlist {
-    border-right:1px solid #ff6600;
-}
 .activenewest {
+    position: relative;
     color:#ff6600;
+}
+#newest-items:has(.activenewestlist) h3 {
+    color: #ff6600;
+}
+@media (min-width:1600px) {
+    #newest-items {
+        position: fixed;
+        top:0;
+        left:0;
+        border-left:2px solid white;
+        /* Put the scrollbar on the left */
+        direction: rtl;
+    }
+    #newest-items h3, #newest-items p {
+        /* Restore the left-to-right text direction (see above) */
+        direction: ltr;
+    }
+    #newest-items:has(.activenewestlist) {
+        border-left:2px solid #ff6600;
+    }
+    .activenewest::after {
+        content: " ";
+        display: block;
+        background-color: #ff6600;
+        position: absolute;
+        right:-2px;
+        width:2px;
+        top: 0px;
+        bottom: 0px;
+    }
+}
+@media (max-width:1599px) {
+    #newest-items {
+        display: none;
+        border-right: 2px solid #ff6600;
+    }
+    #newest-items:has(.activenewestlist) {
+        display: block;
+        position:fixed;
+        top:0;
+        right:0;
+        background-color:white;
+    }
+    #newest-items li {
+        border-left: 2px solid white;
+    }
+    #newest-items li.activenewest {
+        border-left: 2px solid #ff6600;
+    }
 }
