@@ -50,7 +50,11 @@
     }
 }
 @media (max-width:1799px) {
+    #newest-items {
+        display: none;
+    }
     #newest-items:has(.activenewestlist) {
+        display: block;
         position:fixed;
         top:0;
         right:0;
