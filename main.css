@@ -39,7 +39,7 @@
     scrollbar-width:none;
     font-size: 8pt;
 }
-@media (min-width:1800px) {
+@media (min-width:1600px) {
     #newest-items {
         position: fixed;
         top:0;
@@ -48,7 +48,7 @@
         direction: rtl;
     }
 }
-@media (max-width:1799px) {
+@media (max-width:1599px) {
     #newest-items {
         display: none;
     }
