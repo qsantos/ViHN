@@ -271,7 +271,11 @@ function gotoThing(thing) {
             // The thing is a story, also scroll the associated .subtext into view if possible
             // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
             thing.scrollIntoView({block: 'nearest'});
-            thing.nextElementSibling.scrollIntoView({block: 'nearest'});
+            // NOTE: the “more” link is not a story either, and do not have a next sibling
+            const subtext = thing.nextElementSibling;
+            if (subtext) {
+                thing.nextElementSibling.scrollIntoView({block: 'nearest'});
+            }
         }
         if (currentThing) {
             currentThing.classList.remove('activething');

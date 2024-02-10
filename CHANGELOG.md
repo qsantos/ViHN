@@ -2,6 +2,7 @@
 
 - Prefer smooth scrolling between comments (easier to keep track of moves)
 - In Newest Items, do not repeat date of a same day
+- Fix unable to go to “more” link (regression from v0.1.3)
 
 # v0.1.3
 
