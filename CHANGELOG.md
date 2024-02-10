@@ -1,3 +1,7 @@
+# v0.1.4
+
+- Prefer smooth scrolling between items (easier to keep track of moves)
+
 # v0.1.3
 
 - Fix selecting the oldest item being ignored
