@@ -99,13 +99,23 @@ if (datedIndexes.length != 0) {
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     newestItems.id = 'newest-items';
     // Setting innerHTML is still faster than doing DOM
-    newestItems.innerHTML = (
-        '<h3><u>N</u>ewest Items</u></h3>'
-        + (hasOtherPages ? '<p>(items on this page)</p>' : '')
-        + '<ul>'
-        + datedIndexes.map(([date, index]) => `<li data-index="${index}">${date}</li>`).join('')
-        + '</ul>'
-    );
+    const parts = ['<h3><u>N</u>ewest Items</u></h3>'];
+    if (hasOtherPages) {
+        parts.push('<p>(items on this page)</p>');
+    }
+    parts.push('<ul>');
+    let lastDay = null;
+    for (const [datetime, index] of datedIndexes) {
+        const [day, time] = datetime.split('T');
+        if (day == lastDay) {
+            parts.push(`<li data-index="${index}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${time}</li>`);
+        } else {
+            lastDay = day;
+            parts.push(`<li data-index="${index}">${day} ${time}</li>`);
+        }
+    }
+    parts.push('</ul>');
+    newestItems.innerHTML = parts.join('');
     // Make the addition of Newest Comments idempotent (useful for extension reloading when debugging)
     const previousLatestComment = document.getElementById('newest-items');
     if (previousLatestComment) {

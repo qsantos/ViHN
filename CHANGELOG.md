@@ -1,6 +1,7 @@
 # v0.1.4
 
 - Prefer smooth scrolling between comments (easier to keep track of moves)
+- In Newest Items, do not repeat date of a same day
 
 # v0.1.3
 

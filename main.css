@@ -37,6 +37,7 @@
     height:100%;
     overflow:auto;
     scrollbar-width:none;
+    font-family: monospace;
     font-size: 8pt;
     padding:2px;
 }
