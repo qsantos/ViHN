@@ -784,3 +784,8 @@ document.addEventListener('keydown', (event) => {
         thingEvent(event);
     }
 });
+
+document.addEventListener('click', (event) => {
+    const el = document.elementFromPoint(event.clientX, event.clientY);
+    gotoThingByDescendant(el);
+});

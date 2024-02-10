@@ -46,6 +46,9 @@ In addition, the quick-reply and quick-edit forms let you see a preview of the c
 **Note:**
 When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.
 
+**Note:**
+You can also select an item by clicking in its bounding box.
+
 ## Key Bindings in Newest Items
 
 In the Newest Items list, the following key bindings are available:
