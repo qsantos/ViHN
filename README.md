@@ -29,8 +29,8 @@ In addition, the quick-reply and quick-edit forms let you see a preview of the c
 | <kbd>M</kbd> | Focus on story/comment in the **m**iddle of the screen
 | <kbd>L</kbd> | Focus on story/comment at the bottom of the screen (**l**ow)
 | <kbd>n</kbd> | Switch to Newest Items
-| <kbd>h</kbd> | Parent comment (stay in context when changing page)
-| <kbd>p</kbd> | Parent comment (always go directly to parent)
+| <kbd>h</kbd> | Parent comment/story (see [#follow-links](Follow Links))
+| <kbd>p</kbd> | Parent comment/story (see [#follow-links](Follow Links))
 
 **Note:**
 You can also select an item by clicking in its bounding box.
@@ -43,6 +43,8 @@ You can also select an item by clicking in its bounding box.
 | <kbd>O</kbd> | Open story link/comment in background
 | <kbd>c</kbd> | Open comment thread
 | <kbd>C</kbd> | Open comment thread in background
+| <kbd>h</kbd> | Follow “context” link (go to comment thread, but focus on current comment)
+| <kbd>p</kbd> | Follow “parent” link (go to parent's page, and focus on parent comment/story)
 
 **Note:**
 When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.
