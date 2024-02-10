@@ -1,4 +1,6 @@
-#!/bin/sed -f
+#!/usr/bin/env bash
+sed '
+/^<img/d
 s/^##* \(.*\)/<strong>\1<\/strong>/
 s/^| Key.*/<ul>/
 /^| -/d
@@ -6,3 +8,6 @@ s/kbd/strong/g
 s/| \(<.*\) | \(.*\)/<li>\1: \2<\/li>/
 /<li>/,/^$/{ s/^$/<\/ul>\n/ }
 $,//a</ul>
+s/\*\*\(.*\)\*\*/<strong>\1<\/strong>/g
+' README.md | xclip -selection CLIPBOARD
+echo HTML copied to clipboard >&2
