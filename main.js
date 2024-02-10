@@ -790,7 +790,7 @@ function newestEvent(event) {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (event.target.tagName == 'TEXTAREA') {
+    if (event.target.tagName != 'BODY') {
         if (event.key == 'Escape') {
             event.target.blur();
         } else if (event.ctrlKey && event.key == 'Enter') {
