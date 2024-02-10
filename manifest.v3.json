@@ -4,6 +4,7 @@
     "manifest_version": 3,
     "name": "ViHN",
     "version": "0.0.0",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAooYOPfTuX73AcUHgIxxyH4XEsvIDujav9JIs6M+sXJii9lCVlb1kqdbyAYlYmTnZ5MsnFiujybHntGuGmNBvaqsUYqFGbC8RMLJ76bGK+N0HU35qVy7qTS8brpWD7DpXZH+c+xn9w93zPOf3ZcKMbo2f3bUbvAuvEgWSZK3LRJ6gIcDGv0o0wNc7iyxwCMAOq+qpWOfu6nibBD+Bv7/VIoE/6bn/bGHaH/qH8rqmALej5oht/8NjWU+HVyyUFWICy/AdGppjyKkizEtX8TNjijIGVXJLZ2aqoLR279Mv3pdpPMD9wShIrP0eww1c2yiYTKMkarDFdrTy4LP6fLA/nwIDAQAB",
     "icons": {
         "128": "icon128.png"
     },
