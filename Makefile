@@ -8,5 +8,5 @@ release/$(VERSION)-mv3.zip: manifest.v3.json main.js background.js main.css icon
 
 %.zip:
 	mkdir -p release/
-	ln -f $< manifest.json
+	jq '.version="$(VERSION:v%=%)"' $< >manifest.json
 	zip -r $@ manifest.json $^ --exclude $<

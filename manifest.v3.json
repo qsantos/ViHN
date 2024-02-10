@@ -3,7 +3,7 @@
     "author": "Quentin Santos",
     "manifest_version": 3,
     "name": "ViHN",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "icons": {
         "128": "icon128.png"
     },
