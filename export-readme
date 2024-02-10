@@ -1,0 +1,8 @@
+#!/bin/sed -f
+s/^##* \(.*\)/<strong>\1<\/strong>/
+s/^| Key.*/<ul>/
+/^| -/d
+s/kbd/strong/g
+s/| \(<.*\) | \(.*\)/<li>\1: \2<\/li>/
+/<li>/,/^$/{ s/^$/<\/ul>\n/ }
+$,//a</ul>
