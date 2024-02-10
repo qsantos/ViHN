@@ -39,10 +39,10 @@ You can also select an item by clicking in its bounding box.
 
 | Key          | Effect
 | ------------ | ------
-| <kbd>l</kbd> | Open story link/comment permalink
-| <kbd>b</kbd> | Open story link/comment permalink in **b**ackground
-| <kbd>c</kbd> | Open comments
-| <kbd>C</kbd> | Open comments in background
+| <kbd>o</kbd> | Open story link/comment
+| <kbd>O</kbd> | Open story link/comment in background
+| <kbd>c</kbd> | Open comment thread
+| <kbd>C</kbd> | Open comment thread in background
 
 **Note:**
 When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.

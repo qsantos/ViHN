@@ -433,7 +433,7 @@ function thingEvent(event) {
         if (currentThing) {
             toggleCollapse(currentThing);
         }
-    } else if (event.key == 'l' || event.key == 'o') {
+    } else if (event.key == 'o' || event.key == 'O') {
         /* Open thing permalink (l: foreground, L: background) */
         if (currentThing == morelinkThing) {
             morelink.click();
@@ -444,7 +444,7 @@ function thingEvent(event) {
             chrome.runtime.sendMessage({
                 action: 'open',
                 url,
-                active: event.key == 'l',
+                active: event.key == 'o',
             });
         }
     } else if (event.key == 'c' || event.key == 'C') {
