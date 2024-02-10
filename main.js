@@ -134,15 +134,17 @@ function gotoThingFromNewestIndex(newestIndex) {
 }
 
 function gotoThingFromIndex(index) {
-    if (!index) {
-        return;
-    }
     const thing = things[index];
     // Uncollapse all the ancestors to make the thing visible
-    let currentDepth = thingDepth(thing) + 1; // hack to include the thing itself
+    let currentDepth = thingDepth(thing);
     let otherIndex = index;
     // We need to uncollapse ancestors in descending order to avoid showing children of other collapsed things
     const ancestorsToUncollapse = [];
+    // The thing itself
+    if (thing.classList.contains('coll')) {
+        ancestorsToUncollapse.push(thing);
+    }
+    // Its ancestors
     while (currentDepth > 0) {
         // Find previous ancestor
         while (otherIndex > 0) {
