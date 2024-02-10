@@ -253,6 +253,10 @@ function gotoThing(thing) {
             historyUpdateTimer = null;
         }, 50);
         // Immediately makes the change visible
+        if (!thing.classList.contains('comtr')) {
+            // The thing is a story, also scroll the associated .subtext into view if possible
+            thing.nextElementSibling.scrollIntoView({block: 'nearest'});
+        }
         thing.scrollIntoView({block: 'nearest'});
         if (currentThing) {
             currentThing.classList.remove('activething');
