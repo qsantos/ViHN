@@ -255,11 +255,14 @@ function gotoThing(thing) {
             historyUpdateTimer = null;
         }, 50);
         // Immediately makes the change visible
-        if (!thing.classList.contains('comtr')) {
+        if (thing.classList.contains('comtr')) {
+            thing.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        } else {
             // The thing is a story, also scroll the associated .subtext into view if possible
-            thing.nextElementSibling.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+            // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
+            thing.scrollIntoView({block: 'nearest'});
+            thing.nextElementSibling.scrollIntoView({block: 'nearest'});
         }
-        thing.scrollIntoView({block: 'nearest', behavior: 'smooth'});
         if (currentThing) {
             currentThing.classList.remove('activething');
         }

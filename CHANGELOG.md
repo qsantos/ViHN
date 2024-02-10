@@ -1,6 +1,6 @@
 # v0.1.4
 
-- Prefer smooth scrolling between items (easier to keep track of moves)
+- Prefer smooth scrolling between comments (easier to keep track of moves)
 
 # v0.1.3
 
