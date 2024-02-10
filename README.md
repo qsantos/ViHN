@@ -13,6 +13,8 @@ Also, you can quickly find new comments by hitting “n” to browse comments in
 
 In addition, the quick-reply and quick-edit forms let you see a preview of the comment you are writing.
 
+Finally, the original poster (OP) is highlighted in comments.
+
 ## Key bindings
 
 ### Navigate Comments/Stories
