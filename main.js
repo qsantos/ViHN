@@ -262,7 +262,8 @@ function gotoThing(thing) {
     }
 }
 
-function gotoThingByDescendant(el) {
+function gotoThingAt(x, y) {
+    let el = document.elementFromPoint(x, y);
     do {
         if (el.classList.contains('athing')) {
             // Story or comment
@@ -399,16 +400,13 @@ function thingEvent(event) {
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'H') {
         /* Focus on thing at top of screen (high) */
-        const el = document.elementFromPoint(visualViewport.width / 5, 1);
-        gotoThingByDescendant(el);
+        gotoThingAt(visualViewport.width / 5, 1);
     } else if (event.key == 'M') {
         /* Focus on thing in the **middle** of the screen */
-        const el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height / 2);
-        gotoThingByDescendant(el);
+        gotoThingAt(visualViewport.width / 5, visualViewport.height / 2);
     } else if (event.key == 'L') {
         /* Focus on thing at bottom of screen (low) */
-        const el = document.elementFromPoint(visualViewport.width / 5, visualViewport.height - 2);
-        gotoThingByDescendant(el);
+        gotoThingAt(visualViewport.width / 5, visualViewport.height - 2);
     } else if (event.key == 'h' || event.key == 'p') {
         /* Parent comment (h: say in context when changing page, p: directly go to comment) */
         if (!currentThing || currentThingIndex == 0) {
@@ -786,6 +784,5 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('click', (event) => {
-    const el = document.elementFromPoint(event.clientX, event.clientY);
-    gotoThingByDescendant(el);
+    gotoThingAt(event.clientX, event.clientY);
 });
