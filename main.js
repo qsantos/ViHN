@@ -1,3 +1,12 @@
+// set top color
+const pageSpace = document.getElementById('pagespace');
+if (pageSpace) {
+    const topColor = pageSpace?.previousElementSibling?.firstElementChild?.getAttribute('bgcolor');
+    if (topColor) {
+        document.body.style.setProperty('--top-color', topColor);
+    }
+}
+
 const loggedIn = document.getElementById('logout') != null;
 const things = Array.from(document.getElementsByClassName('athing'));
 

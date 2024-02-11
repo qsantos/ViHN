@@ -1,3 +1,7 @@
+# v0.1.5
+
+- Use user-defined top color
+
 # v0.1.4
 
 - Prefer smooth scrolling between comments (easier to keep track of moves)
