@@ -1,6 +1,7 @@
 # v0.1.5
 
 - Use user-defined top color
+- Fix unable to open the story link on page with no “more” link when no item is selected
 
 # v0.1.4
 

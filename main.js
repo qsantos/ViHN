@@ -463,7 +463,7 @@ function thingEvent(event) {
         }
     } else if (event.key == 'o' || event.key == 'O') {
         /* Open thing permalink (l: foreground, L: background) */
-        if (currentThing == morelinkThing) {
+        if (currentThing && currentThing == morelinkThing) {
             morelink.click();
         } else {
             const anchor = (currentThing || document).querySelector('.titleline>a');
