@@ -1,4 +1,7 @@
 /* Orange bar left to the active thing */
+:root {
+    --top-color: #ff6600;
+}
 .title {
     /* overflow: hidden hides the ::before element of the sibling */
     overflow: visible !important;
@@ -11,7 +14,7 @@
 .activething:has(.title) + tr td:last-child::before {
     content: " ";
     display: block;
-    background-color:#ff6600;
+    background-color:var(--top-color);
     position: absolute;
     left:-3px;
     width:2px;
@@ -26,7 +29,7 @@
 
 /* Highlight op */
 .op {
-    color: #ff6600 !important;
+    color: var(--top-color) !important;
 }
 .op::after {
     content: " [op]";
@@ -50,10 +53,10 @@
 }
 .active-newest {
     position: relative;
-    color:#ff6600;
+    color:var(--top-color);
 }
 #newest-items.active-newest-items h3 {
-    color: #ff6600;
+    color: var(--top-color);
 }
 @media (min-width:1600px) {
     #newest-items {
@@ -63,12 +66,12 @@
         border-left:2px solid white;
     }
     #newest-items.active-newest-items {
-        border-left:2px solid #ff6600;
+        border-left:2px solid var(--top-color);
     }
     .active-newest::after {
         content: " ";
         display: block;
-        background-color: #ff6600;
+        background-color: var(--top-color);
         position: absolute;
         right:-2px;
         width:2px;
@@ -79,7 +82,7 @@
 @media (max-width:1599px) {
     #newest-items {
         display: none;
-        border-right: 2px solid #ff6600;
+        border-right: 2px solid var(--top-color);
     }
     #newest-items.active-newest-items {
         display: block;
@@ -92,6 +95,6 @@
         border-left: 2px solid white;
     }
     #newest-items li.active-newest {
-        border-left: 2px solid #ff6600;
+        border-left: 2px solid var(--top-color);
     }
 }
