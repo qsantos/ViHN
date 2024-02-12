@@ -17,6 +17,8 @@ Finally, the original poster (OP) is highlighted in comments.
 
 ## Key bindings
 
+Press <kbd>?</kbd> to toggle help.
+
 ### Navigate Comments/Stories
 
 | Key          | Effect

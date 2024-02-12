@@ -3,6 +3,7 @@
 - Use user-defined top color
 - Fix unable to open the story link on page with no “more” link when no item is selected
 - Add preview to new top comments (not just replies) as well
+- Press ? for help
 
 # v0.1.4
 

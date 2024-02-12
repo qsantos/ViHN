@@ -7,6 +7,118 @@ if (pageSpace) {
     }
 }
 
+let helpOuter = null;
+let helpInner = null;
+let helpShown = false;
+function initHelp() {
+    if (helpOuter) {
+        return;
+    }
+    // Make the addition of help idempotent (useful for extension reloading when debugging)
+    const oldHelp = document.getElementById('help');
+    if (oldHelp) {
+        oldHelp.remove();
+    }
+    helpOuter = document.createElement('DIV');
+    helpOuter.id = 'help';
+    // tabindex needed to focus div
+    helpOuter.innerHTML =  `
+    <div id="help-inner" tabindex="0">
+        <h2>ViHN Key bindings</h2>
+        <p>Press <kbd>?</kbd> to toggle help.</p>
+        <h3>Navigate Comments/Stories</h3>
+        <table>
+            <thead>
+                <tr><th>Key</th><th>Effect</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><kbd>j</kbd></td><td>Next comment/story</td></tr>
+                <tr><td><kbd>k</kbd></td><td>Previous comment/story</td></tr>
+                <tr><td><kbd>J</kbd></td><td>Next sibling comment</td></tr>
+                <tr><td><kbd>K</kbd></td><td>Previous sibling comment</td></tr>
+                <tr><td><kbd>g</kbd></td><td>Go to first story/comment</td></tr>
+                <tr><td><kbd>G</kbd></td><td>Go to last story, last root comment or “More” link</td></tr>
+                <tr><td><kbd>H</kbd></td><td>Focus on story/comment at the top of the screen (<strong>h</strong>igh)</td></tr>
+                <tr><td><kbd>M</kbd></td><td>Focus on story/comment in the <strong>m</strong>iddle of the screen</td></tr>
+                <tr><td><kbd>L</kbd></td><td>Focus on story/comment at the bottom of the screen (<strong>l</strong>ow)</td></tr>
+                <tr><td><kbd>n</kbd></td><td>Switch to Newest Items</td></tr>
+                <tr><td><kbd>h</kbd></td><td>Parent comment/story (see Follow Links)</td></tr>
+                <tr><td><kbd>p</kbd></td><td>Parent comment/story (see Follow Links)</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Note:</strong> You can also select an item by clicking in its bounding box.</p>
+        <h3>Follow links</h3>
+        <table>
+            <thead>
+                <tr><th>Key</th><th>Effect</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><kbd>o</kbd></td><td>Open story link/comment</td></tr>
+                <tr><td><kbd>O</kbd></td><td>Open story link/comment in background</td></tr>
+                <tr><td><kbd>c</kbd></td><td>Open comment thread</td></tr>
+                <tr><td><kbd>C</kbd></td><td>Open comment thread in background</td></tr>
+                <tr><td><kbd>h</kbd></td><td>Follow “context” link (go to comment thread, but focus on current comment)</td></tr>
+                <tr><td><kbd>p</kbd></td><td>Follow “parent” link (go to parent's page, and focus on parent comment/story)</td></tr>
+            </tbody>
+        </table>
+        <p><strong>Note:</strong>When on the “XXX more comments” link, you can hit either of <code>[lLcC]</code> to go to the next page of comments.</p>
+        <h3>Actions</h3>
+        <table>
+            <thead>
+                <tr><th>Key</th><th>Effect</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><kbd>m</kbd></td><td>Collapse/uncollapse comment tree</td></tr>
+                <tr><td><kbd>u</kbd></td><td>Upvote story/comment, or cancel vote</td></tr>
+                <tr><td><kbd>d</kbd></td><td>Downvote story/comment, or cancel vote</td></tr>
+                <tr><td><kbd>f</kbd></td><td>Favorite/un-favorite story/comment of the current page</td></tr>
+                <tr><td><kbd>F</kbd></td><td>Flag/unflag story/comment of the current page</td></tr>
+                <tr><td><kbd>r</kbd></td><td>Comment on story, or reply to comment (with preview)</td></tr>
+                <tr><td><kbd>e</kbd></td><td>Edit comment (with preview)</td></tr>
+                <tr><td><kbd>D</kbd></td><td>Delete comment</td></tr>
+                <tr><td><kbd>Ctrl</kbd>+<kbd>Return</kbd></td><td>Submit current form</td></tr>
+            </tbody>
+        </table>
+        <h3>Navigate Newest Items</h3>
+        <p>In the Newest Items list, the following key bindings are available:</p>
+        <table>
+            <thead>
+                <tr><th>Key</th><th>Effect</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><kbd>l</kbd></td><td>Show selected comment/story</td></tr>
+                <tr><td><kbd>j</kbd></td><td>Next comment/story</td></tr>
+                <tr><td><kbd>k</kbd></td><td>Previous comment/story</td></tr>
+                <tr><td><kbd>g</kbd></td><td>Go to top story/comment</td></tr>
+                <tr><td><kbd>G</kbd></td><td>Go to last story/comment</td></tr>
+                <tr><td><kbd>n</kbd></td><td>Switch back from Newest Items</td></tr>
+            </tbody>
+        </table>
+    </div>
+    `;
+    document.body.appendChild(helpOuter);
+    helpInner = document.getElementById('help-inner');
+    // Close when clicking outside of documentation
+    helpInner.addEventListener('click', event => {
+        event.stopPropagation();
+    });
+    helpOuter.addEventListener('click', event => {
+        hideHelp();
+    });
+    // Initialize visible state
+    hideHelp();
+}
+function hideHelp() {
+    helpOuter.style.display = 'none';
+    helpShown = false;
+}
+function showHelp() {
+    helpOuter.style.display = 'block';
+    helpShown = true;
+    helpInner.focus();
+}
+initHelp();
+
 const loggedIn = document.getElementById('logout') != null;
 const things = Array.from(document.getElementsByClassName('athing'));
 
@@ -811,7 +923,11 @@ function newestEvent(event) {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (event.target.tagName != 'BODY') {
+    if (helpShown) {
+        if (event.key == 'Escape' || event.key == '?') {
+            hideHelp();
+        }
+    } else if (event.target.tagName != 'BODY') {
         if (event.key == 'Escape') {
             event.target.blur();
         } else if (event.ctrlKey && event.key == 'Enter') {
@@ -820,6 +936,8 @@ document.addEventListener('keydown', (event) => {
     } else if (event.ctrlKey || event.altKey || event.metaKey) {
         // do not capture Ctrl+r and such
         return;
+    } else if (event.key == '?') {
+        showHelp();
     } else if (focusNewest) {
         newestEvent(event);
     } else {
