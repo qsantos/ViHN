@@ -309,6 +309,20 @@ function gotoThingAt(x, y) {
     } while (el = el.parentElement);
 }
 
+let newCommentFormTextarea = null;
+function initNewCommentForm() {
+    if (newCommentFormTextarea) {
+        return;
+    }
+    newCommentFormTextarea = document.getElementsByTagName('textarea')[0];
+    const newCommentFormPreview = document.createElement('DIV');
+    newCommentFormPreview.classList.add('preview');
+    newCommentFormTextarea.insertAdjacentElement('afterend', newCommentFormPreview);
+    newCommentFormTextarea.addEventListener('input', event => {
+        newCommentFormPreview.innerHTML = formatComment(newCommentFormTextarea.value);
+    });
+}
+
 let quickReplyForm = null;
 let quickReplyFormParent = null;
 let quickReplyFormGoto = null;
@@ -346,7 +360,7 @@ function initQuickReplyForm() {
     quickReplyFormGoto = container.querySelector('[name="goto"]');
     quickReplyFormHmac = container.querySelector('[name="hmac"]');
     quickReplyFormTextarea = container.getElementsByTagName('textarea')[0];
-    quickReplyFormPreview = container.getElementsByClassName('preview')[0];
+    const quickReplyFormPreview = container.getElementsByClassName('preview')[0];
     quickReplyFormSubmit = container.querySelector('[type="submit"]');
     quickReplyFormError = container.getElementsByClassName('error')[0];
     quickReplyFormTextarea.addEventListener('input', event => {
@@ -387,7 +401,7 @@ function initEditForm() {
     editFormId = container.querySelector('[name="id"]');
     editFormHmac = container.querySelector('[name="hmac"]');
     editFormTextarea = container.getElementsByTagName('textarea')[0];
-    editFormPreview = container.getElementsByClassName('preview')[0];
+    const editFormPreview = container.getElementsByClassName('preview')[0];
     editFormSubmit = container.querySelector('[type="submit"]');
     editFormTextarea.addEventListener('input', event => {
         editFormPreview.innerHTML = formatComment(editFormTextarea.value);
@@ -531,10 +545,8 @@ function thingEvent(event) {
     } else if (event.key == 'r') {
         /* Comment on story, or reply to comment */
         if (!currentThing || currentThingIndex == 0) {
-            const newCommentTextarea = document.getElementsByTagName('textarea')[0];
-            if (newCommentTextarea) {
-                newCommentTextarea.focus();
-            }
+            initNewCommentForm();
+            newCommentFormTextarea.focus();
         } else {
             // can comment:    <div class="reply"><p><font><u><a>reply
             // cannot comment: <div class="reply"><p><font>
