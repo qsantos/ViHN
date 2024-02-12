@@ -76,6 +76,8 @@ In the Newest Items list, the following key bindings are available:
 | <kbd>l</kbd> | Show selected comment/story
 | <kbd>j</kbd> | Next comment/story
 | <kbd>k</kbd> | Previous comment/story
+| <kbd>J</kbd> | Jump 10 down
+| <kbd>K</kbd> | Jump 10 up
 | <kbd>g</kbd> | Go to top story/comment
 | <kbd>G</kbd> | Go to last story/comment
 | <kbd>n</kbd> | Switch back from Newest Items

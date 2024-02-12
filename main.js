@@ -89,6 +89,8 @@ function initHelp() {
                 <tr><td><kbd>l</kbd></td><td>Show selected comment/story</td></tr>
                 <tr><td><kbd>j</kbd></td><td>Next comment/story</td></tr>
                 <tr><td><kbd>k</kbd></td><td>Previous comment/story</td></tr>
+                <tr><td><kbd>J</kbd></td><td>Jump 10 down</td></tr>
+                <tr><td><kbd>K</kbd></td><td>Jump 10 up</td></tr>
                 <tr><td><kbd>g</kbd></td><td>Go to top story/comment</td></tr>
                 <tr><td><kbd>G</kbd></td><td>Go to last story/comment</td></tr>
                 <tr><td><kbd>n</kbd></td><td>Switch back from Newest Items</td></tr>
@@ -907,6 +909,12 @@ function newestEvent(event) {
         if (currentNewestIndex > 0) {
             gotoNewestIndex(currentNewestIndex - 1);
         }
+    } else if (event.key == 'J') {
+        /* Jump 10 down */
+        gotoNewestIndex(Math.min(currentNewestIndex + 10, newestList.childElementCount - 1));
+    } else if (event.key == 'K') {
+        /* Jump 10 up */
+        gotoNewestIndex(Math.max(currentNewestIndex - 10, 0));
     } else if (event.key == 'g') {
         /* First newest */
         gotoNewestIndex(0);

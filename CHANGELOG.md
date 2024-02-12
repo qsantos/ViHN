@@ -1,3 +1,7 @@
+# v0.1.6
+
+- Use J/K to jump down/up 10 at a time in Newest Items
+
 # v0.1.5
 
 - Use user-defined top color
