@@ -57,6 +57,8 @@ function initHelp() {
                 <tr><td><kbd>O</kbd></td><td>Open story link/comment in background</td></tr>
                 <tr><td><kbd>c</kbd></td><td>Open comment thread</td></tr>
                 <tr><td><kbd>C</kbd></td><td>Open comment thread in background</td></tr>
+                <tr><td><kbd>b</kbd></td><td>Open both story link and comment thread</td></tr>
+                <tr><td><kbd>B</kbd></td><td>Open both story link and comment thread in background</td></tr>
                 <tr><td><kbd>h</kbd></td><td>Follow “context” link (go to comment thread, but focus on current comment)</td></tr>
                 <tr><td><kbd>p</kbd></td><td>Follow “parent” link (go to parent's page, and focus on parent comment/story)</td></tr>
             </tbody>
@@ -312,6 +314,24 @@ function setClassIf(el, className, condition) {
     } else {
         el.classList.remove(className);
     }
+}
+
+function openThing(thing, active) {
+    const anchor = thing.querySelector('.titleline>a');
+    const relativeUrl = anchor ? anchor.href : 'item?id=' + thing.id;
+    const url = new URL(relativeUrl, document.location).href;
+    chrome.runtime.sendMessage({ action: 'open', url, active });
+}
+
+function openComments(thing, active) {
+    const subtext = thing.nextElementSibling;
+    if (!subtext || subtext.classList.contains('athing')) {
+        return;
+    }
+    const anchor = subtext.querySelector('.age>a');
+    const relativeUrl = anchor.href;
+    const url = new URL(relativeUrl, document.location).href;
+    chrome.runtime.sendMessage({ action: 'open', url, active });
 }
 
 // Basically from Hacker News's JavaScript
@@ -594,14 +614,7 @@ function thingEvent(event) {
         if (currentThing && currentThing == morelinkThing) {
             morelink.click();
         } else {
-            const anchor = (currentThing || document).querySelector('.titleline>a');
-            const relativeUrl = anchor ? anchor.href : 'item?id=' + currentThing.id;
-            const url = new URL(relativeUrl, document.location).href;
-            chrome.runtime.sendMessage({
-                action: 'open',
-                url,
-                active: event.key == 'o',
-            });
+            openThing(currentThing || document, event.key == 'o');
         }
     } else if (event.key == 'c' || event.key == 'C') {
         /* Open comments (c: foreground, C: background) */
@@ -609,17 +622,17 @@ function thingEvent(event) {
             if (currentThing == morelinkThing) {
                 morelink.click();
             } else {
-                const subtext = currentThing.nextElementSibling;
-                if (subtext && !subtext.classList.contains('athing')) {
-                    const anchor = subtext.querySelector('.age>a');
-                    const relativeUrl = anchor.href;
-                    const url = new URL(relativeUrl, document.location).href;
-                    chrome.runtime.sendMessage({
-                        action: 'open',
-                        url,
-                        active: event.key == 'c',
-                    });
-                }
+                openCOmments(currentThing, event.key == 'c');
+            }
+        }
+    } else if (event.key == 'b' || event.key == 'B') {
+        /* Open both (b: foreground, B: background) */
+        if (currentThing && currentThing == morelinkThing) {
+            morelink.click();
+        } else {
+            openThing(currentThing || document, event.key == 'b');
+            if (currentThing) {
+                openComments(currentThing, event.key == 'b');
             }
         }
     } else if (event.key == 'g') {

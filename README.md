@@ -47,6 +47,8 @@ You can also select an item by clicking in its bounding box.
 | <kbd>O</kbd> | Open story link/comment in background
 | <kbd>c</kbd> | Open comment thread
 | <kbd>C</kbd> | Open comment thread in background
+| <kbd>b</kbd> | Open both story link and comment thread
+| <kbd>B</kbd> | Open both story link and comment thread in background
 | <kbd>h</kbd> | Follow “context” link (go to comment thread, but focus on current comment)
 | <kbd>p</kbd> | Follow “parent” link (go to parent's page, and focus on parent comment/story)
 
