@@ -163,3 +163,73 @@
     border-radius: 6px;
     box-shadow: inset 0 -1px 0 rgba(175,184,193,0.2);
 }
+
+/* In-comment link counter */
+body { counter-reset: link; }
+.activething .commtext a:after {
+    /* Display link number */
+    counter-increment: link;
+    content: " " counter(link);
+    color: var(--top-color);
+    /* Put it in superscript, without moving anything else */
+    font-weight: bold;
+    font-variant-position: super;
+    /* I have considered using absolute positioning within an absolute parent
+     * to avoid moving the comment's content.
+     *
+     * However, this generally risks overlapping content. The safest place to
+     * position the counter would be right after the link, expecting either the
+     * end of the line, and period or a space, which would leave enough room
+     * for a single digit number.
+     *
+     * However, links are inline elements and so can be broken over several
+     * lines in multiple fragments. The positioning of an absolutely positioned
+     * element in a relatively positioned inline element is set around the
+     * bounding box of the first fragment. That means that we can only position
+     * our counter on the first line of the link, when it is over multiple
+     * lines.
+     *
+     * See also https://bugzilla.mozilla.org/show_bug.cgi?id=489100
+     *
+     * Positioning the counter on the left of the link would also be possible,
+     * but that overlaps with the orange bar that indicates the active items,
+     * when the link is the first thing in the line.
+     *
+     * No overlaying the counter should minimize incompatibilities, and
+     * hopefully won't cause too much reflow. At least, it should only happen
+     * on user interaction or with a targeted link.
+     */
+}
+
+/* NOTE: Due to a bug, the reply link may or may not be part of <span class="commtext">.
+ *
+ * Hacker News does not closes <p> tags in comments. Since comments are
+ * wrapped in a <span class="commtext">, closing the <span> does not actually
+ * closes the <p>. This causes the reply link to be in the <span> when the
+ * comment contains a <p>.
+ *
+ * ```
+ * <span class="commtext c00">
+ * Not a proper paragraph
+ * </span>
+ * <div class='reply'>
+ * ```
+ *
+ * Works as expected: the reply <div> is a sibling of the comment <span>
+ *
+ * ```
+ * <span class="commtext c00">Not a paragraph
+ * <p>First paragraph
+ * <p>Second paragraph
+ * </span>
+ * <div class='reply'>
+ * ```
+ *
+ * Here, the </span> is ignored and the reply <div> is still in the comment
+ * <span>. However, when the reply <div> closes, it does closes the comment
+ * <span> at well, making the layout not completely broken.
+ */
+.activething .commtext .reply a:after {
+    /* Avoid showing a link count on reply link (see remark above) */
+    content: none;
+}

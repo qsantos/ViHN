@@ -61,9 +61,15 @@ function initHelp() {
                 <tr><td><kbd>B</kbd></td><td>Open both story link and comment thread in background</td></tr>
                 <tr><td><kbd>h</kbd></td><td>Follow “context” link (go to comment thread, but focus on current comment)</td></tr>
                 <tr><td><kbd>p</kbd></td><td>Follow “parent” link (go to parent's page, and focus on parent comment/story)</td></tr>
+                <tr><td><kbd>1</kbd></td><td>Open 1st link in comment (maintain shift to open in background)</td><tr>
+                <tr><td><kbd>…</kbd></td><td>…</td><tr>
+                <tr><td><kbd>9</kbd></td><td>Open 9th link in comment (maintain shift to open in background)</td><tr>
+                <tr><td><kbd>0</kbd></td><td>Open 10th link in comment (maintain shift to open in background)</td><tr>
             </tbody>
         </table>
         <p><strong>Note:</strong> When on the “XXX more comments” link, you can hit either of <code>[lLcC]</code> to go to the next page of comments.</p>
+        <p><strong>Note:</strong> The digits of the numeric keypad work as well to open links in comments. However, this can only open links in foreground.</p>
+        <p><strong>Note:</strong> When using AZERTY, the key bindings to open links inside comments still work like in QWERTY. Hit the <kbd>1</kbd> key <strong>without</strong> shift (like typing <code>&</code>) to open the 1st link in foreground. Hit the <kbd>1</kbd> key <strong>with</strong> shift (like typing <code>1</code>) to open the 1st link in background. Same for the other link numbers.</p>
         <h3>Actions</h3>
         <table>
             <thead>
@@ -331,6 +337,24 @@ function openComments(thing, active) {
     const anchor = subtext.querySelector('.age>a');
     const relativeUrl = anchor.href;
     const url = new URL(relativeUrl, document.location).href;
+    chrome.runtime.sendMessage({ action: 'open', url, active });
+}
+
+function openCommentLink(thing, linkNumber, active) {
+    if (!thing) {
+        return;
+    }
+    /* Map 0 to 10th link */
+    const n = linkNumber ?? 10;
+    const link = thing.querySelectorAll('.commtext a')[n - 1];
+    if (!link) {
+        return;
+    }
+    if (link.getAttribute('href').startsWith('reply')) {
+        // Ignore reply link when it is part of .commtext (see HN bug fix in main.css)
+        return;
+    }
+    const url = link.href;
     chrome.runtime.sendMessage({ action: 'open', url, active });
 }
 
@@ -900,6 +924,13 @@ function thingEvent(event) {
         focusNewest = true;
         newestItems.classList.add('active-newest-items');
         gotoNewestIndex(currentNewestIndex);
+    } else if (48 <= event.keyCode && event.keyCode <= 57) {
+        /* Top-row 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9 */
+        /* We use keyCode to avoid having to ignore effect of shift key */
+        openCommentLink(currentThing, event.keyCode - 48, !event.shiftKey);
+    } else if (96 <= event.keyCode && event.keyCode <= 105) {
+        /* Numpad 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9 */
+        openCommentLink(currentThing, event.keyCode - 96, !event.shiftKey);
     } else {
         return;
     }

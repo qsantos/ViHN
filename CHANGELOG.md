@@ -3,6 +3,7 @@
 - Use J/K to jump down/up 10 at a time in Newest Items
 - Hit b/B to open both permalink and comment thread
 - Fix missing space in help page
+- Hit numeric keys to open links in comments
 
 # v0.1.5
 

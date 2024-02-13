@@ -54,9 +54,23 @@ You can also select an item by clicking in its bounding box.
 | <kbd>B</kbd> | Open both story link and comment thread in background
 | <kbd>h</kbd> | Follow “context” link (go to comment thread, but focus on current comment)
 | <kbd>p</kbd> | Follow “parent” link (go to parent's page, and focus on parent comment/story)
+| <kbd>1</kbd> | Open 1st link in comment (maintain shift to open in background)
+| <kbd>…</kbd> | …
+| <kbd>9</kbd> | Open 9th link in comment (maintain shift to open in background)
+| <kbd>0</kbd> | Open 10th link in comment (maintain shift to open in background)
 
 **Note:**
 When on the “XXX more comments” link, you can hit either of `[lLcC]` to go to the next page of comments.
+
+**Note:**
+The digits of the numeric keypad work as well to open links in comments.
+However, this can only open links in foreground.
+
+**Note:**
+When using AZERTY, the key bindings to open links inside comments still work like in QWERTY.
+Hit the <kbd>1</kbd> key **without** shift (like typing `&`) to open the 1st link in foreground.
+Hit the <kbd>1</kbd> key **with** shift (like typing `1`) to open the 1st link in background.
+Same for the other link numbers.
 
 ### Actions
 
