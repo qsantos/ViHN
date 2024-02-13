@@ -63,7 +63,7 @@ function initHelp() {
                 <tr><td><kbd>p</kbd></td><td>Follow “parent” link (go to parent's page, and focus on parent comment/story)</td></tr>
             </tbody>
         </table>
-        <p><strong>Note:</strong>When on the “XXX more comments” link, you can hit either of <code>[lLcC]</code> to go to the next page of comments.</p>
+        <p><strong>Note:</strong> When on the “XXX more comments” link, you can hit either of <code>[lLcC]</code> to go to the next page of comments.</p>
         <h3>Actions</h3>
         <table>
             <thead>
