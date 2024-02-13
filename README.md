@@ -4,6 +4,9 @@ Vi-style key bindings for browsing Hacker News.
 
 It's fast. If you have to wait a perceptible amount of time, that's a bug.
 
+<a href="https://addons.mozilla.org/fr/firefox/addon/vihn/"><img src="firefox.svg" width="172" height="60" alt="Get the Add-on"></a>
+<a href="https://chromewebstore.google.com/detail/vihn/cfmccoefeojndmkdmbkgalghikfafdod"><img src="chrome.png" width="206" height="58" alt="Available in the Chrome Web Store"></a>
+
 ## Features
 
 Use the key bindings similar to Vi to navigate Hacker News stories and comments.
