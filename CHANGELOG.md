@@ -1,3 +1,7 @@
+# v0.1.7
+
+- Fix regression in v0.1.6: unable to open comments threads by hitting c/C
+
 # v0.1.6
 
 - Use J/K to jump down/up 10 at a time in Newest Items

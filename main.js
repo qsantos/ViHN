@@ -646,7 +646,7 @@ function thingEvent(event) {
             if (currentThing == morelinkThing) {
                 morelink.click();
             } else {
-                openCOmments(currentThing, event.key == 'c');
+                openComments(currentThing, event.key == 'c');
             }
         }
     } else if (event.key == 'b' || event.key == 'B') {
