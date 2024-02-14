@@ -1,3 +1,7 @@
+# v0.1.9
+
+- Fix hitting m on story in comment thread making upvote button disappear
+
 # v0.1.8
 
 - Fix smooth scrolling disabled when jumping to “more” link

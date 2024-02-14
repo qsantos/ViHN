@@ -360,8 +360,11 @@ function openCommentLink(thing, linkNumber, active) {
 
 // Basically from Hacker News's JavaScript
 function toggleCollapse(thing) {
-    const collapseToggle = thing.getElementsByClassName('togg')[0];
-    let coll = !thing.classList.contains('coll');
+    if (!thing.classList.contains('comtr')) {
+        // Not a comment, do not try to collapse it
+        return;
+    }
+    const coll = !thing.classList.contains('coll');
 
     if (loggedIn) {
         // This is non critical, so no point in blocking the collapsing on getting
