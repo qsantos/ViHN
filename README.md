@@ -18,6 +18,8 @@ In addition, the quick-reply and quick-edit forms let you see a preview of the c
 
 Finally, the original poster (OP) is highlighted in comments.
 
+https://github.com/qsantos/ViHN/assets/8493765/69d96e60-54d3-4c81-8f2b-24142d65225d
+
 ## Key bindings
 
 Press <kbd>?</kbd> to toggle help.
