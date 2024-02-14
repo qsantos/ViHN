@@ -432,17 +432,14 @@ function gotoThing(thing) {
             historyUpdateTimer = null;
         }, 50);
         // Immediately makes the change visible
-        if (thing.classList.contains('comtr')) {
+        if (thing.classList.contains('comtr') || !thing.nextElementSibling) {
+            // The thing is a comment, or the “more” link
             thing.scrollIntoView({block: 'nearest', behavior: 'smooth'});
         } else {
             // The thing is a story, also scroll the associated .subtext into view if possible
             // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
             thing.scrollIntoView({block: 'nearest'});
-            // NOTE: the “more” link is not a story either, and do not have a next sibling
-            const subtext = thing.nextElementSibling;
-            if (subtext) {
-                thing.nextElementSibling.scrollIntoView({block: 'nearest'});
-            }
+            thing.nextElementSibling.scrollIntoView({block: 'nearest'});
         }
         if (currentThing) {
             currentThing.classList.remove('activething');

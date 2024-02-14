@@ -1,3 +1,7 @@
+# v0.1.8
+
+- Fix smooth scrolling disabled when jumping to “more” link
+
 # v0.1.7
 
 - Fix regression in v0.1.6: unable to open comments threads by hitting c/C
