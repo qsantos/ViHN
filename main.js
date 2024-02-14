@@ -414,7 +414,7 @@ function thingDepth(thing) {
     if (!indentTd) {
         return 0;
     }
-    return parseInt(indentTd.getAttribute('indent')) ||0;
+    return parseInt(indentTd.getAttribute('indent')) || 0;
 }
 
 function thingIsHidden(thing) {
