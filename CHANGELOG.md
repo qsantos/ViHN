@@ -4,6 +4,7 @@
 - Fix hitting m on story in comment thread making upvote button disappear
 - Fix innocuous error when toggling last comment
 - Fix quick-edit form broken by preview feature in v0.1.5
+- Fix Ctrl+Return submitting disabled form
 
 # v0.1.8
 

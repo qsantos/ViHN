@@ -1071,7 +1071,10 @@ document.addEventListener('keydown', (event) => {
         if (event.key == 'Escape') {
             event.target.blur();
         } else if (event.ctrlKey && event.key == 'Enter') {
-            event.target.parentNode.submit();
+            const form = event.target.parentNode;
+            // Simulate click on submit button to handle the case where it is disabled
+            const submitButton = form.querySelector('[type=submit]');
+            submitButton.click();
         }
     } else if (event.ctrlKey || event.altKey || event.metaKey) {
         // do not capture Ctrl+r and such
