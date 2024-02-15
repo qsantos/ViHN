@@ -467,11 +467,9 @@ function vote(id, how, auth, _goto) {
     const url = 'https://news.ycombinator.com/' + vurl(id, how, auth, _goto);
     hnfetch(url).then(({html}) => {
         if (html.match('<b>Login</b>')) {
-            restore();
-            alert('You are not connected');
-        } else {
-            complete();
+            throw 'You are not connected';
         }
+        complete();
     }).catch(msg => {
         restore();
         alert(msg);
@@ -809,12 +807,12 @@ function thingEvent(event) {
                         quickReplyFormHmac.value = hmacMatch[1];
                         quickReplyFormSubmit.disabled = false;
                     } else if (html.match('You have to be logged in to reply.<br>')) {
-                        quickReplyFormError.innerText = 'You need to be logged in to reply';
+                        throw 'You need to be logged in to reply';
                     } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
-                        quickReplyFormError.innerText = 'Cannot reply to this anymore (thread locked or comment deleted)';
+                        throw 'Cannot reply to this anymore (thread locked or comment deleted)';
                     } else {
                         console.warn(html);
-                        quickReplyFormError.innerText = 'Unexpected error';
+                        throw 'Unexpected error';
                     }
                 }).catch(msg => {
                     quickReplyFormError.innerText = msg;
@@ -848,7 +846,7 @@ function thingEvent(event) {
                 } else {
                     // NOTE: actually never happen
                     // TODO: detect logged out in this case
-                    editFormTextarea.value = 'You cannot edit this';
+                    throw 'You cannot edit this';
                 }
             }).catch(msg => {
                 editFormTextarea.value = msg;
@@ -869,37 +867,30 @@ function thingEvent(event) {
             const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
             hnfetch(url).then(({html}) => {
                 const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                if (hmacMatch) {
-                    const formData = new URLSearchParams();
-                    formData.append('id', currentThing.id);
-                    formData.append('goto', goto);
-                    formData.append('hmac', hmacMatch[1]);
-                    formData.append('d', 'Yes');
-                    hnfetch('https://news.ycombinator.com/xdelete', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    }).then(({response}) => {
-                        if (response.url) {
-                            document.location = response.url;
-                        } else {
-                            console.warn(response);
-                            deleteLink.textContent = 'delete';
-                            alert('Unexpected response while deleting comment');
-                        }
-                    }).catch(msg => {
-                        deleteLink.textContent = 'delete';
-                        alert(msg);
-                    });
-                } else if (html == "You can't delete that.")  {
-                    deleteLink.textContent = 'delete';
-                    alert('You cannot delete this comment');
-                } else {
+                if (html == "You can't delete that.")  {
+                    throw 'You cannot delete this comment';
+                } else if (!hmacMatch) {
                     console.warn(html);
-                    deleteLink.textContent = 'delete';
-                    alert('Unexpected error while deleting comment');
+                    throw 'Unexpected error while deleting comment';
+                }
+                const formData = new URLSearchParams();
+                formData.append('id', currentThing.id);
+                formData.append('goto', goto);
+                formData.append('hmac', hmacMatch[1]);
+                formData.append('d', 'Yes');
+                return hnfetch('https://news.ycombinator.com/xdelete', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+            }).then(({response}) => {
+                if (response.url) {
+                    document.location = response.url;
+                } else {
+                    console.warn(response);
+                    throw 'Unexpected response while deleting comment';
                 }
             }).catch(msg => {
                 deleteLink.textContent = 'delete';
@@ -916,20 +907,18 @@ function thingEvent(event) {
             faveLink.textContent = '…';
             hnfetch(url).then(({html}) => {
                 if (html.match('Please log in.<br>')) {
-                    faveLink.textContent = originalLinkLabel;
-                    alert('You are not connected');
-                } else {
-                    /* Switch URL between favorite/un-favorite and update link label */
-                    const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                    if (searchParams.get('un')) {
-                        searchParams.delete('un');
-                        faveLink.textContent = 'favorite';
-                    } else {
-                        searchParams.set('un', 't');
-                        faveLink.textContent = 'un-favorite';
-                    }
-                    faveLink.href = 'fave?' + searchParams.toString();
+                    throw 'You are not connected';
                 }
+                /* Switch URL between favorite/un-favorite and update link label */
+                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                if (searchParams.get('un')) {
+                    searchParams.delete('un');
+                    faveLink.textContent = 'favorite';
+                } else {
+                    searchParams.set('un', 't');
+                    faveLink.textContent = 'un-favorite';
+                }
+                faveLink.href = 'fave?' + searchParams.toString();
             }).catch(msg => {
                 faveLink.textContent = originalLinkLabel;
                 alert(msg);
@@ -947,20 +936,18 @@ function thingEvent(event) {
                 if (html.match('Please log in.<br>')) {
                     // NOTE: actually never happen
                     // TODO: detect logged out in this case
-                    flagLink.textContent = originalLinkLabel;
-                    alert('You are not connected');
-                } else {
-                    /* Switch URL between flag/unflag and update link label */
-                    const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                    if (searchParams.get('un')) {
-                        searchParams.delete('un');
-                        flagLink.textContent = 'flag';
-                    } else {
-                        searchParams.set('un', 't');
-                        flagLink.textContent = 'unflag';
-                    }
-                    flagLink.href = 'flag?' + searchParams.toString();
+                    throw 'You are not connected';
                 }
+                /* Switch URL between flag/unflag and update link label */
+                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                if (searchParams.get('un')) {
+                    searchParams.delete('un');
+                    flagLink.textContent = 'flag';
+                } else {
+                    searchParams.set('un', 't');
+                    flagLink.textContent = 'unflag';
+                }
+                flagLink.href = 'flag?' + searchParams.toString();
             }).catch(msg => {
                 flagLink.textContent = originalLinkLabel;
                 alert(msg);
