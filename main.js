@@ -204,10 +204,20 @@ function handleRequest() {
             if (!requestTimer) {
                 requestTimer = setTimeout(handleRequest, 2000);
             }
+        } else if (response.status === 200) {
+            // Good!
+            response.text().then(html => {
+                // Very good!
+                resolve({html, response});
+            }).catch(() => {
+                reject('Failed to read response; are you connected to the Internet?');
+            });
         } else {
-            resolve(response);
+            reject('Unexpected error (' + response.status + ')');
         }
-    }).catch(reject);
+    }).catch(() => {
+        reject('Connection failure; are you connected to the Internet?');
+    });
     // Program handling the next request, if any
     if (requestQueue.length > 0) {
         requestTimer = setTimeout(handleRequest, 2000);
@@ -372,7 +382,8 @@ function toggleCollapse(thing) {
         // This is non critical, so no point in blocking the collapsing on getting
         // a result. We just do best effort. Do use hnfetch() to handle the user
         // {,un}collapsing many things in a row.
-        hnfetch('https://news.ycombinator.com/collapse?id=' + thing.id + (coll ? '' : '&un=true'));
+        hnfetch('https://news.ycombinator.com/collapse?id=' + thing.id + (coll ? '' : '&un=true'))
+        .catch(console.warn);
     }
 
     // The thing itself
@@ -454,26 +465,16 @@ function vote(id, how, auth, _goto) {
 
     // Do the query
     const url = 'https://news.ycombinator.com/' + vurl(id, how, auth, _goto);
-    hnfetch(url).then(response => {
-        if (response.status !== 200) {
+    hnfetch(url).then(({html}) => {
+        if (html.match('<b>Login</b>')) {
             restore();
-            alert('Unexpected error (' + response.status + ')');
-            return;
+            alert('You are not connected');
+        } else {
+            complete();
         }
-        response.text().then(html => {
-            if (html.match('<b>Login</b>')) {
-                restore();
-                alert('You are not connected');
-            } else {
-                complete();
-            }
-        }).catch(() => {
-            restore();
-            alert('Failed to read response; are you connected to the Internet?');
-        });
-    }).catch(x => {
+    }).catch(msg => {
         restore();
-        alert('Connection failure; are you connected to the Internet?');
+        alert(msg);
     });
 }
 // Basically from Hacker News's JavaScript
@@ -800,31 +801,23 @@ function thingEvent(event) {
                 // NOTE: fetch only accepts absolute URLs
                 // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
                 const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-                hnfetch(url).then(response => {
-                    if (response.status != 200) {
-                        quickReplyFormError.innerText = 'Unexpected error (' + response.status + ')';
-                        return;
+                hnfetch(url).then(({html}) => {
+                    const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
+                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                    if (parentMatch && hmacMatch) {
+                        quickReplyFormParent.value = parentMatch[1];
+                        quickReplyFormHmac.value = hmacMatch[1];
+                        quickReplyFormSubmit.disabled = false;
+                    } else if (html.match('You have to be logged in to reply.<br>')) {
+                        quickReplyFormError.innerText = 'You need to be logged in to reply';
+                    } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
+                        quickReplyFormError.innerText = 'Cannot reply to this anymore (thread locked or comment deleted)';
+                    } else {
+                        console.warn(html);
+                        quickReplyFormError.innerText = 'Unexpected error';
                     }
-                    response.text().then(html => {
-                        const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-                        const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                        if (parentMatch && hmacMatch) {
-                            quickReplyFormParent.value = parentMatch[1];
-                            quickReplyFormHmac.value = hmacMatch[1];
-                            quickReplyFormSubmit.disabled = false;
-                        } else if (html.match('You have to be logged in to reply.<br>')) {
-                            quickReplyFormError.innerText = 'You need to be logged in to reply';
-                        } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
-                            quickReplyFormError.innerText = 'Cannot reply to this anymore (thread locked or comment deleted)';
-                        } else {
-                            console.warn(html);
-                            quickReplyFormError.innerText = 'Unexpected error';
-                        }
-                    }).catch(() => {
-                        quickReplyFormError.innerText = 'Failed to read response; are you connected to the Internet?';
-                    });
-                }).catch(() => {
-                    quickReplyFormError.innerText = 'Connection failure; are you connected to the Internet?';
+                }).catch(msg => {
+                    quickReplyFormError.innerText = msg;
                 });
                 quickReplyFormGoto.value = goto;
                 currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
@@ -841,30 +834,24 @@ function thingEvent(event) {
             editFormTextarea.disabled = true;
             editFormTextarea.value = 'loading…';
             const url = 'https://news.ycombinator.com/edit?id=' + currentThing.id;
-            hnfetch(url).then(response => {
-                if (response.status != 200) {
-                    editFormTextarea.value = 'Unexpected error (' + response.status + ')';
-                    return;
+            hnfetch(url).then(({html}) => {
+                const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
+                if (hmacMatch && textMatch) {
+                    const content = htmlDecode(textMatch[1]);
+                    editFormHmac.value = hmacMatch[1];
+                    editFormTextarea.value = content;
+                    editFormPreview.innerHTML = formatComment(content);
+                    editFormSubmit.disabled = false;
+                    editFormTextarea.disabled = false;
+                    editFormTextarea.focus();
+                } else {
+                    // NOTE: actually never happen
+                    // TODO: detect logged out in this case
+                    editFormTextarea.value = 'You cannot edit this';
                 }
-                response.text().then(html => {
-                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
-                    if (hmacMatch && textMatch) {
-                        const content = htmlDecode(textMatch[1]);
-                        editFormHmac.value = hmacMatch[1];
-                        editFormTextarea.value = content;
-                        editFormPreview.innerHTML = formatComment(content);
-                        editFormSubmit.disabled = false;
-                        editFormTextarea.disabled = false;
-                        editFormTextarea.focus();
-                    } else {
-                        editFormTextarea.value = 'You cannot edit this';
-                    }
-                }).catch(() => {
-                    editFormTextarea.value = 'Failed to read response; are you connected to the Internet?';
-                });
-            }).catch(() => {
-                editFormTextarea.value = 'Connection failure; are you connected to the Internet?';
+            }).catch(msg => {
+                editFormTextarea.value = msg;
             });
             editFormId.value = currentThing.id;
             const tbody = currentThing.getElementsByTagName('tbody')[0] || currentThing.parentElement;
@@ -880,53 +867,43 @@ function thingEvent(event) {
             // NOTE: fetch only accepts absolute URLs
             // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
             const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-            hnfetch(url).then(response => {
-                if (response.status !== 200) {
-                    deleteLink.textContent = 'delete';
-                    alert('Unexpected error (' + response.status + ')');
-                    return;
-                }
-                response.text().then(html => {
-                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    if (hmacMatch) {
-                        const formData = new URLSearchParams();
-                        formData.append('id', currentThing.id);
-                        formData.append('goto', goto);
-                        formData.append('hmac', hmacMatch[1]);
-                        formData.append('d', 'Yes');
-                        hnfetch('https://news.ycombinator.com/xdelete', {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        }).then(response => {
-                            if (response.url) {
-                                document.location = response.url;
-                            } else {
-                                console.warn(response);
-                                deleteLink.textContent = 'delete';
-                                alert('Unexpected response while deleting comment');
-                            }
-                        }).catch(() => {
+            hnfetch(url).then(({html}) => {
+                const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+                if (hmacMatch) {
+                    const formData = new URLSearchParams();
+                    formData.append('id', currentThing.id);
+                    formData.append('goto', goto);
+                    formData.append('hmac', hmacMatch[1]);
+                    formData.append('d', 'Yes');
+                    hnfetch('https://news.ycombinator.com/xdelete', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then(({response}) => {
+                        if (response.url) {
+                            document.location = response.url;
+                        } else {
+                            console.warn(response);
                             deleteLink.textContent = 'delete';
-                            alert('Second connection failure; are you connected to the Internet?');
-                        });
-                    } else if (html == "You can't delete that.")  {
+                            alert('Unexpected response while deleting comment');
+                        }
+                    }).catch(msg => {
                         deleteLink.textContent = 'delete';
-                        alert('You cannot delete this comment');
-                    } else {
-                        console.warn(html);
-                        deleteLink.textContent = 'delete';
-                        alert('Unexpected error while deleting comment');
-                    }
-                }).catch(() => {
+                        alert(msg);
+                    });
+                } else if (html == "You can't delete that.")  {
                     deleteLink.textContent = 'delete';
-                    alert('Failed to read response; are you connected to the Internet?');
-                });
-            }).catch(() => {
+                    alert('You cannot delete this comment');
+                } else {
+                    console.warn(html);
+                    deleteLink.textContent = 'delete';
+                    alert('Unexpected error while deleting comment');
+                }
+            }).catch(msg => {
                 deleteLink.textContent = 'delete';
-                alert('Connection failure; are you connected to the Internet?');
+                alert(msg);
             });
         }
     } else if (event.key == 'f') {
@@ -937,35 +914,25 @@ function thingEvent(event) {
             const url = faveLink.href;
             const originalLinkLabel = faveLink.textContent;
             faveLink.textContent = '…';
-            hnfetch(url).then(response => {
-                if (response.status !== 200) {
+            hnfetch(url).then(({html}) => {
+                if (html.match('Please log in.<br>')) {
                     faveLink.textContent = originalLinkLabel;
-                    alert('Unexpected error (' + response.status + ')');
-                    return;
-                }
-                response.text().then(html => {
-                    if (html.match('Please log in.<br>')) {
-                        faveLink.textContent = originalLinkLabel;
-                        alert('You are not connected');
+                    alert('You are not connected');
+                } else {
+                    /* Switch URL between favorite/un-favorite and update link label */
+                    const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                    if (searchParams.get('un')) {
+                        searchParams.delete('un');
+                        faveLink.textContent = 'favorite';
                     } else {
-                        /* Switch URL between favorite/un-favorite and update link label */
-                        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                        if (searchParams.get('un')) {
-                            searchParams.delete('un');
-                            faveLink.textContent = 'favorite';
-                        } else {
-                            searchParams.set('un', 't');
-                            faveLink.textContent = 'un-favorite';
-                        }
-                        faveLink.href = 'fave?' + searchParams.toString();
+                        searchParams.set('un', 't');
+                        faveLink.textContent = 'un-favorite';
                     }
-                }).catch(() => {
-                    faveLink.textContent = originalLinkLabel;
-                    alert('Failed to read response; are you connected to the Internet?');
-                });
-            }).catch(() => {
+                    faveLink.href = 'fave?' + searchParams.toString();
+                }
+            }).catch(msg => {
                 faveLink.textContent = originalLinkLabel;
-                alert('Connection failure; are you connected to the Internet?');
+                alert(msg);
             });
         }
     } else if (event.key == 'F') {
@@ -976,35 +943,27 @@ function thingEvent(event) {
             const url = flagLink.href;
             const originalLinkLabel = flagLink.textContent;
             flagLink.textContent = '…';
-            hnfetch(url).then(response => {
-                if (response.status !== 200) {
+            hnfetch(url).then(({html}) => {
+                if (html.match('Please log in.<br>')) {
+                    // NOTE: actually never happen
+                    // TODO: detect logged out in this case
                     flagLink.textContent = originalLinkLabel;
-                    alert('Unexpected error (' + response.status + ')');
-                    return;
-                }
-                response.text().then(html => {
-                    if (html.match('Please log in.<br>')) {
-                        flagLink.textContent = originalLinkLabel;
-                        alert('You are not connected');
+                    alert('You are not connected');
+                } else {
+                    /* Switch URL between flag/unflag and update link label */
+                    const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+                    if (searchParams.get('un')) {
+                        searchParams.delete('un');
+                        flagLink.textContent = 'flag';
                     } else {
-                        /* Switch URL between flag/unflag and update link label */
-                        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                        if (searchParams.get('un')) {
-                            searchParams.delete('un');
-                            flagLink.textContent = 'flag';
-                        } else {
-                            searchParams.set('un', 't');
-                            flagLink.textContent = 'unflag';
-                        }
-                        flagLink.href = 'flag?' + searchParams.toString();
+                        searchParams.set('un', 't');
+                        flagLink.textContent = 'unflag';
                     }
-                }).catch(() => {
-                    flagLink.textContent = originalLinkLabel;
-                    alert('Failed to read response; are you connected to the Internet?');
-                });
-            }).catch(() => {
+                    flagLink.href = 'flag?' + searchParams.toString();
+                }
+            }).catch(msg => {
                 flagLink.textContent = originalLinkLabel;
-                alert('Connection failure; are you connected to the Internet?');
+                alert(msg);
             });
         }
     } else if (event.key == 'n') {
