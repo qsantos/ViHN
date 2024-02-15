@@ -2,6 +2,7 @@
 
 - Schedule vote requests to avoid 503s
 - Fix hitting m on story in comment thread making upvote button disappear
+- Fix innocuous error when toggling last comment
 
 # v0.1.8
 

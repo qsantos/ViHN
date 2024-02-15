@@ -497,6 +497,9 @@ if (op) {
 }
 
 function thingDepth(thing) {
+    if (!thing) {
+        return 0;
+    }
     const indentTd = thing.querySelector('td[indent]');
     if (!indentTd) {
         return 0;
