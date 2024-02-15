@@ -1,5 +1,6 @@
 # v0.1.9
 
+- Schedule vote requests to avoid 503s
 - Fix hitting m on story in comment thread making upvote button disappear
 
 # v0.1.8

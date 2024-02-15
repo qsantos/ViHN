@@ -27,6 +27,20 @@
     top:-13px !important;
 }
 
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.inprogress-votelink:last-of-type::before {
+    /* Override nosee */
+    visibility: visible;
+    /* Make a spinner */
+    content:"↻";
+    display:block;
+    animation:spin 3s linear infinite;
+}
+
 /* Highlight op */
 .op {
     color: var(--top-color) !important;

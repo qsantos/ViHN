@@ -315,10 +315,12 @@ function nextcomm(el) {
 }
 
 function setClassIf(el, className, condition) {
-    if (condition) {
-        el.classList.add(className);
-    } else {
-        el.classList.remove(className);
+    if (el) {
+        if (condition) {
+            el.classList.add(className);
+        } else {
+            el.classList.remove(className);
+        }
     }
 }
 
@@ -398,6 +400,88 @@ function toggleCollapse(thing) {
                 thing.classList.remove('noshow');
             }
         }
+    }
+}
+
+// From Hacker News's JavaScript
+function vurl(id, how, auth, _goto) {
+    return "vote?id=" + id + "&how=" + how + "&auth=" + auth + "&goto=" + encodeURIComponent(_goto) + "&js=t";
+}
+
+// Basically from Hacker News's JavaScript
+function vote(id, how, auth, _goto) {
+    const upLink = document.getElementById('up_' + id);
+    const downLink = document.getElementById('down_' + id);
+    const unLink = document.getElementById('unv_' + id);
+    // Display vote links as “in-progress”
+    upLink.classList.add('nosee', 'inprogress-votelink');
+    if (downLink) {
+        downLink.classList.add('nosee', 'inprogress-votelink');
+    }
+    const originalUnlinkContent = unLink.innerHTML;
+    unLink.innerHTML = '| …';
+
+    function restore() {
+        // Clear “in-progress”
+        upLink.classList.remove('inprogress-votelink');
+        if (downLink) {
+            downLink.classList.remove('inprogress-votelink');
+        }
+        setClassIf(upLink, 'nosee', how == 'un');
+        setClassIf(downLink, 'nosee', how == 'un');
+        unLink.innerHTML = originalUnlinkContent;
+    }
+    function complete() {
+        // Clear “in-progress”
+        upLink.classList.remove('inprogress-votelink');
+        if (downLink) {
+            downLink.classList.remove('inprogress-votelink');
+        }
+        // Toggle links
+        setClassIf(upLink, 'nosee', how != 'un');
+        setClassIf(downLink, 'nosee', how != 'un');
+        if (how == 'un') {
+            unLink.innerHTML = '';
+        } else {
+            const unUrl = vurl(id, 'un', auth, _goto);
+            unLink.innerHTML = (
+                " | <a id='un_" + id + "' class='clicky' " + "href='" + unUrl + "'>" +
+                (how == 'up' ? 'unvote' : 'undown')
+                + "</a>"
+            );
+        }
+    }
+
+    // Do the query
+    const url = 'https://news.ycombinator.com/' + vurl(id, how, auth, _goto);
+    hnfetch(url).then(response => {
+        if (response.status !== 200) {
+            restore();
+            alert('Unexpected error (' + response.status + ')');
+            return;
+        }
+        response.text().then(html => {
+            if (html.match('<b>Login</b>')) {
+                restore();
+                alert('You are not connected');
+            } else {
+                complete();
+            }
+        }).catch(() => {
+            restore();
+            alert('Failed to read response; are you connected to the Internet?');
+        });
+    }).catch(x => {
+        restore();
+        alert('Connection failure; are you connected to the Internet?');
+    });
+}
+// Basically from Hacker News's JavaScript
+function voteFromLink(el) {
+    const u = new URL(el.href, location);
+    const p = u.searchParams;
+    if (u.pathname == '/vote') {
+        vote(p.get('id'), p.get('how'), p.get('auth'), p.get('goto'));
     }
 }
 
@@ -675,10 +759,10 @@ function thingEvent(event) {
             // upArrow hidden, we can only unvote
             const unvoteLink = document.getElementById('un_' + currentThing.id);
             if (unvoteLink) {
-                unvoteLink.click();
+                voteFromLink(unvoteLink);
             }
         } else {
-            upArrow.click();
+            voteFromLink(upArrow);
         }
     } else if (event.key == 'd') {
         /* Downvote */
@@ -688,10 +772,10 @@ function thingEvent(event) {
             // downArrow hidden, we can only undown
             const unvoteLink = document.getElementById('un_' + currentThing.id);
             if (unvoteLink) {
-                unvoteLink.click();
+                voteFromLink(unvoteLink);
             }
         } else {
-            downArrow.click();
+            voteFromLink(downArrow);
         }
     } else if (event.key == 'r') {
         /* Comment on story, or reply to comment */
