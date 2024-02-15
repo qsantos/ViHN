@@ -617,6 +617,7 @@ let editForm = null;
 let editFormId = null;
 let editFormHmac = null;
 let editFormTextarea = null;
+let editFormPreview = null;
 let editFormSubmit = null;
 function initEditForm() {
     if (editForm != null) {
@@ -646,7 +647,7 @@ function initEditForm() {
     editFormId = container.querySelector('[name="id"]');
     editFormHmac = container.querySelector('[name="hmac"]');
     editFormTextarea = container.getElementsByTagName('textarea')[0];
-    const editFormPreview = container.getElementsByClassName('preview')[0];
+    editFormPreview = container.getElementsByClassName('preview')[0];
     editFormSubmit = container.querySelector('[type="submit"]');
     editFormTextarea.addEventListener('input', event => {
         editFormPreview.innerHTML = formatComment(editFormTextarea.value);
