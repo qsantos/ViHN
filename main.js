@@ -271,6 +271,15 @@ const newestList = newestItems.getElementsByTagName('ul')[0];
 let focusNewest = false;
 let currentNewestIndex = 0;
 
+function thingIndexParent(thingIndex) {
+    const currentDepth = thingDepth(currentThing);
+    thingIndex--;
+    while (thingIndex > 0 && (thingIsHidden(things[thingIndex]) || thingDepth(things[thingIndex]) >= currentDepth)) {
+        thingIndex--;
+    }
+    return thingIndex;
+}
+
 function gotoNewestIndex(index) {
     newestList.children[currentNewestIndex].classList.remove('active-newest');
     currentNewestIndex = index;
@@ -709,12 +718,8 @@ function thingEvent(event) {
             }
             return;
         }
-        const currentDepth = thingDepth(currentThing);
-        let nextThingIndex = currentThingIndex - 1;
-        while (nextThingIndex > 0 && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) >= currentDepth)) {
-            nextThingIndex--;
-        }
-        gotoThing(things[nextThingIndex]);
+        const parentIndex = thingIndexParent(currentThingIndex);
+        gotoThing(things[parentIndex]);
     } else if (event.key == 'm') {
         /* Toggle comment tree */
         if (currentThing) {
@@ -861,7 +866,9 @@ function thingEvent(event) {
         if (deleteLink && deleteLink.textContent != '…' && confirm('Are you sure you want to delete this comment?')) {
             deleteLink.textContent = '…';
             const loc = document.location;
-            const goto = loc.pathname.substr(1) + loc.search;
+            const parentIndex = thingIndexParent(currentThingIndex);
+            const parent = things[parentIndex];
+            const goto = loc.pathname.substr(1) + loc.search + (parent ? '#' + parent.id : '');
             // NOTE: fetch only accepts absolute URLs
             // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
             const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
@@ -887,7 +894,10 @@ function thingEvent(event) {
                 });
             }).then(({response}) => {
                 if (response.url) {
-                    document.location = response.url;
+                    // NOTE: response.url seems to ignore our goto
+                    document.location = goto;
+                    // The page might not reload if only the hash has changed
+                    document.location.reload()
                 } else {
                     console.warn(response);
                     throw 'Unexpected response while deleting comment';

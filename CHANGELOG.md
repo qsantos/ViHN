@@ -5,6 +5,7 @@
 - Fix innocuous error when toggling last comment
 - Fix quick-edit form broken by preview feature in v0.1.5
 - Fix Ctrl+Return submitting disabled form
+- Redirect to parent when deleting comment
 
 # v0.1.8
 
