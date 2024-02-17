@@ -22,7 +22,7 @@
     "content_scripts": [
         {
             "matches": ["https://news.ycombinator.com/*"],
-            "js": ["main.js"],
+            "js": ["get-option.js", "main.js"],
             "css": ["main.css"],
             "run_at": "document_end"
         }

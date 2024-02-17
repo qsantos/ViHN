@@ -1,3 +1,10 @@
+chrome.storage.sync.get(options => {
+
+const maybeSmoothScrolling = {
+    block: 'nearest',
+    behavior: getOption(options, 'smoothScrolling') ? 'smooth' : 'instant',
+};
+
 // set top color
 const pageSpace = document.getElementById('pagespace');
 if (pageSpace) {
@@ -285,7 +292,7 @@ function gotoNewestIndex(index) {
     currentNewestIndex = index;
     const newest = newestList.children[currentNewestIndex];
     newest.classList.add('active-newest');
-    newest.scrollIntoView({block: 'nearest'});
+    newest.scrollIntoView(maybeSmoothScrolling);
 }
 
 function gotoThingFromNewestIndex(newestIndex) {
@@ -532,7 +539,7 @@ function gotoThing(thing) {
         // Immediately makes the change visible
         if (thing.classList.contains('comtr') || !thing.nextElementSibling) {
             // The thing is a comment, or the “more” link
-            thing.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+            thing.scrollIntoView(maybeSmoothScrolling);
         } else {
             // The thing is a story, also scroll the associated .subtext into view if possible
             // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
@@ -1046,4 +1053,6 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('click', (event) => {
     gotoThingAt(event.clientX, event.clientY);
+});
+
 });
