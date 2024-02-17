@@ -5,6 +5,7 @@ const maybeSmoothScrolling = {
     behavior: getOption(options, 'smoothScrolling') ? 'smooth' : 'instant',
 };
 const persistCollapse = getOption(options, 'persistentCollapse');
+const enableNewestItems = getOption(options, 'newestItems')
 
 // set top color
 const pageSpace = document.getElementById('pagespace');
@@ -238,12 +239,19 @@ const thingIndexes = [];
 things.forEach((thing, index) => thingIndexes[thing.id] = index);
 
 // Newest Items
-const newestItems = document.createElement('DIV');
-const datedIndexes = Array.from(document.getElementsByClassName('age'))
-    .map((age , index)=> [age.title, index])
-    // Chrome is very slow without an explicit comparison function
-    .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
-    .reverse();
+let newestItems;
+let datedIndexes = [];
+let newestList;
+let focusNewest = false;
+let currentNewestIndex = 0;
+if (enableNewestItems) {
+    newestItems = document.createElement('DIV');
+    datedIndexes = Array.from(document.getElementsByClassName('age'))
+        .map((age , index)=> [age.title, index])
+        // Chrome is very slow without an explicit comparison function
+        .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
+        .reverse();
+}
 if (datedIndexes.length != 0) {
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     newestItems.id = 'newest-items';
@@ -274,10 +282,8 @@ if (datedIndexes.length != 0) {
         gotoThingFromIndex(event.target.dataset.index);
     });
     document.body.appendChild(newestItems);
+    newestList = newestItems.getElementsByTagName('ul')[0];
 }
-const newestList = newestItems.getElementsByTagName('ul')[0];
-let focusNewest = false;
-let currentNewestIndex = 0;
 
 function thingIndexParent(thingIndex) {
     const currentDepth = thingDepth(currentThing);
@@ -973,9 +979,11 @@ function thingEvent(event) {
         }
     } else if (event.key == 'n') {
         /* Switch to Newest Items */
-        focusNewest = true;
-        newestItems.classList.add('active-newest-items');
-        gotoNewestIndex(currentNewestIndex);
+        if (enableNewestItems) {
+            focusNewest = true;
+            newestItems.classList.add('active-newest-items');
+            gotoNewestIndex(currentNewestIndex);
+        }
     } else if (48 <= event.keyCode && event.keyCode <= 57) {
         /* Top-row 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9 */
         /* We use keyCode to avoid having to ignore effect of shift key */
