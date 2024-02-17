@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <title>ViHN Options</title>
+    <head>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <style>
+        #options { list-style-type: none; }
+        #options input { width:20px; margin-left:-25px; margin-right:5px; padding:0; }
+        #options>li { margin-bottom: 2em; } 
+        /*
+         * NOTE:
+         * Chrome finally supports hyphens since 2021.
+         * However, CSS justification can still only do inter-character or inter-word, not both, so it looks terrible.
+         * hyphenate-limit-chars might help mitigate this but it is not supported by Firefox.
+         * Without justification, hyphens just add clutter, so no point in enabling them either.
+         */
+        #options { padding-left: 25px; }
+        #options ul { padding-left: 15px; }
+        </style>
+    </head>
+    <body>
+        <ul id="options">
+            <li>
+                <label>
+                    <input type="checkbox" checked><strong>Smooth scrolling</strong>
+                    <p>
+                        When navigating moving from an item to another, the viewport is automatically scrolled to make the item visible.
+                        Smooth scrolling can help get a better understanding of where the viewport was scrolled to, but can cause dizziness.
+                    </p>
+                    <ul>
+                        <li>With this option <strong>enabled</strong>, you will briefly see the page move.</li>
+                        <li>With this option <strong>disabled</strong>, the view will jump immediately to the item, with no transition.</li>
+                    </ul>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" checked><strong>Persistent collapsed threads</strong>
+                    <p>
+                        When collapsing or uncollapsing comment threads, the effect is performed locally immediately.
+                        However, when logged in, a request is also sent to Hacker News.
+                        This allows Hacker News to persist the state of threads you have collapsed when reloading the page.
+                    </p>
+                    <ul>
+                        <li>With this option <strong>enabled</strong>, the threads you have collapsed will stay collapsed when visiting the page again.</li>
+                        <li>With this option <strong>disabled</strong>, you will still be able to collapse threads when navigating the page, but not be kept when reloading the page.</li>
+                    </ul>
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" checked><strong>Show “Newest Items” aside</strong>
+                    <p>
+                        ViHN adds an aside to quickly navigate the comments or stories depending on their age.
+                        However, you might not be using this, or that feature might cause visual clutter, or even performance issues.
+                        If the aside does not look right, or if it causes performance issues, this is a bug;
+                        please <a href="https://github.com/qsantos/ViHN/issues/new/choose">report it</a> with your browser/screen resolution so that we can fix it.
+                    </p>
+                    <ul>
+                        <li>With this option <strong>enabled</strong>, “Newest Items” will be shown towards the left of the screen if there is room, or overlayed when hitting <kbd>n</kbd>.</li>
+                        <li>With this option <strong>disabled</strong>, “Newest Items” will never be shown.</li>
+                    </ul>
+                </label>
+            </li>
+        </ul>
+    </body>
+</html>

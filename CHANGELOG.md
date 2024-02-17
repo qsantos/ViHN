@@ -1,3 +1,7 @@
+# v0.1.10
+
+- Add options page
+
 # v0.1.9
 
 - Schedule vote requests to avoid 503s

@@ -165,7 +165,7 @@
     padding: 6px 13px;
     border: 1px solid #d0d7de;
 }
-#help kbd {
+kbd {
     display: inline-block;
     padding: 3px 5px;
     font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;

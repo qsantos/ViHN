@@ -11,6 +11,9 @@
     "background": {
         "scripts": ["background.js"]
     },
+    "options_ui": {
+        "page": "options.html"
+    },
     "browser_specific_settings": {
         "gecko": {
             "id": "{4622cacb-93c6-4050-bf6e-749f0237fecb}"
