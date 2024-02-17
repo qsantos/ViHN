@@ -23,7 +23,7 @@
         <ul id="options">
             <li>
                 <label>
-                    <input type="checkbox" checked><strong>Smooth scrolling</strong>
+                    <input type="checkbox" name="smoothScrolling"><strong>Smooth scrolling</strong>
                     <p>
                         When navigating moving from an item to another, the viewport is automatically scrolled to make the item visible.
                         Smooth scrolling can help get a better understanding of where the viewport was scrolled to, but can cause dizziness.
@@ -36,7 +36,7 @@
             </li>
             <li>
                 <label>
-                    <input type="checkbox" checked><strong>Persistent collapsed threads</strong>
+                    <input type="checkbox" name="persistentCollapse"><strong>Persistent collapsed threads</strong>
                     <p>
                         When collapsing or uncollapsing comment threads, the effect is performed locally immediately.
                         However, when logged in, a request is also sent to Hacker News.
@@ -50,7 +50,7 @@
             </li>
             <li>
                 <label>
-                    <input type="checkbox" checked><strong>Show “Newest Items” aside</strong>
+                    <input type="checkbox" name="newestItems"><strong>“Newest Items” aside</strong>
                     <p>
                         ViHN adds an aside to quickly navigate the comments or stories depending on their age.
                         However, you might not be using this, or that feature might cause visual clutter, or even performance issues.
@@ -65,4 +65,6 @@
             </li>
         </ul>
     </body>
+    <script src="get-option.js"></script>
+    <script src="options.js"></script>
 </html>
