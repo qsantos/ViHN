@@ -4,6 +4,7 @@ const maybeSmoothScrolling = {
     block: 'nearest',
     behavior: getOption(options, 'smoothScrolling') ? 'smooth' : 'instant',
 };
+const persistCollapse = getOption(options, 'persistentCollapse');
 
 // set top color
 const pageSpace = document.getElementById('pagespace');
@@ -394,7 +395,7 @@ function toggleCollapse(thing) {
     }
     const coll = !thing.classList.contains('coll');
 
-    if (loggedIn) {
+    if (loggedIn && persistCollapse) {
         // This is non critical, so no point in blocking the collapsing on getting
         // a result. We just do best effort. Do use hnfetch() to handle the user
         // {,un}collapsing many things in a row.
