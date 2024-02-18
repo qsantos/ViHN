@@ -4,7 +4,7 @@ const maybeSmoothScrolling = {
     block: 'nearest',
     behavior: getOption(options, 'smoothScrolling') ? 'smooth' : 'instant',
 };
-const persistCollapse = getOption(options, 'persistentCollapse');
+let persistCollapse = getOption(options, 'persistentCollapse');
 const enableNewestItems = getOption(options, 'newestItems')
 
 chrome.storage.sync.onChanged.addListener(changes => {
@@ -14,6 +14,11 @@ chrome.storage.sync.onChanged.addListener(changes => {
         maybeSmoothScrolling.behavior = 'smooth';
     } else if (smoothScrolling === false) {
         maybeSmoothScrolling.behavior = 'instant';
+    }
+    // persistent collapse
+    const persistentCollapse = changes.persistentCollapse?.newValue;
+    if (persistentCollapse !== undefined) {
+        persistCollapse = persistentCollapse;
     }
 });
 
