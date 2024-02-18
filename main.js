@@ -7,6 +7,16 @@ const maybeSmoothScrolling = {
 const persistCollapse = getOption(options, 'persistentCollapse');
 const enableNewestItems = getOption(options, 'newestItems')
 
+chrome.storage.sync.onChanged.addListener(changes => {
+    // smooth scrolling
+    const smoothScrolling = changes.smoothScrolling?.newValue;
+    if (smoothScrolling === true) {
+        maybeSmoothScrolling.behavior = 'smooth';
+    } else if (smoothScrolling === false) {
+        maybeSmoothScrolling.behavior = 'instant';
+    }
+});
+
 // set top color
 const pageSpace = document.getElementById('pagespace');
 if (pageSpace) {
