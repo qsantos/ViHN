@@ -1,6 +1,7 @@
 # v0.1.10
 
 - Add options page
+- Apply options immediately
 
 # v0.1.9
 
