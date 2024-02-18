@@ -5,7 +5,7 @@ const maybeSmoothScrolling = {
     behavior: getOption(options, 'smoothScrolling') ? 'smooth' : 'instant',
 };
 let persistCollapse = getOption(options, 'persistentCollapse');
-const enableNewestItems = getOption(options, 'newestItems')
+let enableNewestItems = getOption(options, 'newestItems')
 
 chrome.storage.sync.onChanged.addListener(changes => {
     // smooth scrolling
@@ -19,6 +19,18 @@ chrome.storage.sync.onChanged.addListener(changes => {
     const persistentCollapse = changes.persistentCollapse?.newValue;
     if (persistentCollapse !== undefined) {
         persistCollapse = persistentCollapse;
+    }
+    // newest items
+    const newestItemsOption = changes.newestItems?.newValue;
+    if (newestItemsOption === true) {
+        enableNewestItems = true;
+        initNewestItems();
+    } else if (newestItemsOption === false) {
+        enableNewestItems = false;
+        focusNewest = false;
+        if (newestItems) {
+            newestItems.style.display = 'none';
+        }
     }
 });
 
@@ -259,15 +271,20 @@ let datedIndexes = [];
 let newestList;
 let focusNewest = false;
 let currentNewestIndex = 0;
-if (enableNewestItems) {
+function initNewestItems() {
+    if (newestItems !== undefined) {
+        newestItems.style.display = 'block';
+        return;
+    }
     newestItems = document.createElement('DIV');
     datedIndexes = Array.from(document.getElementsByClassName('age'))
         .map((age , index)=> [age.title, index])
         // Chrome is very slow without an explicit comparison function
         .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
         .reverse();
-}
-if (datedIndexes.length != 0) {
+    if (datedIndexes.length == 0) {
+        return;
+    }
     const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
     newestItems.id = 'newest-items';
     // Setting innerHTML is still faster than doing DOM
@@ -298,6 +315,9 @@ if (datedIndexes.length != 0) {
     });
     document.body.appendChild(newestItems);
     newestList = newestItems.getElementsByTagName('ul')[0];
+}
+if (enableNewestItems) {
+    initNewestItems();
 }
 
 function thingIndexParent(thingIndex) {
