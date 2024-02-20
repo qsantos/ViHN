@@ -9,18 +9,16 @@
 }
 /* NOTE: The interesting <td> might be the second or third one, but it is
  * always the last one (see DOCUMENTATION.md) */
+/* NOTE: Comments are wrapped in a single <td><table><tbody>; to avoid adding
+ * an orange bar on this <td>, we make sure there are two <td>s. */
+/* NOTE: to apply the orange bar to the subtext of stories, we look at :not(.comtr) + tr */
 /* Make the parent of the actual orange bar relatively positioned to allow
  * moving the orange bar where we want with position: absolute. */
-.activething td+td:last-child,
-/* Also apply the orange bar to the subtext of stories */
-.activething:not(.comtr) + tr td:last-child {
+:is(.activething, .activething:not(.comtr) + tr) td+td:last-child {
     position: relative;
 }
 /* The actual orange bar */
-.activething td+td:last-child::before,
-/* Also apply the orange bar to the subtext of stories */
-.activething:not(.comtr) + tr td:last-child::before
-{
+:is(.activething, .activething:not(.comtr) + tr) td+td:last-child::before {
     content: " ";
     display: block;
     background-color:var(--top-color);
