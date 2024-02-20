@@ -1,3 +1,7 @@
+# v0.1.11
+
+- Extend the orange vertical bar to “add comment”/“reply” form and story text (Show HN) in head item
+
 # v0.1.10
 
 - Add options page

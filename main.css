@@ -14,11 +14,11 @@
 /* NOTE: to apply the orange bar to the subtext of stories, we look at :not(.comtr) + tr */
 /* Make the parent of the actual orange bar relatively positioned to allow
  * moving the orange bar where we want with position: absolute. */
-:is(.activething, .activething:not(.comtr) + tr) td+td:last-child {
+:is(.activething, .activething:not(.comtr) + tr, .fatitem .activething ~ tr) td+td:last-child {
     position: relative;
 }
 /* The actual orange bar */
-:is(.activething, .activething:not(.comtr) + tr) td+td:last-child::before {
+:is(.activething, .activething:not(.comtr) + tr, .fatitem .activething ~ tr) td+td:last-child::before {
     content: " ";
     display: block;
     background-color:var(--top-color);
@@ -29,8 +29,8 @@
     top:-1px;
     bottom:-1px;
 }
-.fatitem td:has(form)::before {
-    /* Cover the empty <tr> before the reply form if there is one */
+.fatitem tr+tr td::before {
+    /* Cover the empty <tr>s in .fatitem */
     top:-13px !important;
 }
 
