@@ -432,9 +432,20 @@ function openCommentLink(thing, linkNumber, active) {
     if (!thing) {
         return;
     }
+    let textElement = thing.getElementsByClassName('commtext')[0];
+    if (!textElement) {
+        // maybe a story with text
+        const subtext = thing?.nextElementSibling;
+        const spacer = subtext?.nextElementSibling;
+        const toptext = spacer?.nextElementSibling;
+        textElement = toptext?.getElementsByClassName('toptext')[0];
+    }
+    if (!textElement) {
+        return;
+    }
     /* Map 0 to 10th link */
     const n = linkNumber ?? 10;
-    const link = thing.querySelectorAll('.commtext a')[n - 1];
+    const link = textElement.getElementsByTagName('a')[n - 1];
     if (!link) {
         return;
     }

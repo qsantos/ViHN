@@ -5,7 +5,7 @@ The section describes the HTML and resulting DOM that make a typical Hacker News
 ## Comment
 
 ```html
-<tr id="XXXXXX" class="athing comtr">
+<tr id="XXXXXX" class="athing">     has the .comtr class in comment threads only
  <td>
   <table>
    <tbody>

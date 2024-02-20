@@ -1,6 +1,7 @@
 # v0.1.11
 
 - Extend the orange vertical bar to “add comment”/“reply” form and story text (Show HN) in head item
+- Can now use the digit keys to open links in submission text (e.g. Show HN)
 
 # v0.1.10
 
