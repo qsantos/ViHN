@@ -215,34 +215,7 @@ body { counter-reset: link; }
      */
 }
 
-/* NOTE: Due to a bug, the reply link may or may not be part of <span class="commtext">.
- *
- * Hacker News does not closes <p> tags in comments. Since comments are
- * wrapped in a <span class="commtext">, closing the <span> does not actually
- * closes the <p>. This causes the reply link to be in the <span> when the
- * comment contains a <p>.
- *
- * ```
- * <span class="commtext c00">
- * Not a proper paragraph
- * </span>
- * <div class='reply'>
- * ```
- *
- * Works as expected: the reply <div> is a sibling of the comment <span>
- *
- * ```
- * <span class="commtext c00">Not a paragraph
- * <p>First paragraph
- * <p>Second paragraph
- * </span>
- * <div class='reply'>
- * ```
- *
- * Here, the </span> is ignored and the reply <div> is still in the comment
- * <span>. However, when the reply <div> closes, it does closes the comment
- * <span> at well, making the layout not completely broken.
- */
+/* NOTE: see Reply Link Bug in DOCUMENTATION.md */
 .activething .commtext .reply a:after {
     /* Avoid showing a link count on reply link (see remark above) */
     content: none;
