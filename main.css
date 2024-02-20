@@ -13,13 +13,13 @@
  * moving the orange bar where we want with position: absolute. */
 .activething td+td:last-child,
 /* Also apply the orange bar to the subtext of stories */
-.activething:has(.title) + tr td:last-child {
+.activething:not(.comtr) + tr td:last-child {
     position: relative;
 }
 /* The actual orange bar */
 .activething td+td:last-child::before,
 /* Also apply the orange bar to the subtext of stories */
-.activething:has(.title) + tr td:last-child::before
+.activething:not(.comtr) + tr td:last-child::before
 {
     content: " ";
     display: block;
