@@ -43,6 +43,11 @@ The section describes the HTML and resulting DOM that make a typical Hacker News
 <table class="fatitem">
  <tbody>
   ONE STORY or ONE COMMENT
+  <tr style="height: 2px">          spacer (only present when submission has text)
+  <tr>                              only present when submission has text
+   <td colspan="2">
+   <td>
+    <div class="toptext">           the submission's text
   <tr style="height: 10px">         spacer (only present on recent items, even if logged out)
   <tr>                              only present on recent items, even if logged out
    <td colspan="2">
