@@ -1,3 +1,7 @@
+# v0.1.12
+
+- Fix showing link counter on some “reply” links (since v0.1.11)
+
 # v0.1.11
 
 - Extend the orange vertical bar to “add comment”/“reply” form and story text (Show HN) in head item

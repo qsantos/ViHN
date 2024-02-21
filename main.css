@@ -223,7 +223,7 @@ body { counter-reset: link; }
 }
 
 /* NOTE: see Reply Link Bug in DOCUMENTATION.md */
-.activething .commtext .reply a:after {
+.reply a:after {
     /* Avoid showing a link count on reply link (see remark above) */
-    content: none;
+    content: none !important;
 }
