@@ -1134,15 +1134,30 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+function handleLinkClick(el) {
+    const url = new URL(el.href, document.location);
+    if (url.pathname == '/vote') {
+        voteFromLink(el);
+        event.stopPropagation();
+        event.preventDefault();
+        return true;
+    } else if (el.classList.contains('togg')) {
+        while (!el.classList.contains('comtr') && (el = el.parentElement));
+        if (el) {
+            toggleCollapse(el);
+            return true;
+        }
+    }
+    return false;
+}
+
 document.addEventListener('click', (event) => {
     // find link
     let el = event.target;
     while (!el.href && (el = el.parentElement));
     // use link
     if (el?.href) {
-        const url = new URL(el.href, document.location);
-        if (url.pathname == '/vote') {
-            voteFromLink(el);
+        if (handleLinkClick(el)) {
             event.stopPropagation();
             event.preventDefault();
             return;
