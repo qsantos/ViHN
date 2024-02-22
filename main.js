@@ -1157,6 +1157,12 @@ function handleLinkClick(el) {
             toggleCollapse(el);
             return true;
         }
+    } else if (url.pathname == '/flag') {
+        flagFromLink(el);
+        return true;
+    } else if (url.pathname == '/fave') {
+        faveFromLink(el);
+        return true;
     }
     return false;
 }
