@@ -1222,6 +1222,15 @@ function handleLinkClick(el) {
     } else if (url.pathname == '/fave') {
         faveFromLink(el);
         return true;
+    } else if (url.pathname == '/reply') {
+        quickReplyFromLink(el);
+        return true;
+    } else if (url.pathname == '/edit') {
+        quickEditFromLink(el);
+        return true;
+    } else if (url.pathname == '/delete-confirm') {
+        quickDeleteFromLink(el);
+        return true;
     }
     return false;
 }

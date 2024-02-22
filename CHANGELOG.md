@@ -6,6 +6,7 @@
 - Same when collapsing/uncollapsing comments
 - Same with favorite/un-favorite/flag/unflag links
 - Same with hide/un-hide links
+- Quick-reply/edit/delete when clicking corresponding link
 
 # v0.1.12
 
