@@ -661,6 +661,41 @@ function hideFromLink(hideLink) {
     });
 }
 
+function quickReplyFromLink(replyLink) {
+    if (!replyLink) {
+        return;
+    }
+    initQuickReplyForm();
+    quickReplyFormSubmit.disabled = true;
+    quickReplyFormError.innerText = '';
+    hnfetch(replyLink.href).then(({html}) => {
+        const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
+        const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+        const gotoMatch = html.match(/<input type="hidden" name="goto" value="(.*?)">/);
+        if (parentMatch && hmacMatch && gotoMatch) {
+            quickReplyFormParent.value = parentMatch[1];
+            quickReplyFormHmac.value = hmacMatch[1];
+            quickReplyFormGoto.value = gotoMatch[1];
+            quickReplyFormSubmit.disabled = false;
+        } else if (html.match('You have to be logged in to reply.<br>')) {
+            throw 'You need to be logged in to reply';
+        } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
+            throw 'Cannot reply to this anymore (thread locked or comment deleted)';
+        } else {
+            console.warn(html);
+            throw 'Unexpected error';
+        }
+    }).catch(msg => {
+        quickReplyFormError.innerText = msg;
+    });
+    let el = replyLink;
+    while (!el.classList.contains('comtr') && (el = el.parentElement));
+    if (el) {
+        el.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
+        quickReplyFormTextarea.focus();
+    }
+}
+
 const op = document.querySelector('.fatitem .hnuser');
 if (op) {
     const opUsername = op.textContent;
@@ -965,33 +1000,7 @@ function thingEvent(event) {
             // cannot comment: <div class="reply"><p><font>
             const replyDiv = currentThing.getElementsByClassName('reply')[0];
             const replyLink = replyDiv?.getElementsByTagName('a')[0];
-            if (replyLink) {
-                initQuickReplyForm();
-                quickReplyFormSubmit.disabled = true;
-                quickReplyFormError.innerText = '';
-                hnfetch(replyLink.href).then(({html}) => {
-                    const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-                    const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    const gotoMatch = html.match(/<input type="hidden" name="goto" value="(.*?)">/);
-                    if (parentMatch && hmacMatch && gotoMatch) {
-                        quickReplyFormParent.value = parentMatch[1];
-                        quickReplyFormHmac.value = hmacMatch[1];
-                        quickReplyFormGoto.value = gotoMatch[1];
-                        quickReplyFormSubmit.disabled = false;
-                    } else if (html.match('You have to be logged in to reply.<br>')) {
-                        throw 'You need to be logged in to reply';
-                    } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
-                        throw 'Cannot reply to this anymore (thread locked or comment deleted)';
-                    } else {
-                        console.warn(html);
-                        throw 'Unexpected error';
-                    }
-                }).catch(msg => {
-                    quickReplyFormError.innerText = msg;
-                });
-                currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
-                quickReplyFormTextarea.focus();
-            }
+            quickReplyFromLink(replyLink);
         }
     } else if (event.key == 'e') {
         /* Edit */
