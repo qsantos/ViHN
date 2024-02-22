@@ -964,22 +964,19 @@ function thingEvent(event) {
             // can comment:    <div class="reply"><p><font><u><a>reply
             // cannot comment: <div class="reply"><p><font>
             const replyDiv = currentThing.getElementsByClassName('reply')[0];
-            const canReply = replyDiv?.firstElementChild?.firstElementChild?.firstElementChild !== null;
-            if (canReply) {
+            const replyLink = replyDiv?.getElementsByTagName('a')[0];
+            if (replyLink) {
                 initQuickReplyForm();
                 quickReplyFormSubmit.disabled = true;
                 quickReplyFormError.innerText = '';
-                const loc = document.location;
-                const goto = loc.pathname.substr(1) + loc.search + '#' + currentThing.id;
-                // NOTE: fetch only accepts absolute URLs
-                // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
-                const url = 'https://news.ycombinator.com/reply?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-                hnfetch(url).then(({html}) => {
+                hnfetch(replyLink.href).then(({html}) => {
                     const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
                     const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                    if (parentMatch && hmacMatch) {
+                    const gotoMatch = html.match(/<input type="hidden" name="goto" value="(.*?)">/);
+                    if (parentMatch && hmacMatch && gotoMatch) {
                         quickReplyFormParent.value = parentMatch[1];
                         quickReplyFormHmac.value = hmacMatch[1];
+                        quickReplyFormGoto.value = gotoMatch[1];
                         quickReplyFormSubmit.disabled = false;
                     } else if (html.match('You have to be logged in to reply.<br>')) {
                         throw 'You need to be logged in to reply';
@@ -992,7 +989,6 @@ function thingEvent(event) {
                 }).catch(msg => {
                     quickReplyFormError.innerText = msg;
                 });
-                quickReplyFormGoto.value = goto;
                 currentThing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
                 quickReplyFormTextarea.focus();
             }
