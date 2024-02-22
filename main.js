@@ -1135,7 +1135,21 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('click', (event) => {
+    // find link
+    let el = event.target;
+    while (!el.href && (el = el.parentElement));
+    // use link
+    if (el?.href) {
+        const url = new URL(el.href, document.location);
+        if (url.pathname == '/vote') {
+            voteFromLink(el);
+            event.stopPropagation();
+            event.preventDefault();
+            return;
+        }
+    }
+    // just select thing
     gotoThingAt(event.clientX, event.clientY);
-});
+}, true);
 
 });

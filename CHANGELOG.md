@@ -2,6 +2,7 @@
 
 - Enable preview in new-comment form without hitting “r”
 - Enable preview in submission form
+- Use 503-safe method when clicking vote links (not just when using key bindings)
 
 # v0.1.12
 
