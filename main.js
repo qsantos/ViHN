@@ -997,7 +997,6 @@ function thingEvent(event) {
         /* Edit */
         const editLink = currentThing.querySelector('a[href^="edit"]');
         if (editLink) {
-            const replyDiv = currentThing.getElementsByClassName('reply')[0];
             initEditForm();
             editFormSubmit.disabled = true;
             editFormTextarea.disabled = true;
