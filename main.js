@@ -634,6 +634,33 @@ function flagFromLink(flagLink) {
     });
 }
 
+function hideFromLink(hideLink) {
+    if (!hideLink || hideLink.textContent == '…') {
+        return;
+    }
+    const url = hideLink.href;
+    const originalLinkLabel = hideLink.textContent;
+    hideLink.textContent = '…';
+    hnfetch(url).then(({html}) => {
+        if (html.match('<b>Login</b>')) {
+            throw 'You are not connected';
+        }
+        /* Switch URL between hide/unhide and update link label */
+        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+        if (searchParams.get('un')) {
+            searchParams.delete('un');
+            hideLink.textContent = 'hide';
+        } else {
+            searchParams.set('un', 't');
+            hideLink.textContent = 'un-hide';
+        }
+        hideLink.href = 'hide?' + searchParams.toString();
+    }).catch(msg => {
+        hideLink.textContent = originalLinkLabel;
+        alert(msg);
+    });
+}
+
 const op = document.querySelector('.fatitem .hnuser');
 if (op) {
     const opUsername = op.textContent;
@@ -1159,6 +1186,9 @@ function handleLinkClick(el) {
         }
     } else if (url.pathname == '/flag') {
         flagFromLink(el);
+        return true;
+    } else if (url.pathname == '/hide') {
+        hideFromLink(el);
         return true;
     } else if (url.pathname == '/fave') {
         faveFromLink(el);

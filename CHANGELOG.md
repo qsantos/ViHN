@@ -5,6 +5,7 @@
 - Use 503-safe method when clicking vote links (not just when using key bindings)
 - Same when collapsing/uncollapsing comments
 - Same with favorite/un-favorite/flag/unflag links
+- Same with hide/un-hide links
 
 # v0.1.12
 
