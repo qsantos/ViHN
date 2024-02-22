@@ -578,6 +578,62 @@ function voteFromLink(el) {
     }
 }
 
+function faveFromLink(faveLink) {
+    if (!faveLink || faveLink.textContent == '…') {
+        return;
+    }
+    const url = faveLink.href;
+    const originalLinkLabel = faveLink.textContent;
+    faveLink.textContent = '…';
+    hnfetch(url).then(({html}) => {
+        if (html.match('Please log in.<br>')) {
+            throw 'You are not connected';
+        }
+        /* Switch URL between favorite/un-favorite and update link label */
+        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+        if (searchParams.get('un')) {
+            searchParams.delete('un');
+            faveLink.textContent = 'favorite';
+        } else {
+            searchParams.set('un', 't');
+            faveLink.textContent = 'un-favorite';
+        }
+        faveLink.href = 'fave?' + searchParams.toString();
+    }).catch(msg => {
+        faveLink.textContent = originalLinkLabel;
+        alert(msg);
+    });
+}
+
+function flagFromLink(flagLink) {
+    if (!flagLink || flagLink.textContent == '…') {
+        return;
+    }
+    const url = flagLink.href;
+    const originalLinkLabel = flagLink.textContent;
+    flagLink.textContent = '…';
+    hnfetch(url).then(({html}) => {
+        if (html.match('Please log in.<br>')) {
+            // NOTE: actually never happen
+            // TODO: detect logged out in this case
+            throw 'You are not connected';
+        }
+        /* Switch URL between flag/unflag and update link label */
+        const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
+        if (searchParams.get('un')) {
+            searchParams.delete('un');
+            flagLink.textContent = 'flag';
+        } else {
+            searchParams.set('un', 't');
+            flagLink.textContent = 'unflag';
+        }
+        flagLink.href = 'flag?' + searchParams.toString();
+    }).catch(msg => {
+        flagLink.textContent = originalLinkLabel;
+        alert(msg);
+    });
+}
+
 const op = document.querySelector('.fatitem .hnuser');
 if (op) {
     const opUsername = op.textContent;
@@ -999,58 +1055,12 @@ function thingEvent(event) {
         /* Favorite */
         const thing = currentThing || things[0];
         const faveLink = thing.querySelector('a[href^="fave"]') || thing.nextSibling?.querySelector?.('a[href^="fave"]');
-        if (faveLink && faveLink.textContent != '…') {
-            const url = faveLink.href;
-            const originalLinkLabel = faveLink.textContent;
-            faveLink.textContent = '…';
-            hnfetch(url).then(({html}) => {
-                if (html.match('Please log in.<br>')) {
-                    throw 'You are not connected';
-                }
-                /* Switch URL between favorite/un-favorite and update link label */
-                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                if (searchParams.get('un')) {
-                    searchParams.delete('un');
-                    faveLink.textContent = 'favorite';
-                } else {
-                    searchParams.set('un', 't');
-                    faveLink.textContent = 'un-favorite';
-                }
-                faveLink.href = 'fave?' + searchParams.toString();
-            }).catch(msg => {
-                faveLink.textContent = originalLinkLabel;
-                alert(msg);
-            });
-        }
+        faveFromLink(faveLink);
     } else if (event.key == 'F') {
         /* Flag */
         const thing = currentThing || things[0];
         const flagLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
-        if (flagLink && flagLink.textContent != '…') {
-            const url = flagLink.href;
-            const originalLinkLabel = flagLink.textContent;
-            flagLink.textContent = '…';
-            hnfetch(url).then(({html}) => {
-                if (html.match('Please log in.<br>')) {
-                    // NOTE: actually never happen
-                    // TODO: detect logged out in this case
-                    throw 'You are not connected';
-                }
-                /* Switch URL between flag/unflag and update link label */
-                const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-                if (searchParams.get('un')) {
-                    searchParams.delete('un');
-                    flagLink.textContent = 'flag';
-                } else {
-                    searchParams.set('un', 't');
-                    flagLink.textContent = 'unflag';
-                }
-                flagLink.href = 'flag?' + searchParams.toString();
-            }).catch(msg => {
-                flagLink.textContent = originalLinkLabel;
-                alert(msg);
-            });
-        }
+        flagFromLink(flagLink);
     } else if (event.key == 'n') {
         /* Switch to Newest Items */
         if (enableNewestItems) {
