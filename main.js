@@ -737,6 +737,62 @@ function quickEditFromLink(editLink) {
     }
 }
 
+function quickDeleteFromLink(deleteLink) {
+    if (!deleteLink || deleteLink.textContent == '…') {
+        return;
+    }
+    const thing = findThingInAscendants(deleteLink);
+    const thingIndex = thingIndexes[thing.id];
+    if (!thingIndex) {
+        return;
+    }
+    if (!confirm('Are you sure you want to delete this comment?')) {
+        return;
+    }
+    deleteLink.textContent = '…';
+    const loc = document.location;
+    const parentIndex = thingIndexParent(thingIndex);
+    const parent = things[parentIndex];
+    const goto = loc.pathname.substr(1) + loc.search + (parent ? '#' + parent.id : '');
+    // NOTE: fetch only accepts absolute URLs
+    // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
+    const url = 'https://news.ycombinator.com/delete-confirm?id=' + thing.id + '&goto=' + encodeURIComponent(goto);
+    hnfetch(url).then(({html}) => {
+        const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+        if (html == "You can't delete that.")  {
+            throw 'You cannot delete this comment';
+        } else if (!hmacMatch) {
+            console.warn(html);
+            throw 'Unexpected error while deleting comment';
+        }
+        const formData = new URLSearchParams();
+        formData.append('id', thing.id);
+        formData.append('goto', goto);
+        formData.append('hmac', hmacMatch[1]);
+        formData.append('d', 'Yes');
+        return hnfetch('https://news.ycombinator.com/xdelete', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+    }).then(({response}) => {
+        if (response.url) {
+            // NOTE: response.url seems to ignore our goto
+            document.location = goto;
+            // The page might not reload if only the hash has changed
+            document.location.reload()
+        } else {
+            console.warn(response);
+            throw 'Unexpected response while deleting comment';
+        }
+    }).catch(msg => {
+        deleteLink.textContent = 'delete';
+        alert(msg);
+    });
+}
+
 const op = document.querySelector('.fatitem .hnuser');
 if (op) {
     const opUsername = op.textContent;
@@ -1050,50 +1106,7 @@ function thingEvent(event) {
     } else if (event.key == 'D') {
         /* Delete */
         const deleteLink = currentThing.querySelector('a[href^="delete-confirm"]');
-        if (deleteLink && deleteLink.textContent != '…' && confirm('Are you sure you want to delete this comment?')) {
-            deleteLink.textContent = '…';
-            const loc = document.location;
-            const parentIndex = thingIndexParent(currentThingIndex);
-            const parent = things[parentIndex];
-            const goto = loc.pathname.substr(1) + loc.search + (parent ? '#' + parent.id : '');
-            // NOTE: fetch only accepts absolute URLs
-            // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
-            const url = 'https://news.ycombinator.com/delete-confirm?id=' + currentThing.id + '&goto=' + encodeURIComponent(goto);
-            hnfetch(url).then(({html}) => {
-                const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                if (html == "You can't delete that.")  {
-                    throw 'You cannot delete this comment';
-                } else if (!hmacMatch) {
-                    console.warn(html);
-                    throw 'Unexpected error while deleting comment';
-                }
-                const formData = new URLSearchParams();
-                formData.append('id', currentThing.id);
-                formData.append('goto', goto);
-                formData.append('hmac', hmacMatch[1]);
-                formData.append('d', 'Yes');
-                return hnfetch('https://news.ycombinator.com/xdelete', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                });
-            }).then(({response}) => {
-                if (response.url) {
-                    // NOTE: response.url seems to ignore our goto
-                    document.location = goto;
-                    // The page might not reload if only the hash has changed
-                    document.location.reload()
-                } else {
-                    console.warn(response);
-                    throw 'Unexpected response while deleting comment';
-                }
-            }).catch(msg => {
-                deleteLink.textContent = 'delete';
-                alert(msg);
-            });
-        }
+        quickDeleteFromLink(deleteLink);
     } else if (event.key == 'f') {
         /* Favorite */
         const thing = currentThing || things[0];
