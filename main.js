@@ -648,6 +648,7 @@ function gotoThingAt(x, y) {
 }
 
 // unconditionally add the preview container to the new comment form
+// NOTE: this also enable preview in submission form
 const newCommentFormTextarea = document.getElementsByTagName('textarea')[0];
 if (newCommentFormTextarea) {
     const newCommentFormPreview = document.createElement('DIV');

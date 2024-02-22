@@ -1,6 +1,7 @@
 # v0.1.13
 
 - Enable preview in new-comment form without hitting “r”
+- Enable preview in submission form
 
 # v0.1.12
 
