@@ -700,6 +700,43 @@ function quickReplyFromLink(replyLink) {
     }
 }
 
+function quickEditFromLink(editLink) {
+    if (!editLink) {
+        return;
+    }
+    initEditForm();
+    editFormSubmit.disabled = true;
+    editFormTextarea.disabled = true;
+    editFormTextarea.value = 'loading…';
+    hnfetch(editLink.href).then(({html}) => {
+        const idMatch = html.match(/<input type="hidden" name="id" value="(.*?)">/);
+        const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
+        const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
+        if (idMatch && hmacMatch && textMatch) {
+            const content = htmlDecode(textMatch[1]);
+            editFormId.value = idMatch[1];
+            editFormHmac.value = hmacMatch[1];
+            editFormTextarea.value = content;
+            // SECURITY: see SECURITY comment inside formatComment
+            editFormPreview.innerHTML = formatComment(content);
+            editFormSubmit.disabled = false;
+            editFormTextarea.disabled = false;
+            editFormTextarea.focus();
+        } else {
+            // NOTE: actually never happen
+            // TODO: detect logged out in this case
+            throw 'You cannot edit this';
+        }
+    }).catch(msg => {
+        editFormTextarea.value = msg;
+    });
+    const thing = findThingInAscendants(editLink);
+    if (thing) {
+        const tbody = thing.getElementsByTagName('tbody')[0] || thing.parentElement;
+        tbody.appendChild(editForm);
+    }
+}
+
 const op = document.querySelector('.fatitem .hnuser');
 if (op) {
     const opUsername = op.textContent;
@@ -1009,36 +1046,7 @@ function thingEvent(event) {
     } else if (event.key == 'e') {
         /* Edit */
         const editLink = currentThing.querySelector('a[href^="edit"]');
-        if (editLink) {
-            initEditForm();
-            editFormSubmit.disabled = true;
-            editFormTextarea.disabled = true;
-            editFormTextarea.value = 'loading…';
-            hnfetch(editLink.href).then(({html}) => {
-                const idMatch = html.match(/<input type="hidden" name="id" value="(.*?)">/);
-                const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-                const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
-                if (idMatch && hmacMatch && textMatch) {
-                    const content = htmlDecode(textMatch[1]);
-                    editFormId.value = idMatch[1];
-                    editFormHmac.value = hmacMatch[1];
-                    editFormTextarea.value = content;
-                    // SECURITY: see SECURITY comment inside formatComment
-                    editFormPreview.innerHTML = formatComment(content);
-                    editFormSubmit.disabled = false;
-                    editFormTextarea.disabled = false;
-                    editFormTextarea.focus();
-                } else {
-                    // NOTE: actually never happen
-                    // TODO: detect logged out in this case
-                    throw 'You cannot edit this';
-                }
-            }).catch(msg => {
-                editFormTextarea.value = msg;
-            });
-            const tbody = currentThing.getElementsByTagName('tbody')[0] || currentThing.parentElement;
-            tbody.appendChild(editForm);
-        }
+        quickEditFromLink(editLink);
     } else if (event.key == 'D') {
         /* Delete */
         const deleteLink = currentThing.querySelector('a[href^="delete-confirm"]');
