@@ -23,9 +23,6 @@ The section describes the HTML and resulting DOM that make a typical Hacker News
          <font>
           < u>                      only present on comments the user can reply to (recent and logged in)
            <a>
-    <tr>                            only present on comments the user can reply to (recent and logged in)
-     <td colspan="2">               covers the .ind and .votelinks <td> from the first <tr>
-     <td>                           for the reply form
 ```
 
 ## Story
