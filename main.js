@@ -661,6 +661,11 @@ function hideFromLink(hideLink) {
     });
 }
 
+function findThingInAscendants(el) {
+    while (!el.classList.contains('comtr') && (el = el.parentElement));
+    return el;
+}
+
 function quickReplyFromLink(replyLink) {
     if (!replyLink) {
         return;
@@ -688,10 +693,9 @@ function quickReplyFromLink(replyLink) {
     }).catch(msg => {
         quickReplyFormError.innerText = msg;
     });
-    let el = replyLink;
-    while (!el.classList.contains('comtr') && (el = el.parentElement));
-    if (el) {
-        el.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
+    const thing = findThingInAscendants(replyLink);
+    if (thing) {
+        thing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
         quickReplyFormTextarea.focus();
     }
 }
@@ -1183,9 +1187,9 @@ function handleLinkClick(el) {
         event.preventDefault();
         return true;
     } else if (el.classList.contains('togg')) {
-        while (!el.classList.contains('comtr') && (el = el.parentElement));
-        if (el) {
-            toggleCollapse(el);
+        const thing = findThingInAscendants(el);
+        if (thing) {
+            toggleCollapse(thing);
             return true;
         }
     } else if (url.pathname == '/flag') {
