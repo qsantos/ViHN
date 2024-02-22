@@ -19,6 +19,10 @@ The section describes the HTML and resulting DOM that make a typical Hacker News
        <span class="commtext c00">  for the comment itself
        <div class="reply">          reply link
                                     NOTE: this <div> is actually a child of the previous <span> in comments with multiple paragraphs
+        <p>
+         <font>
+          < u>                      only present on comments the user can reply to (recent and logged in)
+           <a>
     <tr>                            only present on comments the user can reply to (recent and logged in)
      <td colspan="2">               covers the .ind and .votelinks <td> from the first <tr>
      <td>                           for the reply form
