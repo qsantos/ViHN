@@ -1001,12 +1001,13 @@ function thingEvent(event) {
             editFormSubmit.disabled = true;
             editFormTextarea.disabled = true;
             editFormTextarea.value = 'loading…';
-            const url = 'https://news.ycombinator.com/edit?id=' + currentThing.id;
-            hnfetch(url).then(({html}) => {
+            hnfetch(editLink.href).then(({html}) => {
+                const idMatch = html.match(/<input type="hidden" name="id" value="(.*?)">/);
                 const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
                 const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
-                if (hmacMatch && textMatch) {
+                if (idMatch && hmacMatch && textMatch) {
                     const content = htmlDecode(textMatch[1]);
+                    editFormId.value = idMatch[1];
                     editFormHmac.value = hmacMatch[1];
                     editFormTextarea.value = content;
                     // SECURITY: see SECURITY comment inside formatComment
@@ -1022,7 +1023,6 @@ function thingEvent(event) {
             }).catch(msg => {
                 editFormTextarea.value = msg;
             });
-            editFormId.value = currentThing.id;
             const tbody = currentThing.getElementsByTagName('tbody')[0] || currentThing.parentElement;
             tbody.appendChild(editForm);
         }
