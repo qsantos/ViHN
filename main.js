@@ -647,12 +647,9 @@ function gotoThingAt(x, y) {
     } while (el = el.parentElement);
 }
 
-let newCommentFormTextarea = null;
-function initNewCommentForm() {
-    if (newCommentFormTextarea) {
-        return;
-    }
-    newCommentFormTextarea = document.getElementsByTagName('textarea')[0];
+// unconditionally add the preview container to the new comment form
+const newCommentFormTextarea = document.getElementsByTagName('textarea')[0];
+if (newCommentFormTextarea) {
     const newCommentFormPreview = document.createElement('DIV');
     newCommentFormPreview.classList.add('preview');
     newCommentFormTextarea.insertAdjacentElement('afterend', newCommentFormPreview);
@@ -878,7 +875,6 @@ function thingEvent(event) {
     } else if (event.key == 'r') {
         /* Comment on story, or reply to comment */
         if (!currentThing || currentThingIndex == 0) {
-            initNewCommentForm();
             newCommentFormTextarea.focus();
         } else {
             // can comment:    <div class="reply"><p><font><u><a>reply

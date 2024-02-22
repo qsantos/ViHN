@@ -1,3 +1,7 @@
+# v0.1.13
+
+- Enable preview in new-comment form without hitting “r”
+
 # v0.1.12
 
 - Fix showing link counter on some “reply” links (since v0.1.11)
