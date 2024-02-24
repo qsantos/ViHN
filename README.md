@@ -27,6 +27,11 @@ https://github.com/qsantos/ViHN/assets/8493765/69d96e60-54d3-4c81-8f2b-24142d652
 
 Press <kbd>?</kbd> to toggle help.
 
+**Note**:
+Like in Vim mapping, case is important.
+So <kbd>j</kbd> means hitting the <kbd>j</kbd> key with <kbd>Caps Lock</kbd> disabled, and without holding <kbd>Shift</kbd>.
+But <kbd>J</kbd> means hitting <kbd>j</kbd> key with either <kbd>Caps Lock</kbd> enabled, or while holding <kbd>Shift</kbd>.
+
 ### Navigate Comments/Stories
 
 | Key          | Effect

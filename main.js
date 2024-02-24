@@ -63,6 +63,7 @@ function initHelp() {
     <div id="help-inner" tabindex="0">
         <h2>ViHN Key bindings</h2>
         <p>Press <kbd>?</kbd> to toggle help.</p>
+        <p><strong>Note:</strong> Like in Vim mapping, case is important. So <kbd>j</kbd> means hitting the <kbd>j</kbd> key with <kbd>Caps Lock</kbd> disabled, and without holding <kbd>Shift</kbd>. But <kbd>J</kbd> means hitting <kbd>j</kbd> key with either <kbd>Caps Lock</kbd> enabled, or while holding <kbd>Shift</kbd>.</p>
         <h3>Navigate Comments/Stories</h3>
         <table>
             <thead>

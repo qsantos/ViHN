@@ -1,3 +1,7 @@
+# v0.1.14
+
+- Document that key bindings are case-sensitive
+
 # v0.1.13
 
 - Enable preview in new-comment form without hitting “r”
