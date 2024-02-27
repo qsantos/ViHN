@@ -1,3 +1,7 @@
+# v0.1.15
+
+- Fix showing children of collapsed comment when uncollapsing grandparent
+
 # v0.1.14
 
 - Document that key bindings are case-sensitive

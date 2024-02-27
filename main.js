@@ -484,7 +484,7 @@ function toggleCollapse(thing) {
     // Descendants
     let show = !coll;
     const n0 = thingDepth(thing)
-    const n = thingDepth(nextcomm(thing))
+    let n = thingDepth(nextcomm(thing))
     let coll2 = false;
     if (n > n0) {
         while (thing = nextcomm(thing)) {
@@ -492,10 +492,9 @@ function toggleCollapse(thing) {
                 break;
             } else if (!show) {
                 thing.classList.add('noshow');
-            } else if (thingDepth(thing) == n) {
+            } else if (!coll2 || thingDepth(thing) <= n) {
+                n = thingDepth(thing);
                 coll2 = thing.classList.contains('coll');
-                thing.classList.remove('noshow');
-            } else if (!coll2) {
                 thing.classList.remove('noshow');
             }
         }
