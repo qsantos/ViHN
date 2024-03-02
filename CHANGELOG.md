@@ -1,3 +1,7 @@
+# v0.1.16
+
+- Fix voting causing the content to move (reflow)
+
 # v0.1.15
 
 - Fix showing children of collapsed comment when uncollapsing grandparent

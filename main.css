@@ -40,6 +40,8 @@
     }
 }
 .inprogress-votelink:last-of-type::before {
+    /* Put it above the vote links */
+    position: absolute;
     /* Override nosee */
     visibility: visible;
     /* Make a spinner */
