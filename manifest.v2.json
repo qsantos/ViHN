@@ -1,8 +1,9 @@
 {
+    "name": "ViHN: Vim for Hacker News",
+    "short_name": "ViHN",
     "description": "Vi-style key bindings for browsing Hacker News",
     "author": "Quentin Santos",
     "manifest_version": 2,
-    "name": "ViHN",
     "version": "0.0.0",
     "icons": {
         "128": "icon128.png"

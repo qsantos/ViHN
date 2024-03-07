@@ -1,3 +1,7 @@
+# v0.1.17
+
+- More descriptive name for extension
+
 # v0.1.16
 
 - Fix voting causing the content to move (reflow)
