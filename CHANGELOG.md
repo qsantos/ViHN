@@ -1,3 +1,7 @@
+# v0.1.18
+
+- More specific message for 504 errors (Hacker News is down)
+
 # v0.1.17
 
 - More descriptive name for extension

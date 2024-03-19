@@ -264,6 +264,8 @@ function handleRequest() {
             }).catch(() => {
                 reject('Failed to read response; are you connected to the Internet?');
             });
+        } else if (response.status === 504) {
+            reject('Hacker News is down; try again later (504 error)');
         } else {
             reject('Unexpected error (' + response.status + ')');
         }
