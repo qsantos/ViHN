@@ -244,7 +244,7 @@ function hnfetch(url, options) {
 function handleRequest() {
     const request = requestQueue.shift();
     if (!request) {
-        console.warn('No reqest to handle!');
+        console.warn('No request to handle!');
         return;
     }
     const [url, options, resolve, reject] = request;
