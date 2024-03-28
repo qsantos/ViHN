@@ -12,6 +12,7 @@ See also [Vimium](https://addons.mozilla.org/fr/firefox/addon/vimium-ff/).
 
 ## Features
 
+This browser extension is compatible with Firefox and Chrome.
 Use the key bindings similar to Vi to navigate Hacker News stories and comments.
 It should work on story listings (front page, /new, /newest, /best, user submissions, etc.), comment threads, and comment listings (user comments, etc.).
 
