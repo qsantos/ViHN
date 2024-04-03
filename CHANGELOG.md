@@ -1,3 +1,7 @@
+# v0.1.20
+
+- Enable using 0 key to open 10th link
+
 # v0.1.19
 
 - Fix typo in options page
