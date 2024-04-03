@@ -447,7 +447,7 @@ function openCommentLink(thing, linkNumber, active) {
         return;
     }
     /* Map 0 to 10th link */
-    const n = linkNumber ?? 10;
+    const n = linkNumber === 0 ? 10 : linkNumber;
     const link = textElement.getElementsByTagName('a')[n - 1];
     if (!link) {
         return;
