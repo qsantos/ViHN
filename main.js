@@ -417,7 +417,11 @@ function openThing(thing, active) {
     const anchor = thing.querySelector('.titleline>a');
     const relativeUrl = anchor ? anchor.href : 'item?id=' + thing.id;
     const url = new URL(relativeUrl, document.location).href;
-    chrome.runtime.sendMessage({ action: 'open', url, active });
+    // strips the hash part of the current location
+    const currentUrl = new URL('', document.location).href;
+    if (url != currentUrl) {
+        chrome.runtime.sendMessage({ action: 'open', url, active });
+    }
 }
 
 function openComments(thing, active) {
@@ -457,7 +461,11 @@ function openCommentLink(thing, linkNumber, active) {
         return;
     }
     const url = link.href;
-    chrome.runtime.sendMessage({ action: 'open', url, active });
+    // strips the hash part of the current location
+    const currentUrl = new URL('', document.location).href;
+    if (url != currentUrl) {
+        chrome.runtime.sendMessage({ action: 'open', url, active });
+    }
 }
 
 // Basically from Hacker News's JavaScript

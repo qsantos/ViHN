@@ -1,3 +1,7 @@
+# v0.1.21
+
+- Hitting o/c/b does not open self-referential links of Ask HNs
+
 # v0.1.20
 
 - Enable using 0 key to open 10th link
