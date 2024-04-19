@@ -1065,10 +1065,10 @@ function thingEvent(event) {
             }
         }
     } else if (event.key == 'g') {
-        /* Go to last thing */
+        /* Go to first thing */
         gotoThing(things[0]);
     } else if (event.key == 'G') {
-        /* Go to first thing */
+        /* Go to last thing */
         const topThings = document.querySelectorAll('.athing:has([indent="0"]),#morelink');
         const thing =  topThings[topThings.length - 1]
         gotoThing(thing);
