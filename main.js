@@ -829,6 +829,16 @@ function thingIsHidden(thing) {
     return thing.classList.contains('noshow');
 }
 
+function gotoTop() {
+    const l = document.location;
+    history.replaceState(null, '', l.pathname + l.search);
+    if (currentThing) {
+        currentThing.classList.remove('activething');
+        currentThing = undefined;
+    }
+    scrollTo(0, 0)
+}
+
 let historyUpdateTimer = null;
 function gotoThing(thing) {
     if (thing) {
@@ -990,11 +1000,15 @@ function thingEvent(event) {
         }
     } else if (event.key == 'k') {
         /* Previous thing */
-        let nextThingIndex = currentThingIndex - 1;
-        while (nextThingIndex > 0 && nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
-            nextThingIndex--;
+        if (currentThingIndex == 0) {
+            gotoTop();
+        } else {
+            let nextThingIndex = currentThingIndex - 1;
+            while (nextThingIndex > 0 && nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
+                nextThingIndex--;
+            }
+            gotoThing(things[nextThingIndex]);
         }
-        gotoThing(things[nextThingIndex]);
     } else if (event.key == 'J') {
         /* Next sibling thing */
         const currentDepth = thingDepth(currentThing);
@@ -1005,12 +1019,16 @@ function thingEvent(event) {
         gotoThing(things[nextThingIndex]);
     } else if (event.key == 'K') {
         /* Previous sibling thing */
-        const currentDepth = thingDepth(currentThing);
-        let nextThingIndex = currentThingIndex - 1;
-        while (nextThingIndex > 0 && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) > currentDepth)) {
-            nextThingIndex--;
+        if (currentThingIndex == 0) {
+            gotoTop();
+        } else {
+            const currentDepth = thingDepth(currentThing);
+            let nextThingIndex = currentThingIndex - 1;
+            while (nextThingIndex > 0 && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) > currentDepth)) {
+                nextThingIndex--;
+            }
+            gotoThing(things[nextThingIndex]);
         }
-        gotoThing(things[nextThingIndex]);
     } else if (event.key == 'H') {
         /* Focus on thing at top of screen (high) */
         gotoThingAt(visualViewport.width / 5, 1);
@@ -1065,8 +1083,8 @@ function thingEvent(event) {
             }
         }
     } else if (event.key == 'g') {
-        /* Go to first thing */
-        gotoThing(things[0]);
+        /* Go to top */
+        gotoTop();
     } else if (event.key == 'G') {
         /* Go to last thing */
         const topThings = document.querySelectorAll('.athing:has([indent="0"]),#morelink');

@@ -1,3 +1,7 @@
+# v0.1.22
+
+- Scrolling to top really goes to top: removes hash from URL, and active comment/item
+
 # v0.1.21
 
 - Hitting o/c/b does not open self-referential links of Ask HNs
