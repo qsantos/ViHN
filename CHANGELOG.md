@@ -1,6 +1,7 @@
 # v0.1.23
 
 - Fix navigating to parent on user's comments just moves upwards #48
+- Fix pressing "p" navigating to full thread instead of parent's page #49
 
 # v0.1.22
 

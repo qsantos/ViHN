@@ -1053,7 +1053,7 @@ function thingEvent(event) {
         } else {
             // Use context link for h, and parent link for p
             const selector = event.key == 'h' ? '.navs>a+a' : '.navs>a';
-            const parentLink = things[0].querySelector('.navs>a+a');
+            const parentLink = things[0].querySelector(selector);
             if (parentLink) {
                 parentLink.click();
             }
