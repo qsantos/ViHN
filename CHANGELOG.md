@@ -1,3 +1,7 @@
+# v0.1.23
+
+- Fix navigating to parent on user's comments just moves upwards #48
+
 # v0.1.22
 
 - Scrolling to top really goes to top: removes hash from URL, and active comment/item

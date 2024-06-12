@@ -1047,17 +1047,17 @@ function thingEvent(event) {
         gotoThingAt(visualViewport.width / 5, visualViewport.height - 2);
     } else if (event.key == 'h' || event.key == 'p') {
         /* Parent comment (h: say in context when changing page, p: directly go to comment) */
-        if (!currentThing || currentThingIndex == 0) {
+        const parentIndex = thingIndexParent(currentThingIndex);
+        if (parentIndex !== undefined) {
+            gotoThing(things[parentIndex]);
+        } else {
             // Use context link for h, and parent link for p
             const selector = event.key == 'h' ? '.navs>a+a' : '.navs>a';
             const parentLink = things[0].querySelector('.navs>a+a');
             if (parentLink) {
                 parentLink.click();
             }
-            return;
         }
-        const parentIndex = thingIndexParent(currentThingIndex);
-        gotoThing(things[parentIndex]);
     } else if (event.key == 'm') {
         /* Toggle comment tree */
         if (currentThing) {
