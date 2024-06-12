@@ -344,10 +344,17 @@ if (enableNewestItems) {
 function thingIndexParent(thingIndex) {
     const currentDepth = thingDepth(currentThing);
     thingIndex--;
-    while (thingIndex > 0 && (thingIsHidden(things[thingIndex]) || thingDepth(things[thingIndex]) >= currentDepth)) {
-        thingIndex--;
+    for (; thingIndex >= 0; thingIndex--) {
+        const thing = things[thingIndex];
+        console.log(thing);
+        if (thing.parentElement.parentElement.classList.contains('fatitem')) {
+            return thingIndex;
+        }
+        if (!thingIsHidden(thing) && thingDepth(thing) < currentDepth) {
+            return thingIndex;
+        }
     }
-    return thingIndex;
+    return undefined;
 }
 
 function gotoNewestIndex(index) {
