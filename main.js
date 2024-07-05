@@ -1,19 +1,18 @@
-chrome.storage.sync.get(options => {
-
+chrome.storage.sync.get((options) => {
     const maybeSmoothScrolling = {
-        block: 'nearest',
-        behavior: getOption(options, 'smoothScrolling') ? 'smooth' : 'instant',
+        block: "nearest",
+        behavior: getOption(options, "smoothScrolling") ? "smooth" : "instant",
     };
-    let persistCollapse = getOption(options, 'persistentCollapse');
-    let enableNewestItems = getOption(options, 'newestItems')
+    let persistCollapse = getOption(options, "persistentCollapse");
+    let enableNewestItems = getOption(options, "newestItems");
 
-    chrome.storage.sync.onChanged.addListener(changes => {
+    chrome.storage.sync.onChanged.addListener((changes) => {
         // smooth scrolling
         const smoothScrolling = changes.smoothScrolling?.newValue;
         if (smoothScrolling === true) {
-            maybeSmoothScrolling.behavior = 'smooth';
+            maybeSmoothScrolling.behavior = "smooth";
         } else if (smoothScrolling === false) {
-            maybeSmoothScrolling.behavior = 'instant';
+            maybeSmoothScrolling.behavior = "instant";
         }
         // persistent collapse
         const persistentCollapse = changes.persistentCollapse?.newValue;
@@ -29,17 +28,20 @@ chrome.storage.sync.get(options => {
             enableNewestItems = false;
             focusNewest = false;
             if (newestItems) {
-                newestItems.style.display = 'none';
+                newestItems.style.display = "none";
             }
         }
     });
 
     // set top color
-    const pageSpace = document.getElementById('pagespace');
+    const pageSpace = document.getElementById("pagespace");
     if (pageSpace) {
-        const topColor = pageSpace?.previousElementSibling?.firstElementChild?.getAttribute('bgcolor');
+        const topColor =
+            pageSpace?.previousElementSibling?.firstElementChild?.getAttribute(
+                "bgcolor",
+            );
         if (topColor) {
-            document.body.style.setProperty('--top-color', topColor);
+            document.body.style.setProperty("--top-color", topColor);
         }
     }
 
@@ -51,15 +53,15 @@ chrome.storage.sync.get(options => {
             return;
         }
         // Make the addition of help idempotent (useful for extension reloading when debugging)
-        const oldHelp = document.getElementById('help');
+        const oldHelp = document.getElementById("help");
         if (oldHelp) {
             oldHelp.remove();
         }
-        helpOuter = document.createElement('DIV');
-        helpOuter.id = 'help';
+        helpOuter = document.createElement("DIV");
+        helpOuter.id = "help";
         // tabindex needed to focus div
         // SECURITY: this is static HTML content
-        helpOuter.innerHTML =  `
+        helpOuter.innerHTML = `
         <div id="help-inner" tabindex="0">
             <h2>ViHN Key bindings</h2>
             <p>Press <kbd>?</kbd> to toggle help.</p>
@@ -145,53 +147,55 @@ chrome.storage.sync.get(options => {
         </div>
         `;
         document.body.appendChild(helpOuter);
-        helpInner = document.getElementById('help-inner');
+        helpInner = document.getElementById("help-inner");
         // Close when clicking outside of documentation
-        helpInner.addEventListener('click', event => {
+        helpInner.addEventListener("click", (event) => {
             event.stopPropagation();
         });
-        helpOuter.addEventListener('click', event => {
+        helpOuter.addEventListener("click", (event) => {
             hideHelp();
         });
         // Initialize visible state
         hideHelp();
     }
     function hideHelp() {
-        helpOuter.style.display = 'none';
+        helpOuter.style.display = "none";
         helpShown = false;
     }
     function showHelp() {
-        helpOuter.style.display = 'block';
+        helpOuter.style.display = "block";
         helpShown = true;
         helpInner.focus();
     }
     initHelp();
 
-    const loggedIn = document.getElementById('logout') !== null;
-    const things = Array.from(document.getElementsByClassName('athing'));
+    const loggedIn = document.getElementById("logout") !== null;
+    const things = Array.from(document.getElementsByClassName("athing"));
 
-    let currentThing = document.querySelector('.athing:target');
+    let currentThing = document.querySelector(".athing:target");
     if (currentThing) {
-        currentThing.classList.add('activething');
+        currentThing.classList.add("activething");
     }
 
     // handle the “XXX more comments” link like a thing
-    const morelink = document.getElementsByClassName('morelink')[0];
-    const morelinkThing = morelink ? morelink.parentElement.parentElement : null;
+    const morelink = document.getElementsByClassName("morelink")[0];
+    const morelinkThing = morelink
+        ? morelink.parentElement.parentElement
+        : null;
     if (morelink) {
-        morelinkThing.id = 'morelink';
+        morelinkThing.id = "morelink";
         things.push(morelinkThing);
-        if (document.location.hash === '#morelink') {
+        if (document.location.hash === "#morelink") {
             currentThing = morelinkThing;
-            currentThing.classList.add('activething');
+            currentThing.classList.add("activething");
             currentThing.scrollIntoView(true);
         }
     }
 
     // from https://stackoverflow.com/a/34064434/4457767
     function htmlDecode(input) {
-      const doc = new DOMParser().parseFromString(input, "text/html");
-      return doc.documentElement.textContent;
+        const doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
     }
 
     function formatComment(comment) {
@@ -209,18 +213,30 @@ chrome.storage.sync.get(options => {
         // between double quotes and must match a regex which does not allow double
         // quotes at all. Also, this value is an URL, but only allows the http: and
         // https: protocols (no javascript:).
-        return comment.split('\n\n').map(paragraph => {
-            const htmlEscaped = paragraph.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
-            if (htmlEscaped.startsWith('  ')) {
-                return `<code><pre>${htmlEscaped}</code></pre>`;
-            }
-            // replaces *something*, but not **something**, \*something\*, \*something**, etc.
-            const italicized = htmlEscaped.replace(/(?<!\\|\*)\*((?!\*).*?(?<!\\|\*))\*(?!\*)/sg, '<i>$1</i>');
-            // URL regex inspired from https://stackoverflow.com/a/6041965/4457767
-            // plus ugly hack at the end to avoid parsing escaped '>' as part of search parameters
-            const linkified = italicized.replace(/https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])(?!(?<=&gt);|(?<=&g)t;|(?<=&)gt;)/g, '<a href="$&">$&</a>');
-            return `<p>${linkified}</p>`;
-        }).join('');
+        return comment
+            .split("\n\n")
+            .map((paragraph) => {
+                const htmlEscaped = paragraph
+                    .replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;");
+                if (htmlEscaped.startsWith("  ")) {
+                    return `<code><pre>${htmlEscaped}</code></pre>`;
+                }
+                // replaces *something*, but not **something**, \*something\*, \*something**, etc.
+                const italicized = htmlEscaped.replace(
+                    /(?<!\\|\*)\*((?!\*).*?(?<!\\|\*))\*(?!\*)/gs,
+                    "<i>$1</i>",
+                );
+                // URL regex inspired from https://stackoverflow.com/a/6041965/4457767
+                // plus ugly hack at the end to avoid parsing escaped '>' as part of search parameters
+                const linkified = italicized.replace(
+                    /https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])(?!(?<=&gt);|(?<=&g)t;|(?<=&)gt;)/g,
+                    '<a href="$&">$&</a>',
+                );
+                return `<p>${linkified}</p>`;
+            })
+            .join("");
     }
 
     // We assume the queue is always pretty short, so using an Array should be okay
@@ -236,7 +252,9 @@ chrome.storage.sync.get(options => {
         });
         // Start a timer to handle the next request if there is not one already
         if (!requestTimer) {
-            const remaining = lastRequestTime ? Math.max(lastRequestTime - now + 2000, 0) : 0;
+            const remaining = lastRequestTime
+                ? Math.max(lastRequestTime - now + 2000, 0)
+                : 0;
             requestTimer = setTimeout(handleRequest, remaining);
         }
         return promise;
@@ -244,34 +262,43 @@ chrome.storage.sync.get(options => {
     function handleRequest() {
         const request = requestQueue.shift();
         if (!request) {
-            console.warn('No request to handle!');
+            console.warn("No request to handle!");
             return;
         }
         const [url, options, resolve, reject] = request;
         lastRequestTime = new Date();
-        fetch(url, options).then(response => {
-            if (response.status === 503) {
-                // Still too fast, try again
-                requestQueue.unshift([url, options, resolve, reject]);
-                if (!requestTimer) {
-                    requestTimer = setTimeout(handleRequest, 2000);
+        fetch(url, options)
+            .then((response) => {
+                if (response.status === 503) {
+                    // Still too fast, try again
+                    requestQueue.unshift([url, options, resolve, reject]);
+                    if (!requestTimer) {
+                        requestTimer = setTimeout(handleRequest, 2000);
+                    }
+                } else if (response.status === 200) {
+                    // Good!
+                    response
+                        .text()
+                        .then((html) => {
+                            // Very good!
+                            resolve({ html, response });
+                        })
+                        .catch(() => {
+                            reject(
+                                "Failed to read response; are you connected to the Internet?",
+                            );
+                        });
+                } else if (response.status === 504) {
+                    reject("Hacker News is down; try again later (504 error)");
+                } else {
+                    reject(`Unexpected error (${response.status})`);
                 }
-            } else if (response.status === 200) {
-                // Good!
-                response.text().then(html => {
-                    // Very good!
-                    resolve({html, response});
-                }).catch(() => {
-                    reject('Failed to read response; are you connected to the Internet?');
-                });
-            } else if (response.status === 504) {
-                reject('Hacker News is down; try again later (504 error)');
-            } else {
-                reject(`Unexpected error (${response.status})`);
-            }
-        }).catch(() => {
-            reject('Connection failure; are you connected to the Internet?');
-        });
+            })
+            .catch(() => {
+                reject(
+                    "Connection failure; are you connected to the Internet?",
+                );
+            });
         // Program handling the next request, if any
         if (requestQueue.length > 0) {
             requestTimer = setTimeout(handleRequest, 2000);
@@ -281,7 +308,7 @@ chrome.storage.sync.get(options => {
     }
 
     const thingIndexes = [];
-    things.forEach((thing, index) => thingIndexes[thing.id] = index);
+    things.forEach((thing, index) => (thingIndexes[thing.id] = index));
 
     // Newest Items
     let newestItems;
@@ -291,51 +318,55 @@ chrome.storage.sync.get(options => {
     let currentNewestIndex = 0;
     function initNewestItems() {
         if (newestItems !== undefined) {
-            newestItems.style.display = 'block';
+            newestItems.style.display = "block";
             return;
         }
-        newestItems = document.createElement('DIV');
-        datedIndexes = Array.from(document.getElementsByClassName('age'))
-            .map((age , index)=> [age.title, index])
+        newestItems = document.createElement("DIV");
+        datedIndexes = Array.from(document.getElementsByClassName("age"))
+            .map((age, index) => [age.title, index])
             // Chrome is very slow without an explicit comparison function
-            .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] === a2[0] ? 0 : 1)
+            .sort((a1, a2) => (a1[0] < a2[0] ? -1 : a1[0] === a2[0] ? 0 : 1))
             .reverse();
         if (datedIndexes.length === 0) {
             return;
         }
-        const hasOtherPages = morelinkThing !== null || document.location.search.indexOf('&p=') > 0
-        newestItems.id = 'newest-items';
+        const hasOtherPages =
+            morelinkThing !== null ||
+            document.location.search.indexOf("&p=") > 0;
+        newestItems.id = "newest-items";
         // Setting innerHTML is still faster than doing DOM
-        const parts = ['<h3><u>N</u>ewest Items</u></h3>'];
+        const parts = ["<h3><u>N</u>ewest Items</u></h3>"];
         if (hasOtherPages) {
-            parts.push('<p>(items on this page)</p>');
+            parts.push("<p>(items on this page)</p>");
         }
-        parts.push('<ul>');
+        parts.push("<ul>");
         let lastDay = null;
         for (const [datetime, index] of datedIndexes) {
-            const [day, time] = datetime.split('T');
+            const [day, time] = datetime.split("T");
             if (day === lastDay) {
-                parts.push(`<li data-index="${index}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${time}</li>`);
+                parts.push(
+                    `<li data-index="${index}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${time}</li>`,
+                );
             } else {
                 lastDay = day;
                 parts.push(`<li data-index="${index}">${day} ${time}</li>`);
             }
         }
-        parts.push('</ul>');
+        parts.push("</ul>");
         // SECURITY: ${index} is a local index, ${day} and ${time} come from the
         // title attribute which is generated by Hacker News and not
         // user-controlled. We do trust Hacker News itself.
-        newestItems.innerHTML = parts.join('');
+        newestItems.innerHTML = parts.join("");
         // Make the addition of Newest Comments idempotent (useful for extension reloading when debugging)
-        const previousLatestComment = document.getElementById('newest-items');
+        const previousLatestComment = document.getElementById("newest-items");
         if (previousLatestComment) {
             previousLatestComment.remove();
         }
-        newestItems.addEventListener('click', event => {
+        newestItems.addEventListener("click", (event) => {
             gotoThingFromIndex(event.target.dataset.index);
         });
         document.body.appendChild(newestItems);
-        newestList = newestItems.getElementsByTagName('ul')[0];
+        newestList = newestItems.getElementsByTagName("ul")[0];
     }
     if (enableNewestItems) {
         initNewestItems();
@@ -347,7 +378,9 @@ chrome.storage.sync.get(options => {
         for (; thingIndex >= 0; thingIndex--) {
             const thing = things[thingIndex];
             console.log(thing);
-            if (thing.parentElement.parentElement.classList.contains('fatitem')) {
+            if (
+                thing.parentElement.parentElement.classList.contains("fatitem")
+            ) {
                 return thingIndex;
             }
             if (!thingIsHidden(thing) && thingDepth(thing) < currentDepth) {
@@ -358,10 +391,12 @@ chrome.storage.sync.get(options => {
     }
 
     function gotoNewestIndex(index) {
-        newestList.children[currentNewestIndex].classList.remove('active-newest');
+        newestList.children[currentNewestIndex].classList.remove(
+            "active-newest",
+        );
         currentNewestIndex = index;
         const newest = newestList.children[currentNewestIndex];
-        newest.classList.add('active-newest');
+        newest.classList.add("active-newest");
         newest.scrollIntoView(maybeSmoothScrolling);
     }
 
@@ -378,7 +413,7 @@ chrome.storage.sync.get(options => {
         // We need to uncollapse ancestors in descending order to avoid showing children of other collapsed things
         const ancestorsToUncollapse = [];
         // The thing itself
-        if (thing.classList.contains('coll')) {
+        if (thing.classList.contains("coll")) {
             ancestorsToUncollapse.push(thing);
         }
         // Its ancestors
@@ -393,7 +428,7 @@ chrome.storage.sync.get(options => {
                 otherIndex--;
             }
             const otherThing = things[otherIndex];
-            if (otherThing.classList.contains('coll')) {
+            if (otherThing.classList.contains("coll")) {
                 ancestorsToUncollapse.push(otherThing);
             }
         }
@@ -405,9 +440,9 @@ chrome.storage.sync.get(options => {
 
     // From Hacker News's JavaScript
     function nextcomm(el) {
-      while (el = el.nextElementSibling) {
-        if (el.classList.contains('comtr')) return el;
-      }
+        while ((el = el.nextElementSibling)) {
+            if (el.classList.contains("comtr")) return el;
+        }
     }
 
     function setClassIf(el, className, condition) {
@@ -421,98 +456,101 @@ chrome.storage.sync.get(options => {
     }
 
     function openThing(thing, active) {
-        const anchor = thing.querySelector('.titleline>a');
+        const anchor = thing.querySelector(".titleline>a");
         const relativeUrl = anchor ? anchor.href : `item?id=${thing.id}`;
         const url = new URL(relativeUrl, document.location).href;
         // strips the hash part of the current location
-        const currentUrl = new URL('', document.location).href;
+        const currentUrl = new URL("", document.location).href;
         if (url !== currentUrl) {
-            chrome.runtime.sendMessage({ action: 'open', url, active });
+            chrome.runtime.sendMessage({ action: "open", url, active });
         }
     }
 
     function openComments(thing, active) {
         const subtext = thing.nextElementSibling;
-        if (!subtext || subtext.classList.contains('athing')) {
+        if (!subtext || subtext.classList.contains("athing")) {
             return;
         }
-        const anchor = subtext.querySelector('.age>a');
+        const anchor = subtext.querySelector(".age>a");
         const relativeUrl = anchor.href;
         const url = new URL(relativeUrl, document.location).href;
-        chrome.runtime.sendMessage({ action: 'open', url, active });
+        chrome.runtime.sendMessage({ action: "open", url, active });
     }
 
     function openCommentLink(thing, linkNumber, active) {
         if (!thing) {
             return;
         }
-        let textElement = thing.getElementsByClassName('commtext')[0];
+        let textElement = thing.getElementsByClassName("commtext")[0];
         if (!textElement) {
             // maybe a story with text
             const subtext = thing?.nextElementSibling;
             const spacer = subtext?.nextElementSibling;
             const toptext = spacer?.nextElementSibling;
-            textElement = toptext?.getElementsByClassName('toptext')[0];
+            textElement = toptext?.getElementsByClassName("toptext")[0];
         }
         if (!textElement) {
             return;
         }
         /* Map 0 to 10th link */
         const n = linkNumber === 0 ? 10 : linkNumber;
-        const link = textElement.getElementsByTagName('a')[n - 1];
+        const link = textElement.getElementsByTagName("a")[n - 1];
         if (!link) {
             return;
         }
-        if (link.getAttribute('href').startsWith('reply')) {
+        if (link.getAttribute("href").startsWith("reply")) {
             // Ignore reply link when it is part of .commtext (see HN bug fix in main.css)
             return;
         }
         const url = link.href;
         // strips the hash part of the current location
-        const currentUrl = new URL('', document.location).href;
+        const currentUrl = new URL("", document.location).href;
         if (url !== currentUrl) {
-            chrome.runtime.sendMessage({ action: 'open', url, active });
+            chrome.runtime.sendMessage({ action: "open", url, active });
         }
     }
 
     // Basically from Hacker News's JavaScript
     function toggleCollapse(thing) {
-        if (!thing.classList.contains('comtr')) {
+        if (!thing.classList.contains("comtr")) {
             // Not a comment, do not try to collapse it
             return;
         }
-        const coll = !thing.classList.contains('coll');
+        const coll = !thing.classList.contains("coll");
 
         if (loggedIn && persistCollapse) {
             // This is non critical, so no point in blocking the collapsing on getting
             // a result. We just do best effort. Do use hnfetch() to handle the user
             // {,un}collapsing many things in a row.
-            hnfetch(`https://news.ycombinator.com/collapse?id=${thing.id}${coll ? '' : '&un=true'}`)
-            .catch(console.warn);
+            hnfetch(
+                `https://news.ycombinator.com/collapse?id=${thing.id}${
+                    coll ? "" : "&un=true"
+                }`,
+            ).catch(console.warn);
         }
 
         // The thing itself
-        setClassIf(thing, 'coll', coll);
-        setClassIf(thing.getElementsByClassName('votelinks')[0], 'nosee', coll);
-        setClassIf(thing.getElementsByClassName('comment')[0], 'noshow', coll);
-        const el = thing.getElementsByClassName('togg')[0];
-        el.textContent = coll ? (`[${el.getAttribute('n')} more]`) : '[–]';
+        setClassIf(thing, "coll", coll);
+        setClassIf(thing.getElementsByClassName("votelinks")[0], "nosee", coll);
+        setClassIf(thing.getElementsByClassName("comment")[0], "noshow", coll);
+        const el = thing.getElementsByClassName("togg")[0];
+        el.textContent = coll ? `[${el.getAttribute("n")} more]` : "[–]";
 
         // Descendants
         const show = !coll;
-        const n0 = thingDepth(thing)
-        let n = thingDepth(nextcomm(thing))
+        const n0 = thingDepth(thing);
+        let n = thingDepth(nextcomm(thing));
         let coll2 = false;
         if (n > n0) {
-            while (thing = nextcomm(thing)) {
+            while ((thing = nextcomm(thing))) {
                 if (thingDepth(thing) <= n0) {
                     break;
                 } else if (!show) {
-                    thing.classList.add('noshow');
+                    thing.classList.add("noshow");
                 } else if (!coll2 || thingDepth(thing) <= n) {
                     n = thingDepth(thing);
-                    coll2 = thing.classList.contains('coll');
-                    thing.classList.remove('noshow');
+                    coll2 = thing.classList.contains("coll");
+                    thing.classList.remove("noshow");
                 }
             }
         }
@@ -520,7 +558,9 @@ chrome.storage.sync.get(options => {
 
     // From Hacker News's JavaScript
     function vurl(id, how, auth, _goto) {
-        return `vote?id=${id}&how=${how}&auth=${auth}&goto=${encodeURIComponent(_goto)}&js=t`;
+        return `vote?id=${id}&how=${how}&auth=${auth}&goto=${encodeURIComponent(
+            _goto,
+        )}&js=t`;
     }
 
     // Basically from Hacker News's JavaScript
@@ -529,155 +569,174 @@ chrome.storage.sync.get(options => {
         const downLink = document.getElementById(`down_${id}`);
         const unLink = document.getElementById(`unv_${id}`);
         // Display vote links as “in-progress”
-        upLink.classList.add('nosee', 'inprogress-votelink');
+        upLink.classList.add("nosee", "inprogress-votelink");
         if (downLink) {
-            downLink.classList.add('nosee', 'inprogress-votelink');
+            downLink.classList.add("nosee", "inprogress-votelink");
         }
         const originalUnlinkContent = unLink.innerHTML;
         // SECURITY: this is static HTML content
-        unLink.innerHTML = '| …';
+        unLink.innerHTML = "| …";
 
         function restore() {
             // Clear “in-progress”
-            upLink.classList.remove('inprogress-votelink');
+            upLink.classList.remove("inprogress-votelink");
             if (downLink) {
-                downLink.classList.remove('inprogress-votelink');
+                downLink.classList.remove("inprogress-votelink");
             }
-            setClassIf(upLink, 'nosee', how === 'un');
-            setClassIf(downLink, 'nosee', how === 'un');
+            setClassIf(upLink, "nosee", how === "un");
+            setClassIf(downLink, "nosee", how === "un");
             // SECURITY: this is HTML which was already active on the page before
             unLink.innerHTML = originalUnlinkContent;
         }
         function complete() {
             // Clear “in-progress”
-            upLink.classList.remove('inprogress-votelink');
+            upLink.classList.remove("inprogress-votelink");
             if (downLink) {
-                downLink.classList.remove('inprogress-votelink');
+                downLink.classList.remove("inprogress-votelink");
             }
             // Toggle links
-            setClassIf(upLink, 'nosee', how !== 'un');
-            setClassIf(downLink, 'nosee', how !== 'un');
-            if (how === 'un') {
+            setClassIf(upLink, "nosee", how !== "un");
+            setClassIf(downLink, "nosee", how !== "un");
+            if (how === "un") {
                 // SECURITY: this is static HTML content
-                unLink.innerHTML = '';
+                unLink.innerHTML = "";
             } else {
-                const unUrl = vurl(id, 'un', auth, _goto);
+                const unUrl = vurl(id, "un", auth, _goto);
                 // SECURITY: unUrl depends on id, auth and _goto; these are
                 // extracted from the URL provided by Hacker News on the arrow
                 // button or unvote link. These URLs are not user-controlled, and
                 // we do trust Hacker News itself.
-                unLink.innerHTML = (
-                    ` | <a id='un_${id}' class='clicky' href='${unUrl}'>${how === 'up' ? 'unvote' : 'undown'}</a>`
-                );
+                unLink.innerHTML = ` | <a id='un_${id}' class='clicky' href='${unUrl}'>${
+                    how === "up" ? "unvote" : "undown"
+                }</a>`;
             }
         }
 
         // Do the query
-        const url = `https://news.ycombinator.com/${vurl(id, how, auth, _goto)}`;
-        hnfetch(url).then(({html}) => {
-            if (html.match('<b>Login</b>')) {
-                throw 'You are not connected';
-            }
-            complete();
-        }).catch(msg => {
-            restore();
-            alert(msg);
-        });
+        const url = `https://news.ycombinator.com/${vurl(
+            id,
+            how,
+            auth,
+            _goto,
+        )}`;
+        hnfetch(url)
+            .then(({ html }) => {
+                if (html.match("<b>Login</b>")) {
+                    throw "You are not connected";
+                }
+                complete();
+            })
+            .catch((msg) => {
+                restore();
+                alert(msg);
+            });
     }
     // Basically from Hacker News's JavaScript
     function voteFromLink(el) {
         const u = new URL(el.href, location);
         const p = u.searchParams;
-        if (u.pathname === '/vote') {
-            vote(p.get('id'), p.get('how'), p.get('auth'), p.get('goto'));
+        if (u.pathname === "/vote") {
+            vote(p.get("id"), p.get("how"), p.get("auth"), p.get("goto"));
         }
     }
 
     function faveFromLink(faveLink) {
-        if (!faveLink || faveLink.textContent === '…') {
+        if (!faveLink || faveLink.textContent === "…") {
             return;
         }
         const url = faveLink.href;
         const originalLinkLabel = faveLink.textContent;
-        faveLink.textContent = '…';
-        hnfetch(url).then(({html}) => {
-            if (html.match('Please log in.<br>')) {
-                throw 'You are not connected';
-            }
-            /* Switch URL between favorite/un-favorite and update link label */
-            const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-            if (searchParams.get('un')) {
-                searchParams.delete('un');
-                faveLink.textContent = 'favorite';
-            } else {
-                searchParams.set('un', 't');
-                faveLink.textContent = 'un-favorite';
-            }
-            faveLink.href = `fave?${searchParams.toString()}`;
-        }).catch(msg => {
-            faveLink.textContent = originalLinkLabel;
-            alert(msg);
-        });
+        faveLink.textContent = "…";
+        hnfetch(url)
+            .then(({ html }) => {
+                if (html.match("Please log in.<br>")) {
+                    throw "You are not connected";
+                }
+                /* Switch URL between favorite/un-favorite and update link label */
+                const searchParams = new URLSearchParams(
+                    url.substr(url.indexOf("?")),
+                );
+                if (searchParams.get("un")) {
+                    searchParams.delete("un");
+                    faveLink.textContent = "favorite";
+                } else {
+                    searchParams.set("un", "t");
+                    faveLink.textContent = "un-favorite";
+                }
+                faveLink.href = `fave?${searchParams.toString()}`;
+            })
+            .catch((msg) => {
+                faveLink.textContent = originalLinkLabel;
+                alert(msg);
+            });
     }
 
     function flagFromLink(flagLink) {
-        if (!flagLink || flagLink.textContent === '…') {
+        if (!flagLink || flagLink.textContent === "…") {
             return;
         }
         const url = flagLink.href;
         const originalLinkLabel = flagLink.textContent;
-        flagLink.textContent = '…';
-        hnfetch(url).then(({html}) => {
-            if (html.match('Please log in.<br>')) {
-                // NOTE: actually never happen
-                // TODO: detect logged out in this case
-                throw 'You are not connected';
-            }
-            /* Switch URL between flag/unflag and update link label */
-            const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-            if (searchParams.get('un')) {
-                searchParams.delete('un');
-                flagLink.textContent = 'flag';
-            } else {
-                searchParams.set('un', 't');
-                flagLink.textContent = 'unflag';
-            }
-            flagLink.href = `flag?${searchParams.toString()}`;
-        }).catch(msg => {
-            flagLink.textContent = originalLinkLabel;
-            alert(msg);
-        });
+        flagLink.textContent = "…";
+        hnfetch(url)
+            .then(({ html }) => {
+                if (html.match("Please log in.<br>")) {
+                    // NOTE: actually never happen
+                    // TODO: detect logged out in this case
+                    throw "You are not connected";
+                }
+                /* Switch URL between flag/unflag and update link label */
+                const searchParams = new URLSearchParams(
+                    url.substr(url.indexOf("?")),
+                );
+                if (searchParams.get("un")) {
+                    searchParams.delete("un");
+                    flagLink.textContent = "flag";
+                } else {
+                    searchParams.set("un", "t");
+                    flagLink.textContent = "unflag";
+                }
+                flagLink.href = `flag?${searchParams.toString()}`;
+            })
+            .catch((msg) => {
+                flagLink.textContent = originalLinkLabel;
+                alert(msg);
+            });
     }
 
     function hideFromLink(hideLink) {
-        if (!hideLink || hideLink.textContent === '…') {
+        if (!hideLink || hideLink.textContent === "…") {
             return;
         }
         const url = hideLink.href;
         const originalLinkLabel = hideLink.textContent;
-        hideLink.textContent = '…';
-        hnfetch(url).then(({html}) => {
-            if (html.match('<b>Login</b>')) {
-                throw 'You are not connected';
-            }
-            /* Switch URL between hide/unhide and update link label */
-            const searchParams = new URLSearchParams(url.substr(url.indexOf('?')));
-            if (searchParams.get('un')) {
-                searchParams.delete('un');
-                hideLink.textContent = 'hide';
-            } else {
-                searchParams.set('un', 't');
-                hideLink.textContent = 'un-hide';
-            }
-            hideLink.href = `hide?${searchParams.toString()}`;
-        }).catch(msg => {
-            hideLink.textContent = originalLinkLabel;
-            alert(msg);
-        });
+        hideLink.textContent = "…";
+        hnfetch(url)
+            .then(({ html }) => {
+                if (html.match("<b>Login</b>")) {
+                    throw "You are not connected";
+                }
+                /* Switch URL between hide/unhide and update link label */
+                const searchParams = new URLSearchParams(
+                    url.substr(url.indexOf("?")),
+                );
+                if (searchParams.get("un")) {
+                    searchParams.delete("un");
+                    hideLink.textContent = "hide";
+                } else {
+                    searchParams.set("un", "t");
+                    hideLink.textContent = "un-hide";
+                }
+                hideLink.href = `hide?${searchParams.toString()}`;
+            })
+            .catch((msg) => {
+                hideLink.textContent = originalLinkLabel;
+                alert(msg);
+            });
     }
 
     function findThingInAscendants(el) {
-        while (!el.classList.contains('comtr') && (el = el.parentElement));
+        while (!el.classList.contains("comtr") && (el = el.parentElement));
         return el;
     }
 
@@ -687,30 +746,42 @@ chrome.storage.sync.get(options => {
         }
         initQuickReplyForm();
         quickReplyFormSubmit.disabled = true;
-        quickReplyFormError.innerText = '';
-        hnfetch(replyLink.href).then(({html}) => {
-            const parentMatch = html.match(/<input type="hidden" name="parent" value="(.*?)">/);
-            const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-            const gotoMatch = html.match(/<input type="hidden" name="goto" value="(.*?)">/);
-            if (parentMatch && hmacMatch && gotoMatch) {
-                quickReplyFormParent.value = parentMatch[1];
-                quickReplyFormHmac.value = hmacMatch[1];
-                quickReplyFormGoto.value = gotoMatch[1];
-                quickReplyFormSubmit.disabled = false;
-            } else if (html.match('You have to be logged in to reply.<br>')) {
-                throw 'You need to be logged in to reply';
-            } else if (html.match("<td>Sorry, you can't comment here.</td>")) {
-                throw 'Cannot reply to this anymore (thread locked or comment deleted)';
-            } else {
-                console.warn(html);
-                throw 'Unexpected error';
-            }
-        }).catch(msg => {
-            quickReplyFormError.innerText = msg;
-        });
+        quickReplyFormError.innerText = "";
+        hnfetch(replyLink.href)
+            .then(({ html }) => {
+                const parentMatch = html.match(
+                    /<input type="hidden" name="parent" value="(.*?)">/,
+                );
+                const hmacMatch = html.match(
+                    /<input type="hidden" name="hmac" value="(.*?)">/,
+                );
+                const gotoMatch = html.match(
+                    /<input type="hidden" name="goto" value="(.*?)">/,
+                );
+                if (parentMatch && hmacMatch && gotoMatch) {
+                    quickReplyFormParent.value = parentMatch[1];
+                    quickReplyFormHmac.value = hmacMatch[1];
+                    quickReplyFormGoto.value = gotoMatch[1];
+                    quickReplyFormSubmit.disabled = false;
+                } else if (
+                    html.match("You have to be logged in to reply.<br>")
+                ) {
+                    throw "You need to be logged in to reply";
+                } else if (
+                    html.match("<td>Sorry, you can't comment here.</td>")
+                ) {
+                    throw "Cannot reply to this anymore (thread locked or comment deleted)";
+                } else {
+                    console.warn(html);
+                    throw "Unexpected error";
+                }
+            })
+            .catch((msg) => {
+                quickReplyFormError.innerText = msg;
+            });
         const thing = findThingInAscendants(replyLink);
         if (thing) {
-            thing.getElementsByTagName('tbody')[0].appendChild(quickReplyForm);
+            thing.getElementsByTagName("tbody")[0].appendChild(quickReplyForm);
             quickReplyFormTextarea.focus();
         }
     }
@@ -722,38 +793,47 @@ chrome.storage.sync.get(options => {
         initEditForm();
         editFormSubmit.disabled = true;
         editFormTextarea.disabled = true;
-        editFormTextarea.value = 'loading…';
-        hnfetch(editLink.href).then(({html}) => {
-            const idMatch = html.match(/<input type="hidden" name="id" value="(.*?)">/);
-            const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-            const textMatch = html.match(/<textarea name="text" .*?>(.*?)<\/textarea>/s);
-            if (idMatch && hmacMatch && textMatch) {
-                const content = htmlDecode(textMatch[1]);
-                editFormId.value = idMatch[1];
-                editFormHmac.value = hmacMatch[1];
-                editFormTextarea.value = content;
-                // SECURITY: see SECURITY comment inside formatComment
-                editFormPreview.innerHTML = formatComment(content);
-                editFormSubmit.disabled = false;
-                editFormTextarea.disabled = false;
-                editFormTextarea.focus();
-            } else {
-                // NOTE: actually never happen
-                // TODO: detect logged out in this case
-                throw 'You cannot edit this';
-            }
-        }).catch(msg => {
-            editFormTextarea.value = msg;
-        });
+        editFormTextarea.value = "loading…";
+        hnfetch(editLink.href)
+            .then(({ html }) => {
+                const idMatch = html.match(
+                    /<input type="hidden" name="id" value="(.*?)">/,
+                );
+                const hmacMatch = html.match(
+                    /<input type="hidden" name="hmac" value="(.*?)">/,
+                );
+                const textMatch = html.match(
+                    /<textarea name="text" .*?>(.*?)<\/textarea>/s,
+                );
+                if (idMatch && hmacMatch && textMatch) {
+                    const content = htmlDecode(textMatch[1]);
+                    editFormId.value = idMatch[1];
+                    editFormHmac.value = hmacMatch[1];
+                    editFormTextarea.value = content;
+                    // SECURITY: see SECURITY comment inside formatComment
+                    editFormPreview.innerHTML = formatComment(content);
+                    editFormSubmit.disabled = false;
+                    editFormTextarea.disabled = false;
+                    editFormTextarea.focus();
+                } else {
+                    // NOTE: actually never happen
+                    // TODO: detect logged out in this case
+                    throw "You cannot edit this";
+                }
+            })
+            .catch((msg) => {
+                editFormTextarea.value = msg;
+            });
         const thing = findThingInAscendants(editLink);
         if (thing) {
-            const tbody = thing.getElementsByTagName('tbody')[0] || thing.parentElement;
+            const tbody =
+                thing.getElementsByTagName("tbody")[0] || thing.parentElement;
             tbody.appendChild(editForm);
         }
     }
 
     function quickDeleteFromLink(deleteLink) {
-        if (!deleteLink || deleteLink.textContent === '…') {
+        if (!deleteLink || deleteLink.textContent === "…") {
             return;
         }
         const thing = findThingInAscendants(deleteLink);
@@ -761,60 +841,70 @@ chrome.storage.sync.get(options => {
         if (!thingIndex) {
             return;
         }
-        if (!confirm('Are you sure you want to delete this comment?')) {
+        if (!confirm("Are you sure you want to delete this comment?")) {
             return;
         }
-        deleteLink.textContent = '…';
+        deleteLink.textContent = "…";
         const loc = document.location;
         const parentIndex = thingIndexParent(thingIndex);
         const parent = things[parentIndex];
-        const goto = loc.pathname.substr(1) + loc.search + (parent ? `#${parent.id}` : '');
+        const goto =
+            loc.pathname.substr(1) +
+            loc.search +
+            (parent ? `#${parent.id}` : "");
         // NOTE: fetch only accepts absolute URLs
         // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
-        const url = `https://news.ycombinator.com/delete-confirm?id=${thing.id}&goto=${encodeURIComponent(goto)}`;
-        hnfetch(url).then(({html}) => {
-            const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-            if (html === "You can't delete that.")  {
-                throw 'You cannot delete this comment';
-            } else if (!hmacMatch) {
-                console.warn(html);
-                throw 'Unexpected error while deleting comment';
-            }
-            const formData = new URLSearchParams();
-            formData.append('id', thing.id);
-            formData.append('goto', goto);
-            formData.append('hmac', hmacMatch[1]);
-            formData.append('d', 'Yes');
-            return hnfetch('https://news.ycombinator.com/xdelete', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+        const url = `https://news.ycombinator.com/delete-confirm?id=${
+            thing.id
+        }&goto=${encodeURIComponent(goto)}`;
+        hnfetch(url)
+            .then(({ html }) => {
+                const hmacMatch = html.match(
+                    /<input type="hidden" name="hmac" value="(.*?)">/,
+                );
+                if (html === "You can't delete that.") {
+                    throw "You cannot delete this comment";
+                } else if (!hmacMatch) {
+                    console.warn(html);
+                    throw "Unexpected error while deleting comment";
+                }
+                const formData = new URLSearchParams();
+                formData.append("id", thing.id);
+                formData.append("goto", goto);
+                formData.append("hmac", hmacMatch[1]);
+                formData.append("d", "Yes");
+                return hnfetch("https://news.ycombinator.com/xdelete", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                });
+            })
+            .then(({ response }) => {
+                if (response.url) {
+                    // NOTE: response.url seems to ignore our goto
+                    document.location = goto;
+                    // The page might not reload if only the hash has changed
+                    document.location.reload();
+                } else {
+                    console.warn(response);
+                    throw "Unexpected response while deleting comment";
+                }
+            })
+            .catch((msg) => {
+                deleteLink.textContent = "delete";
+                alert(msg);
             });
-        }).then(({response}) => {
-            if (response.url) {
-                // NOTE: response.url seems to ignore our goto
-                document.location = goto;
-                // The page might not reload if only the hash has changed
-                document.location.reload()
-            } else {
-                console.warn(response);
-                throw 'Unexpected response while deleting comment';
-            }
-        }).catch(msg => {
-            deleteLink.textContent = 'delete';
-            alert(msg);
-        });
     }
 
-    const op = document.querySelector('.fatitem .hnuser');
+    const op = document.querySelector(".fatitem .hnuser");
     if (op) {
         const opUsername = op.textContent;
-        const hnusers = document.getElementsByClassName('hnuser');
+        const hnusers = document.getElementsByClassName("hnuser");
         for (const hnuser of hnusers) {
             if (hnuser.textContent === opUsername) {
-                hnuser.classList.add('op');
+                hnuser.classList.add("op");
             }
         }
     }
@@ -823,25 +913,25 @@ chrome.storage.sync.get(options => {
         if (!thing) {
             return 0;
         }
-        const indentTd = thing.querySelector('td[indent]');
+        const indentTd = thing.querySelector("td[indent]");
         if (!indentTd) {
             return 0;
         }
-        return Number.parseInt(indentTd.getAttribute('indent')) || 0;
+        return Number.parseInt(indentTd.getAttribute("indent")) || 0;
     }
 
     function thingIsHidden(thing) {
-        return thing.classList.contains('noshow');
+        return thing.classList.contains("noshow");
     }
 
     function gotoTop() {
         const l = document.location;
-        history.replaceState(null, '', l.pathname + l.search);
+        history.replaceState(null, "", l.pathname + l.search);
         if (currentThing) {
-            currentThing.classList.remove('activething');
+            currentThing.classList.remove("activething");
             currentThing = undefined;
         }
-        scrollTo(0, 0)
+        scrollTo(0, 0);
     }
 
     let historyUpdateTimer = null;
@@ -851,52 +941,60 @@ chrome.storage.sync.get(options => {
             // user navigates through many things in a short amount of time
             clearTimeout(historyUpdateTimer);
             historyUpdateTimer = setTimeout(() => {
-                history.replaceState(null, '', `#${thing.id}`);
+                history.replaceState(null, "", `#${thing.id}`);
                 historyUpdateTimer = null;
             }, 50);
             // Immediately makes the change visible
-            if (thing.classList.contains('comtr') || !thing.nextElementSibling) {
+            if (
+                thing.classList.contains("comtr") ||
+                !thing.nextElementSibling
+            ) {
                 // The thing is a comment, or the “more” link
                 thing.scrollIntoView(maybeSmoothScrolling);
             } else {
                 // The thing is a story, also scroll the associated .subtext into view if possible
                 // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
-                thing.scrollIntoView({block: 'nearest'});
-                thing.nextElementSibling.scrollIntoView({block: 'nearest'});
+                thing.scrollIntoView({ block: "nearest" });
+                thing.nextElementSibling.scrollIntoView({ block: "nearest" });
             }
             if (currentThing) {
-                currentThing.classList.remove('activething');
+                currentThing.classList.remove("activething");
             }
             currentThing = thing;
-            currentThing.classList.add('activething');
+            currentThing.classList.add("activething");
         }
     }
 
     function gotoThingAt(x, y) {
         let el = document.elementFromPoint(x, y);
         do {
-            if (el.classList.contains('athing')) {
+            if (el.classList.contains("athing")) {
                 // Story or comment
                 gotoThing(el);
                 break;
-            } else if (el.classList.contains('subtext')) {
+            } else if (el.classList.contains("subtext")) {
                 // Metadata on story
                 gotoThing(el.parentElement.previousElementSibling);
                 break;
             }
-        } while (el = el.parentElement);
+        } while ((el = el.parentElement));
     }
 
     // unconditionally add the preview container to the new comment form
     // NOTE: this also enable preview in submission form
-    const newCommentFormTextarea = document.getElementsByTagName('textarea')[0];
+    const newCommentFormTextarea = document.getElementsByTagName("textarea")[0];
     if (newCommentFormTextarea) {
-        const newCommentFormPreview = document.createElement('DIV');
-        newCommentFormPreview.classList.add('preview');
-        newCommentFormTextarea.insertAdjacentElement('afterend', newCommentFormPreview);
-        newCommentFormTextarea.addEventListener('input', event => {
+        const newCommentFormPreview = document.createElement("DIV");
+        newCommentFormPreview.classList.add("preview");
+        newCommentFormTextarea.insertAdjacentElement(
+            "afterend",
+            newCommentFormPreview,
+        );
+        newCommentFormTextarea.addEventListener("input", (event) => {
             // SECURITY: see SECURITY comment inside formatComment
-            newCommentFormPreview.innerHTML = formatComment(newCommentFormTextarea.value);
+            newCommentFormPreview.innerHTML = formatComment(
+                newCommentFormTextarea.value,
+            );
         });
     }
 
@@ -910,7 +1008,7 @@ chrome.storage.sync.get(options => {
         if (quickReplyForm !== null) {
             return;
         }
-        const container = document.createElement('tbody');
+        const container = document.createElement("tbody");
         // SECURITY: this is static HTML content
         container.innerHTML = `
             <tr>
@@ -937,13 +1035,16 @@ chrome.storage.sync.get(options => {
         quickReplyFormParent = container.querySelector('[name="parent"]');
         quickReplyFormGoto = container.querySelector('[name="goto"]');
         quickReplyFormHmac = container.querySelector('[name="hmac"]');
-        quickReplyFormTextarea = container.getElementsByTagName('textarea')[0];
-        const quickReplyFormPreview = container.getElementsByClassName('preview')[0];
+        quickReplyFormTextarea = container.getElementsByTagName("textarea")[0];
+        const quickReplyFormPreview =
+            container.getElementsByClassName("preview")[0];
         quickReplyFormSubmit = container.querySelector('[type="submit"]');
-        quickReplyFormError = container.getElementsByClassName('error')[0];
-        quickReplyFormTextarea.addEventListener('input', event => {
+        quickReplyFormError = container.getElementsByClassName("error")[0];
+        quickReplyFormTextarea.addEventListener("input", (event) => {
             // SECURITY: see SECURITY comment inside formatComment
-            quickReplyFormPreview.innerHTML = formatComment(quickReplyFormTextarea.value);
+            quickReplyFormPreview.innerHTML = formatComment(
+                quickReplyFormTextarea.value,
+            );
         });
     }
 
@@ -957,7 +1058,7 @@ chrome.storage.sync.get(options => {
         if (editForm !== null) {
             return;
         }
-        const container = document.createElement('tbody');
+        const container = document.createElement("tbody");
         // SECURITY: this is static HTML content
         container.innerHTML = `
             <tr>
@@ -981,180 +1082,211 @@ chrome.storage.sync.get(options => {
         editForm = container.firstChild;
         editFormId = container.querySelector('[name="id"]');
         editFormHmac = container.querySelector('[name="hmac"]');
-        editFormTextarea = container.getElementsByTagName('textarea')[0];
-        editFormPreview = container.getElementsByClassName('preview')[0];
+        editFormTextarea = container.getElementsByTagName("textarea")[0];
+        editFormPreview = container.getElementsByClassName("preview")[0];
         editFormSubmit = container.querySelector('[type="submit"]');
-        editFormTextarea.addEventListener('input', event => {
+        editFormTextarea.addEventListener("input", (event) => {
             // SECURITY: see SECURITY comment inside formatComment
             editFormPreview.innerHTML = formatComment(editFormTextarea.value);
         });
     }
 
     function thingEvent(event) {
-        const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
-        if (event.key === 'j') {
+        const currentThingIndex =
+            thingIndexes[currentThing ? currentThing.id : ""];
+        if (event.key === "j") {
             /* Next thing */
             if (currentThingIndex === undefined) {
                 gotoThing(things[0]);
             } else {
                 let nextThingIndex = currentThingIndex + 1;
-                while (nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
+                while (
+                    nextThingIndex < things.length &&
+                    thingIsHidden(things[nextThingIndex])
+                ) {
                     nextThingIndex++;
                 }
                 gotoThing(things[nextThingIndex]);
             }
-        } else if (event.key === 'k') {
+        } else if (event.key === "k") {
             /* Previous thing */
             if (currentThingIndex === 0) {
                 gotoTop();
             } else {
                 let nextThingIndex = currentThingIndex - 1;
-                while (nextThingIndex > 0 && nextThingIndex < things.length && thingIsHidden(things[nextThingIndex])) {
+                while (
+                    nextThingIndex > 0 &&
+                    nextThingIndex < things.length &&
+                    thingIsHidden(things[nextThingIndex])
+                ) {
                     nextThingIndex--;
                 }
                 gotoThing(things[nextThingIndex]);
             }
-        } else if (event.key === 'J') {
+        } else if (event.key === "J") {
             /* Next sibling thing */
             const currentDepth = thingDepth(currentThing);
             let nextThingIndex = currentThingIndex + 1;
-            while (nextThingIndex < things.length && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) > currentDepth)) {
+            while (
+                nextThingIndex < things.length &&
+                (thingIsHidden(things[nextThingIndex]) ||
+                    thingDepth(things[nextThingIndex]) > currentDepth)
+            ) {
                 nextThingIndex++;
             }
             gotoThing(things[nextThingIndex]);
-        } else if (event.key === 'K') {
+        } else if (event.key === "K") {
             /* Previous sibling thing */
             if (currentThingIndex === 0) {
                 gotoTop();
             } else {
                 const currentDepth = thingDepth(currentThing);
                 let nextThingIndex = currentThingIndex - 1;
-                while (nextThingIndex > 0 && (thingIsHidden(things[nextThingIndex]) || thingDepth(things[nextThingIndex]) > currentDepth)) {
+                while (
+                    nextThingIndex > 0 &&
+                    (thingIsHidden(things[nextThingIndex]) ||
+                        thingDepth(things[nextThingIndex]) > currentDepth)
+                ) {
                     nextThingIndex--;
                 }
                 gotoThing(things[nextThingIndex]);
             }
-        } else if (event.key === 'H') {
+        } else if (event.key === "H") {
             /* Focus on thing at top of screen (high) */
             gotoThingAt(visualViewport.width / 5, 1);
-        } else if (event.key === 'M') {
+        } else if (event.key === "M") {
             /* Focus on thing in the **middle** of the screen */
             gotoThingAt(visualViewport.width / 5, visualViewport.height / 2);
-        } else if (event.key === 'L') {
+        } else if (event.key === "L") {
             /* Focus on thing at bottom of screen (low) */
             gotoThingAt(visualViewport.width / 5, visualViewport.height - 2);
-        } else if (event.key === 'h' || event.key === 'p') {
+        } else if (event.key === "h" || event.key === "p") {
             /* Parent comment (h: say in context when changing page, p: directly go to comment) */
             const parentIndex = thingIndexParent(currentThingIndex);
             if (parentIndex !== undefined) {
                 gotoThing(things[parentIndex]);
             } else {
                 // Use context link for h, and parent link for p
-                const selector = event.key === 'h' ? '.navs>a+a' : '.navs>a';
+                const selector = event.key === "h" ? ".navs>a+a" : ".navs>a";
                 const parentLink = things[0].querySelector(selector);
                 if (parentLink) {
                     parentLink.click();
                 }
             }
-        } else if (event.key === 'm') {
+        } else if (event.key === "m") {
             /* Toggle comment tree */
             if (currentThing) {
                 toggleCollapse(currentThing);
             }
-        } else if (event.key === 'o' || event.key === 'O') {
+        } else if (event.key === "o" || event.key === "O") {
             /* Open thing permalink (l: foreground, L: background) */
             if (currentThing && currentThing === morelinkThing) {
                 morelink.click();
             } else {
-                openThing(currentThing || document, event.key === 'o');
+                openThing(currentThing || document, event.key === "o");
             }
-        } else if (event.key === 'c' || event.key === 'C') {
+        } else if (event.key === "c" || event.key === "C") {
             /* Open comments (c: foreground, C: background) */
             if (currentThing) {
                 if (currentThing === morelinkThing) {
                     morelink.click();
                 } else {
-                    openComments(currentThing, event.key === 'c');
+                    openComments(currentThing, event.key === "c");
                 }
             }
-        } else if (event.key === 'b' || event.key === 'B') {
+        } else if (event.key === "b" || event.key === "B") {
             /* Open both (b: foreground, B: background) */
             if (currentThing && currentThing === morelinkThing) {
                 morelink.click();
             } else {
-                openThing(currentThing || document, event.key === 'b');
+                openThing(currentThing || document, event.key === "b");
                 if (currentThing) {
-                    openComments(currentThing, event.key === 'b');
+                    openComments(currentThing, event.key === "b");
                 }
             }
-        } else if (event.key === 'g') {
+        } else if (event.key === "g") {
             /* Go to top */
             gotoTop();
-        } else if (event.key === 'G') {
+        } else if (event.key === "G") {
             /* Go to last thing */
-            const topThings = document.querySelectorAll('.athing:has([indent="0"]),#morelink');
-            const thing =  topThings[topThings.length - 1]
+            const topThings = document.querySelectorAll(
+                '.athing:has([indent="0"]),#morelink',
+            );
+            const thing = topThings[topThings.length - 1];
             gotoThing(thing);
-        } else if (event.key === 'u') {
+        } else if (event.key === "u") {
             /* Upvote */
             const upArrow = document.getElementById(`up_${currentThing.id}`);
             if (!upArrow) {
-            } else if (upArrow.classList.contains('nosee')) {
+            } else if (upArrow.classList.contains("nosee")) {
                 // upArrow hidden, we can only unvote
-                const unvoteLink = document.getElementById(`un_${currentThing.id}`);
+                const unvoteLink = document.getElementById(
+                    `un_${currentThing.id}`,
+                );
                 if (unvoteLink) {
                     voteFromLink(unvoteLink);
                 }
             } else {
                 voteFromLink(upArrow);
             }
-        } else if (event.key === 'd') {
+        } else if (event.key === "d") {
             /* Downvote */
-            const downArrow = document.getElementById(`down_${currentThing.id}`);
+            const downArrow = document.getElementById(
+                `down_${currentThing.id}`,
+            );
             if (!downArrow) {
-            } else if (downArrow.classList.contains('nosee')) {
+            } else if (downArrow.classList.contains("nosee")) {
                 // downArrow hidden, we can only undown
-                const unvoteLink = document.getElementById(`un_${currentThing.id}`);
+                const unvoteLink = document.getElementById(
+                    `un_${currentThing.id}`,
+                );
                 if (unvoteLink) {
                     voteFromLink(unvoteLink);
                 }
             } else {
                 voteFromLink(downArrow);
             }
-        } else if (event.key === 'r') {
+        } else if (event.key === "r") {
             /* Comment on story, or reply to comment */
             if (!currentThing || currentThingIndex === 0) {
                 newCommentFormTextarea.focus();
             } else {
                 // can comment:    <div class="reply"><p><font><u><a>reply
                 // cannot comment: <div class="reply"><p><font>
-                const replyDiv = currentThing.getElementsByClassName('reply')[0];
-                const replyLink = replyDiv?.getElementsByTagName('a')[0];
+                const replyDiv =
+                    currentThing.getElementsByClassName("reply")[0];
+                const replyLink = replyDiv?.getElementsByTagName("a")[0];
                 quickReplyFromLink(replyLink);
             }
-        } else if (event.key === 'e') {
+        } else if (event.key === "e") {
             /* Edit */
             const editLink = currentThing.querySelector('a[href^="edit"]');
             quickEditFromLink(editLink);
-        } else if (event.key === 'D') {
+        } else if (event.key === "D") {
             /* Delete */
-            const deleteLink = currentThing.querySelector('a[href^="delete-confirm"]');
+            const deleteLink = currentThing.querySelector(
+                'a[href^="delete-confirm"]',
+            );
             quickDeleteFromLink(deleteLink);
-        } else if (event.key === 'f') {
+        } else if (event.key === "f") {
             /* Favorite */
             const thing = currentThing || things[0];
-            const faveLink = thing.querySelector('a[href^="fave"]') || thing.nextSibling?.querySelector?.('a[href^="fave"]');
+            const faveLink =
+                thing.querySelector('a[href^="fave"]') ||
+                thing.nextSibling?.querySelector?.('a[href^="fave"]');
             faveFromLink(faveLink);
-        } else if (event.key === 'F') {
+        } else if (event.key === "F") {
             /* Flag */
             const thing = currentThing || things[0];
-            const flagLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
+            const flagLink =
+                thing.querySelector('a[href^="flag"]') ||
+                thing.nextSibling?.querySelector?.('a[href^="flag"]');
             flagFromLink(flagLink);
-        } else if (event.key === 'n') {
+        } else if (event.key === "n") {
             /* Switch to Newest Items */
             if (enableNewestItems) {
                 focusNewest = true;
-                newestItems.classList.add('active-newest-items');
+                newestItems.classList.add("active-newest-items");
                 gotoNewestIndex(currentNewestIndex);
             }
         } else if (48 <= event.keyCode && event.keyCode <= 57) {
@@ -1172,33 +1304,38 @@ chrome.storage.sync.get(options => {
     }
 
     function newestEvent(event) {
-        if (event.key === 'n') {
+        if (event.key === "n") {
             /* Switch back from Newest Items */
             focusNewest = false;
-            newestItems.classList.remove('active-newest-items');
-        } else if (event.key === 'j') {
+            newestItems.classList.remove("active-newest-items");
+        } else if (event.key === "j") {
             /* Next newest */
             if (currentNewestIndex < newestList.childElementCount - 1) {
                 gotoNewestIndex(currentNewestIndex + 1);
             }
-        } else if (event.key === 'k') {
+        } else if (event.key === "k") {
             /* Previous newest */
             if (currentNewestIndex > 0) {
                 gotoNewestIndex(currentNewestIndex - 1);
             }
-        } else if (event.key === 'J') {
+        } else if (event.key === "J") {
             /* Jump 10 down */
-            gotoNewestIndex(Math.min(currentNewestIndex + 10, newestList.childElementCount - 1));
-        } else if (event.key === 'K') {
+            gotoNewestIndex(
+                Math.min(
+                    currentNewestIndex + 10,
+                    newestList.childElementCount - 1,
+                ),
+            );
+        } else if (event.key === "K") {
             /* Jump 10 up */
             gotoNewestIndex(Math.max(currentNewestIndex - 10, 0));
-        } else if (event.key === 'g') {
+        } else if (event.key === "g") {
             /* First newest */
             gotoNewestIndex(0);
-        } else if (event.key === 'G') {
+        } else if (event.key === "G") {
             /* Last newest */
             gotoNewestIndex(newestList.childElementCount - 1);
-        } else if (event.key === 'l' ) {
+        } else if (event.key === "l") {
             gotoThingFromNewestIndex(currentNewestIndex);
         } else {
             return;
@@ -1207,24 +1344,24 @@ chrome.storage.sync.get(options => {
         event.preventDefault();
     }
 
-    document.addEventListener('keydown', (event) => {
+    document.addEventListener("keydown", (event) => {
         if (helpShown) {
-            if (event.key === 'Escape' || event.key === '?') {
+            if (event.key === "Escape" || event.key === "?") {
                 hideHelp();
             }
-        } else if (event.target.tagName !== 'BODY') {
-            if (event.key === 'Escape') {
+        } else if (event.target.tagName !== "BODY") {
+            if (event.key === "Escape") {
                 event.target.blur();
-            } else if (event.ctrlKey && event.key === 'Enter') {
+            } else if (event.ctrlKey && event.key === "Enter") {
                 const form = event.target.parentNode;
                 // Simulate click on submit button to handle the case where it is disabled
-                const submitButton = form.querySelector('[type=submit]');
+                const submitButton = form.querySelector("[type=submit]");
                 submitButton.click();
             }
         } else if (event.ctrlKey || event.altKey || event.metaKey) {
             // do not capture Ctrl+r and such
             return;
-        } else if (event.key === '?') {
+        } else if (event.key === "?") {
             showHelp();
         } else if (focusNewest) {
             newestEvent(event);
@@ -1235,53 +1372,56 @@ chrome.storage.sync.get(options => {
 
     function handleLinkClick(el) {
         const url = new URL(el.href, document.location);
-        if (url.pathname === '/vote') {
+        if (url.pathname === "/vote") {
             voteFromLink(el);
             event.stopPropagation();
             event.preventDefault();
             return true;
-        } else if (el.classList.contains('togg')) {
+        } else if (el.classList.contains("togg")) {
             const thing = findThingInAscendants(el);
             if (thing) {
                 toggleCollapse(thing);
                 return true;
             }
-        } else if (url.pathname === '/flag') {
+        } else if (url.pathname === "/flag") {
             flagFromLink(el);
             return true;
-        } else if (url.pathname === '/hide') {
+        } else if (url.pathname === "/hide") {
             hideFromLink(el);
             return true;
-        } else if (url.pathname === '/fave') {
+        } else if (url.pathname === "/fave") {
             faveFromLink(el);
             return true;
-        } else if (url.pathname === '/reply') {
+        } else if (url.pathname === "/reply") {
             quickReplyFromLink(el);
             return true;
-        } else if (url.pathname === '/edit') {
+        } else if (url.pathname === "/edit") {
             quickEditFromLink(el);
             return true;
-        } else if (url.pathname === '/delete-confirm') {
+        } else if (url.pathname === "/delete-confirm") {
             quickDeleteFromLink(el);
             return true;
         }
         return false;
     }
 
-    document.addEventListener('click', (event) => {
-        // find link
-        let el = event.target;
-        while (!el.href && (el = el.parentElement));
-        // use link
-        if (el?.href) {
-            if (handleLinkClick(el)) {
-                event.stopPropagation();
-                event.preventDefault();
-                return;
+    document.addEventListener(
+        "click",
+        (event) => {
+            // find link
+            let el = event.target;
+            while (!el.href && (el = el.parentElement));
+            // use link
+            if (el?.href) {
+                if (handleLinkClick(el)) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    return;
+                }
             }
-        }
-        // just select thing
-        gotoThingAt(event.clientX, event.clientY);
-    }, true);
-
+            // just select thing
+            gotoThingAt(event.clientX, event.clientY);
+        },
+        true,
+    );
 });
