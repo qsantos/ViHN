@@ -167,7 +167,7 @@ function showHelp() {
 }
 initHelp();
 
-const loggedIn = document.getElementById('logout') != null;
+const loggedIn = document.getElementById('logout') !== null;
 const things = Array.from(document.getElementsByClassName('athing'));
 
 let currentThing = document.querySelector('.athing:target');
@@ -181,7 +181,7 @@ const morelinkThing = morelink ? morelink.parentElement.parentElement : null;
 if (morelink) {
     morelinkThing.id = 'morelink';
     things.push(morelinkThing);
-    if (document.location.hash == '#morelink') {
+    if (document.location.hash === '#morelink') {
         currentThing = morelinkThing;
         currentThing.classList.add('activething');
         currentThing.scrollIntoView(true);
@@ -250,7 +250,7 @@ function handleRequest() {
     const [url, options, resolve, reject] = request;
     lastRequestTime = new Date();
     fetch(url, options).then(response => {
-        if (response.status == 503) {
+        if (response.status === 503) {
             // Still too fast, try again
             requestQueue.unshift([url, options, resolve, reject]);
             if (!requestTimer) {
@@ -298,12 +298,12 @@ function initNewestItems() {
     datedIndexes = Array.from(document.getElementsByClassName('age'))
         .map((age , index)=> [age.title, index])
         // Chrome is very slow without an explicit comparison function
-        .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] == a2[0] ? 0 : 1)
+        .sort((a1, a2) => a1[0] < a2[0] ? -1 : a1[0] === a2[0] ? 0 : 1)
         .reverse();
-    if (datedIndexes.length == 0) {
+    if (datedIndexes.length === 0) {
         return;
     }
-    const hasOtherPages = morelinkThing != null || document.location.search.indexOf('&p=') > 0
+    const hasOtherPages = morelinkThing !== null || document.location.search.indexOf('&p=') > 0
     newestItems.id = 'newest-items';
     // Setting innerHTML is still faster than doing DOM
     const parts = ['<h3><u>N</u>ewest Items</u></h3>'];
@@ -314,7 +314,7 @@ function initNewestItems() {
     let lastDay = null;
     for (const [datetime, index] of datedIndexes) {
         const [day, time] = datetime.split('T');
-        if (day == lastDay) {
+        if (day === lastDay) {
             parts.push(`<li data-index="${index}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${time}</li>`);
         } else {
             lastDay = day;
@@ -426,7 +426,7 @@ function openThing(thing, active) {
     const url = new URL(relativeUrl, document.location).href;
     // strips the hash part of the current location
     const currentUrl = new URL('', document.location).href;
-    if (url != currentUrl) {
+    if (url !== currentUrl) {
         chrome.runtime.sendMessage({ action: 'open', url, active });
     }
 }
@@ -470,7 +470,7 @@ function openCommentLink(thing, linkNumber, active) {
     const url = link.href;
     // strips the hash part of the current location
     const currentUrl = new URL('', document.location).href;
-    if (url != currentUrl) {
+    if (url !== currentUrl) {
         chrome.runtime.sendMessage({ action: 'open', url, active });
     }
 }
@@ -543,8 +543,8 @@ function vote(id, how, auth, _goto) {
         if (downLink) {
             downLink.classList.remove('inprogress-votelink');
         }
-        setClassIf(upLink, 'nosee', how == 'un');
-        setClassIf(downLink, 'nosee', how == 'un');
+        setClassIf(upLink, 'nosee', how === 'un');
+        setClassIf(downLink, 'nosee', how === 'un');
         // SECURITY: this is HTML which was already active on the page before
         unLink.innerHTML = originalUnlinkContent;
     }
@@ -555,9 +555,9 @@ function vote(id, how, auth, _goto) {
             downLink.classList.remove('inprogress-votelink');
         }
         // Toggle links
-        setClassIf(upLink, 'nosee', how != 'un');
-        setClassIf(downLink, 'nosee', how != 'un');
-        if (how == 'un') {
+        setClassIf(upLink, 'nosee', how !== 'un');
+        setClassIf(downLink, 'nosee', how !== 'un');
+        if (how === 'un') {
             // SECURITY: this is static HTML content
             unLink.innerHTML = '';
         } else {
@@ -568,7 +568,7 @@ function vote(id, how, auth, _goto) {
             // we do trust Hacker News itself.
             unLink.innerHTML = (
                 " | <a id='un_" + id + "' class='clicky' " + "href='" + unUrl + "'>" +
-                (how == 'up' ? 'unvote' : 'undown')
+                (how === 'up' ? 'unvote' : 'undown')
                 + "</a>"
             );
         }
@@ -590,13 +590,13 @@ function vote(id, how, auth, _goto) {
 function voteFromLink(el) {
     const u = new URL(el.href, location);
     const p = u.searchParams;
-    if (u.pathname == '/vote') {
+    if (u.pathname === '/vote') {
         vote(p.get('id'), p.get('how'), p.get('auth'), p.get('goto'));
     }
 }
 
 function faveFromLink(faveLink) {
-    if (!faveLink || faveLink.textContent == '…') {
+    if (!faveLink || faveLink.textContent === '…') {
         return;
     }
     const url = faveLink.href;
@@ -623,7 +623,7 @@ function faveFromLink(faveLink) {
 }
 
 function flagFromLink(flagLink) {
-    if (!flagLink || flagLink.textContent == '…') {
+    if (!flagLink || flagLink.textContent === '…') {
         return;
     }
     const url = flagLink.href;
@@ -652,7 +652,7 @@ function flagFromLink(flagLink) {
 }
 
 function hideFromLink(hideLink) {
-    if (!hideLink || hideLink.textContent == '…') {
+    if (!hideLink || hideLink.textContent === '…') {
         return;
     }
     const url = hideLink.href;
@@ -755,7 +755,7 @@ function quickEditFromLink(editLink) {
 }
 
 function quickDeleteFromLink(deleteLink) {
-    if (!deleteLink || deleteLink.textContent == '…') {
+    if (!deleteLink || deleteLink.textContent === '…') {
         return;
     }
     const thing = findThingInAscendants(deleteLink);
@@ -776,7 +776,7 @@ function quickDeleteFromLink(deleteLink) {
     const url = 'https://news.ycombinator.com/delete-confirm?id=' + thing.id + '&goto=' + encodeURIComponent(goto);
     hnfetch(url).then(({html}) => {
         const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
-        if (html == "You can't delete that.")  {
+        if (html === "You can't delete that.")  {
             throw 'You cannot delete this comment';
         } else if (!hmacMatch) {
             console.warn(html);
@@ -815,7 +815,7 @@ if (op) {
     const opUsername = op.textContent;
     const hnusers = document.getElementsByClassName('hnuser');
     for (const hnuser of hnusers) {
-        if (hnuser.textContent == opUsername) {
+        if (hnuser.textContent === opUsername) {
             hnuser.classList.add('op');
         }
     }
@@ -909,7 +909,7 @@ let quickReplyFormHmac = null;
 let quickReplyFormTextarea = null;
 let quickReplyFormSubmit = null;
 function initQuickReplyForm() {
-    if (quickReplyForm != null) {
+    if (quickReplyForm !== null) {
         return;
     }
     const container = document.createElement('tbody');
@@ -956,7 +956,7 @@ let editFormTextarea = null;
 let editFormPreview = null;
 let editFormSubmit = null;
 function initEditForm() {
-    if (editForm != null) {
+    if (editForm !== null) {
         return;
     }
     const container = document.createElement('tbody');
@@ -994,9 +994,9 @@ function initEditForm() {
 
 function thingEvent(event) {
     const currentThingIndex = thingIndexes[currentThing ? currentThing.id : ''];
-    if (event.key == 'j') {
+    if (event.key === 'j') {
         /* Next thing */
-        if (currentThingIndex == undefined) {
+        if (currentThingIndex === undefined) {
             gotoThing(things[0]);
         } else {
             let nextThingIndex = currentThingIndex + 1;
@@ -1005,9 +1005,9 @@ function thingEvent(event) {
             }
             gotoThing(things[nextThingIndex]);
         }
-    } else if (event.key == 'k') {
+    } else if (event.key === 'k') {
         /* Previous thing */
-        if (currentThingIndex == 0) {
+        if (currentThingIndex === 0) {
             gotoTop();
         } else {
             let nextThingIndex = currentThingIndex - 1;
@@ -1016,7 +1016,7 @@ function thingEvent(event) {
             }
             gotoThing(things[nextThingIndex]);
         }
-    } else if (event.key == 'J') {
+    } else if (event.key === 'J') {
         /* Next sibling thing */
         const currentDepth = thingDepth(currentThing);
         let nextThingIndex = currentThingIndex + 1;
@@ -1024,9 +1024,9 @@ function thingEvent(event) {
             nextThingIndex++;
         }
         gotoThing(things[nextThingIndex]);
-    } else if (event.key == 'K') {
+    } else if (event.key === 'K') {
         /* Previous sibling thing */
-        if (currentThingIndex == 0) {
+        if (currentThingIndex === 0) {
             gotoTop();
         } else {
             const currentDepth = thingDepth(currentThing);
@@ -1036,68 +1036,68 @@ function thingEvent(event) {
             }
             gotoThing(things[nextThingIndex]);
         }
-    } else if (event.key == 'H') {
+    } else if (event.key === 'H') {
         /* Focus on thing at top of screen (high) */
         gotoThingAt(visualViewport.width / 5, 1);
-    } else if (event.key == 'M') {
+    } else if (event.key === 'M') {
         /* Focus on thing in the **middle** of the screen */
         gotoThingAt(visualViewport.width / 5, visualViewport.height / 2);
-    } else if (event.key == 'L') {
+    } else if (event.key === 'L') {
         /* Focus on thing at bottom of screen (low) */
         gotoThingAt(visualViewport.width / 5, visualViewport.height - 2);
-    } else if (event.key == 'h' || event.key == 'p') {
+    } else if (event.key === 'h' || event.key === 'p') {
         /* Parent comment (h: say in context when changing page, p: directly go to comment) */
         const parentIndex = thingIndexParent(currentThingIndex);
         if (parentIndex !== undefined) {
             gotoThing(things[parentIndex]);
         } else {
             // Use context link for h, and parent link for p
-            const selector = event.key == 'h' ? '.navs>a+a' : '.navs>a';
+            const selector = event.key === 'h' ? '.navs>a+a' : '.navs>a';
             const parentLink = things[0].querySelector(selector);
             if (parentLink) {
                 parentLink.click();
             }
         }
-    } else if (event.key == 'm') {
+    } else if (event.key === 'm') {
         /* Toggle comment tree */
         if (currentThing) {
             toggleCollapse(currentThing);
         }
-    } else if (event.key == 'o' || event.key == 'O') {
+    } else if (event.key === 'o' || event.key === 'O') {
         /* Open thing permalink (l: foreground, L: background) */
-        if (currentThing && currentThing == morelinkThing) {
+        if (currentThing && currentThing === morelinkThing) {
             morelink.click();
         } else {
-            openThing(currentThing || document, event.key == 'o');
+            openThing(currentThing || document, event.key === 'o');
         }
-    } else if (event.key == 'c' || event.key == 'C') {
+    } else if (event.key === 'c' || event.key === 'C') {
         /* Open comments (c: foreground, C: background) */
         if (currentThing) {
-            if (currentThing == morelinkThing) {
+            if (currentThing === morelinkThing) {
                 morelink.click();
             } else {
-                openComments(currentThing, event.key == 'c');
+                openComments(currentThing, event.key === 'c');
             }
         }
-    } else if (event.key == 'b' || event.key == 'B') {
+    } else if (event.key === 'b' || event.key === 'B') {
         /* Open both (b: foreground, B: background) */
-        if (currentThing && currentThing == morelinkThing) {
+        if (currentThing && currentThing === morelinkThing) {
             morelink.click();
         } else {
-            openThing(currentThing || document, event.key == 'b');
+            openThing(currentThing || document, event.key === 'b');
             if (currentThing) {
-                openComments(currentThing, event.key == 'b');
+                openComments(currentThing, event.key === 'b');
             }
         }
-    } else if (event.key == 'g') {
+    } else if (event.key === 'g') {
         /* Go to top */
         gotoTop();
-    } else if (event.key == 'G') {
+    } else if (event.key === 'G') {
         /* Go to last thing */
         const topThings = document.querySelectorAll('.athing:has([indent="0"]),#morelink');
         const thing =  topThings[topThings.length - 1]
         gotoThing(thing);
-    } else if (event.key == 'u') {
+    } else if (event.key === 'u') {
         /* Upvote */
         const upArrow = document.getElementById('up_' + currentThing.id);
         if (!upArrow) {
@@ -1110,7 +1110,7 @@ function thingEvent(event) {
         } else {
             voteFromLink(upArrow);
         }
-    } else if (event.key == 'd') {
+    } else if (event.key === 'd') {
         /* Downvote */
         const downArrow = document.getElementById('down_' + currentThing.id);
         if (!downArrow) {
@@ -1123,9 +1123,9 @@ function thingEvent(event) {
         } else {
             voteFromLink(downArrow);
         }
-    } else if (event.key == 'r') {
+    } else if (event.key === 'r') {
         /* Comment on story, or reply to comment */
-        if (!currentThing || currentThingIndex == 0) {
+        if (!currentThing || currentThingIndex === 0) {
             newCommentFormTextarea.focus();
         } else {
             // can comment:    <div class="reply"><p><font><u><a>reply
@@ -1134,25 +1134,25 @@ function thingEvent(event) {
             const replyLink = replyDiv?.getElementsByTagName('a')[0];
             quickReplyFromLink(replyLink);
         }
-    } else if (event.key == 'e') {
+    } else if (event.key === 'e') {
         /* Edit */
         const editLink = currentThing.querySelector('a[href^="edit"]');
         quickEditFromLink(editLink);
-    } else if (event.key == 'D') {
+    } else if (event.key === 'D') {
         /* Delete */
         const deleteLink = currentThing.querySelector('a[href^="delete-confirm"]');
         quickDeleteFromLink(deleteLink);
-    } else if (event.key == 'f') {
+    } else if (event.key === 'f') {
         /* Favorite */
         const thing = currentThing || things[0];
         const faveLink = thing.querySelector('a[href^="fave"]') || thing.nextSibling?.querySelector?.('a[href^="fave"]');
         faveFromLink(faveLink);
-    } else if (event.key == 'F') {
+    } else if (event.key === 'F') {
         /* Flag */
         const thing = currentThing || things[0];
         const flagLink = thing.querySelector('a[href^="flag"]') || thing.nextSibling?.querySelector?.('a[href^="flag"]');
         flagFromLink(flagLink);
-    } else if (event.key == 'n') {
+    } else if (event.key === 'n') {
         /* Switch to Newest Items */
         if (enableNewestItems) {
             focusNewest = true;
@@ -1174,33 +1174,33 @@ function thingEvent(event) {
 }
 
 function newestEvent(event) {
-    if (event.key == 'n') {
+    if (event.key === 'n') {
         /* Switch back from Newest Items */
         focusNewest = false;
         newestItems.classList.remove('active-newest-items');
-    } else if (event.key == 'j') {
+    } else if (event.key === 'j') {
         /* Next newest */
         if (currentNewestIndex < newestList.childElementCount - 1) {
             gotoNewestIndex(currentNewestIndex + 1);
         }
-    } else if (event.key == 'k') {
+    } else if (event.key === 'k') {
         /* Previous newest */
         if (currentNewestIndex > 0) {
             gotoNewestIndex(currentNewestIndex - 1);
         }
-    } else if (event.key == 'J') {
+    } else if (event.key === 'J') {
         /* Jump 10 down */
         gotoNewestIndex(Math.min(currentNewestIndex + 10, newestList.childElementCount - 1));
-    } else if (event.key == 'K') {
+    } else if (event.key === 'K') {
         /* Jump 10 up */
         gotoNewestIndex(Math.max(currentNewestIndex - 10, 0));
-    } else if (event.key == 'g') {
+    } else if (event.key === 'g') {
         /* First newest */
         gotoNewestIndex(0);
-    } else if (event.key == 'G') {
+    } else if (event.key === 'G') {
         /* Last newest */
         gotoNewestIndex(newestList.childElementCount - 1);
-    } else if (event.key == 'l' ) {
+    } else if (event.key === 'l' ) {
         gotoThingFromNewestIndex(currentNewestIndex);
     } else {
         return;
@@ -1211,13 +1211,13 @@ function newestEvent(event) {
 
 document.addEventListener('keydown', (event) => {
     if (helpShown) {
-        if (event.key == 'Escape' || event.key == '?') {
+        if (event.key === 'Escape' || event.key === '?') {
             hideHelp();
         }
-    } else if (event.target.tagName != 'BODY') {
-        if (event.key == 'Escape') {
+    } else if (event.target.tagName !== 'BODY') {
+        if (event.key === 'Escape') {
             event.target.blur();
-        } else if (event.ctrlKey && event.key == 'Enter') {
+        } else if (event.ctrlKey && event.key === 'Enter') {
             const form = event.target.parentNode;
             // Simulate click on submit button to handle the case where it is disabled
             const submitButton = form.querySelector('[type=submit]');
@@ -1226,7 +1226,7 @@ document.addEventListener('keydown', (event) => {
     } else if (event.ctrlKey || event.altKey || event.metaKey) {
         // do not capture Ctrl+r and such
         return;
-    } else if (event.key == '?') {
+    } else if (event.key === '?') {
         showHelp();
     } else if (focusNewest) {
         newestEvent(event);
@@ -1237,7 +1237,7 @@ document.addEventListener('keydown', (event) => {
 
 function handleLinkClick(el) {
     const url = new URL(el.href, document.location);
-    if (url.pathname == '/vote') {
+    if (url.pathname === '/vote') {
         voteFromLink(el);
         event.stopPropagation();
         event.preventDefault();
@@ -1248,22 +1248,22 @@ function handleLinkClick(el) {
             toggleCollapse(thing);
             return true;
         }
-    } else if (url.pathname == '/flag') {
+    } else if (url.pathname === '/flag') {
         flagFromLink(el);
         return true;
-    } else if (url.pathname == '/hide') {
+    } else if (url.pathname === '/hide') {
         hideFromLink(el);
         return true;
-    } else if (url.pathname == '/fave') {
+    } else if (url.pathname === '/fave') {
         faveFromLink(el);
         return true;
-    } else if (url.pathname == '/reply') {
+    } else if (url.pathname === '/reply') {
         quickReplyFromLink(el);
         return true;
-    } else if (url.pathname == '/edit') {
+    } else if (url.pathname === '/edit') {
         quickEditFromLink(el);
         return true;
-    } else if (url.pathname == '/delete-confirm') {
+    } else if (url.pathname === '/delete-confirm') {
         quickDeleteFromLink(el);
         return true;
     }
