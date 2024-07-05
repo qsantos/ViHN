@@ -212,14 +212,14 @@ function formatComment(comment) {
     return comment.split('\n\n').map(paragraph => {
         const htmlEscaped = paragraph.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
         if (htmlEscaped.startsWith('  ')) {
-            return '<code><pre>' + htmlEscaped + '</code></pre>';
+            return `<code><pre>${htmlEscaped}</code></pre>`;
         }
         // replaces *something*, but not **something**, \*something\*, \*something**, etc.
         const italicized = htmlEscaped.replace(/(?<!\\|\*)\*((?!\*).*?(?<!\\|\*))\*(?!\*)/sg, '<i>$1</i>');
         // URL regex inspired from https://stackoverflow.com/a/6041965/4457767
         // plus ugly hack at the end to avoid parsing escaped '>' as part of search parameters
         const linkified = italicized.replace(/https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])(?!(?<=&gt);|(?<=&g)t;|(?<=&)gt;)/g, '<a href="$&">$&</a>');
-        return '<p>' + linkified + '</p>';
+        return `<p>${linkified}</p>`;
     }).join('');
 }
 
@@ -267,7 +267,7 @@ function handleRequest() {
         } else if (response.status === 504) {
             reject('Hacker News is down; try again later (504 error)');
         } else {
-            reject('Unexpected error (' + response.status + ')');
+            reject(`Unexpected error (${response.status})`);
         }
     }).catch(() => {
         reject('Connection failure; are you connected to the Internet?');
@@ -422,7 +422,7 @@ function setClassIf(el, className, condition) {
 
 function openThing(thing, active) {
     const anchor = thing.querySelector('.titleline>a');
-    const relativeUrl = anchor ? anchor.href : 'item?id=' + thing.id;
+    const relativeUrl = anchor ? anchor.href : `item?id=${thing.id}`;
     const url = new URL(relativeUrl, document.location).href;
     // strips the hash part of the current location
     const currentUrl = new URL('', document.location).href;
@@ -487,7 +487,7 @@ function toggleCollapse(thing) {
         // This is non critical, so no point in blocking the collapsing on getting
         // a result. We just do best effort. Do use hnfetch() to handle the user
         // {,un}collapsing many things in a row.
-        hnfetch('https://news.ycombinator.com/collapse?id=' + thing.id + (coll ? '' : '&un=true'))
+        hnfetch(`https://news.ycombinator.com/collapse?id=${thing.id}${coll ? '' : '&un=true'}`)
         .catch(console.warn);
     }
 
@@ -496,7 +496,7 @@ function toggleCollapse(thing) {
     setClassIf(thing.getElementsByClassName('votelinks')[0], 'nosee', coll);
     setClassIf(thing.getElementsByClassName('comment')[0], 'noshow', coll);
     const el = thing.getElementsByClassName('togg')[0];
-    el.textContent = coll ? ('[' + el.getAttribute('n') + ' more]') : '[–]';
+    el.textContent = coll ? (`[${el.getAttribute('n')} more]`) : '[–]';
 
     // Descendants
     let show = !coll;
@@ -520,14 +520,14 @@ function toggleCollapse(thing) {
 
 // From Hacker News's JavaScript
 function vurl(id, how, auth, _goto) {
-    return "vote?id=" + id + "&how=" + how + "&auth=" + auth + "&goto=" + encodeURIComponent(_goto) + "&js=t";
+    return `vote?id=${id}&how=${how}&auth=${auth}&goto=${encodeURIComponent(_goto)}&js=t`;
 }
 
 // Basically from Hacker News's JavaScript
 function vote(id, how, auth, _goto) {
-    const upLink = document.getElementById('up_' + id);
-    const downLink = document.getElementById('down_' + id);
-    const unLink = document.getElementById('unv_' + id);
+    const upLink = document.getElementById(`up_${id}`);
+    const downLink = document.getElementById(`down_${id}`);
+    const unLink = document.getElementById(`unv_${id}`);
     // Display vote links as “in-progress”
     upLink.classList.add('nosee', 'inprogress-votelink');
     if (downLink) {
@@ -567,15 +567,13 @@ function vote(id, how, auth, _goto) {
             // button or unvote link. These URLs are not user-controlled, and
             // we do trust Hacker News itself.
             unLink.innerHTML = (
-                " | <a id='un_" + id + "' class='clicky' " + "href='" + unUrl + "'>" +
-                (how === 'up' ? 'unvote' : 'undown')
-                + "</a>"
+                ` | <a id='un_${id}' class='clicky' href='${unUrl}'>${how === 'up' ? 'unvote' : 'undown'}</a>`
             );
         }
     }
 
     // Do the query
-    const url = 'https://news.ycombinator.com/' + vurl(id, how, auth, _goto);
+    const url = `https://news.ycombinator.com/${vurl(id, how, auth, _goto)}`;
     hnfetch(url).then(({html}) => {
         if (html.match('<b>Login</b>')) {
             throw 'You are not connected';
@@ -615,7 +613,7 @@ function faveFromLink(faveLink) {
             searchParams.set('un', 't');
             faveLink.textContent = 'un-favorite';
         }
-        faveLink.href = 'fave?' + searchParams.toString();
+        faveLink.href = `fave?${searchParams.toString()}`;
     }).catch(msg => {
         faveLink.textContent = originalLinkLabel;
         alert(msg);
@@ -644,7 +642,7 @@ function flagFromLink(flagLink) {
             searchParams.set('un', 't');
             flagLink.textContent = 'unflag';
         }
-        flagLink.href = 'flag?' + searchParams.toString();
+        flagLink.href = `flag?${searchParams.toString()}`;
     }).catch(msg => {
         flagLink.textContent = originalLinkLabel;
         alert(msg);
@@ -671,7 +669,7 @@ function hideFromLink(hideLink) {
             searchParams.set('un', 't');
             hideLink.textContent = 'un-hide';
         }
-        hideLink.href = 'hide?' + searchParams.toString();
+        hideLink.href = `hide?${searchParams.toString()}`;
     }).catch(msg => {
         hideLink.textContent = originalLinkLabel;
         alert(msg);
@@ -770,10 +768,10 @@ function quickDeleteFromLink(deleteLink) {
     const loc = document.location;
     const parentIndex = thingIndexParent(thingIndex);
     const parent = things[parentIndex];
-    const goto = loc.pathname.substr(1) + loc.search + (parent ? '#' + parent.id : '');
+    const goto = loc.pathname.substr(1) + loc.search + (parent ? `#${parent.id}` : '');
     // NOTE: fetch only accepts absolute URLs
     // see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities#content_script_https_requests
-    const url = 'https://news.ycombinator.com/delete-confirm?id=' + thing.id + '&goto=' + encodeURIComponent(goto);
+    const url = `https://news.ycombinator.com/delete-confirm?id=${thing.id}&goto=${encodeURIComponent(goto)}`;
     hnfetch(url).then(({html}) => {
         const hmacMatch = html.match(/<input type="hidden" name="hmac" value="(.*?)">/);
         if (html === "You can't delete that.")  {
@@ -853,7 +851,7 @@ function gotoThing(thing) {
         // user navigates through many things in a short amount of time
         clearTimeout(historyUpdateTimer);
         historyUpdateTimer = setTimeout(() => {
-            history.replaceState(null, '', '#' + thing.id);
+            history.replaceState(null, '', `#${thing.id}`);
             historyUpdateTimer = null;
         }, 50);
         // Immediately makes the change visible
@@ -1099,11 +1097,11 @@ function thingEvent(event) {
         gotoThing(thing);
     } else if (event.key === 'u') {
         /* Upvote */
-        const upArrow = document.getElementById('up_' + currentThing.id);
+        const upArrow = document.getElementById(`up_${currentThing.id}`);
         if (!upArrow) {
         } else if (upArrow.classList.contains('nosee')) {
             // upArrow hidden, we can only unvote
-            const unvoteLink = document.getElementById('un_' + currentThing.id);
+            const unvoteLink = document.getElementById(`un_${currentThing.id}`);
             if (unvoteLink) {
                 voteFromLink(unvoteLink);
             }
@@ -1112,11 +1110,11 @@ function thingEvent(event) {
         }
     } else if (event.key === 'd') {
         /* Downvote */
-        const downArrow = document.getElementById('down_' + currentThing.id);
+        const downArrow = document.getElementById(`down_${currentThing.id}`);
         if (!downArrow) {
         } else if (downArrow.classList.contains('nosee')) {
             // downArrow hidden, we can only undown
-            const unvoteLink = document.getElementById('un_' + currentThing.id);
+            const unvoteLink = document.getElementById(`un_${currentThing.id}`);
             if (unvoteLink) {
                 voteFromLink(unvoteLink);
             }
