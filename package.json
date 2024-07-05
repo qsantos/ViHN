@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "lint": "npx @biomejs/biome check *.js",
+    "fix": "npx @biomejs/biome check --apply *.js"
+  },
+  "dependencies": {
+    "web-ext": "^7.11.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3"
+  }
+}
