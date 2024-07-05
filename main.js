@@ -190,7 +190,7 @@ if (morelink) {
 
 // from https://stackoverflow.com/a/34064434/4457767
 function htmlDecode(input) {
-  var doc = new DOMParser().parseFromString(input, "text/html");
+  const doc = new DOMParser().parseFromString(input, "text/html");
   return doc.documentElement.textContent;
 }
 
@@ -224,7 +224,7 @@ function formatComment(comment) {
 }
 
 // We assume the queue is always pretty short, so using an Array should be okay
-let requestQueue = [];
+const requestQueue = [];
 let lastRequestTime = null;
 let requestTimer = null;
 function hnfetch(url, options) {
@@ -499,7 +499,7 @@ function toggleCollapse(thing) {
     el.textContent = coll ? (`[${el.getAttribute('n')} more]`) : '[–]';
 
     // Descendants
-    let show = !coll;
+    const show = !coll;
     const n0 = thingDepth(thing)
     let n = thingDepth(nextcomm(thing))
     let coll2 = false;
