@@ -342,7 +342,9 @@ chrome.storage.sync.get((options) => {
         parts.push("<ul>");
         let lastDay = null;
         for (const [datetime, index] of datedIndexes) {
-            const [day, time] = datetime.split("T");
+            // for format provided by Hacker News is "2024-09-03T19:06:26.000000Z"
+            const [day, rest] = datetime.split("T");
+            const [time, fraction] = rest.split(".");
             if (day === lastDay) {
                 parts.push(
                     `<li data-index="${index}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${time}</li>`,
