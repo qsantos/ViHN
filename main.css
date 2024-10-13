@@ -189,7 +189,7 @@ kbd {
 
 /* In-comment link counter */
 body { counter-reset: link; }
-:is(.activething .commtext,.fatitem .activething ~ tr .toptext) a::after {
+a.numbered-link::after {
     /* Display link number */
     counter-increment: link;
     content: " " counter(link);

@@ -1,3 +1,7 @@
+# v0.1.25
+
+- Only annotate the first 10 links (the ones with matching number hotkeys) #43
+
 # v0.1.24
 
 - Truncate milliseconds and UTC marker from times in Newest Items following format change in Hacker News: `2024-09-03 19:06:26.000000Z` → `2024-09-03 19:06:26`

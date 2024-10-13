@@ -924,18 +924,49 @@ chrome.storage.sync.get((options) => {
         return thing.classList.contains("noshow");
     }
 
+    function getThingLinks(thing) {
+        if (currentThing.parentElement.parentElement.classList.contains("fatitem")) {
+            // The current thing is the top element
+            //
+            // For comment pages, the text is still in the .commtext. But, for
+            // Ask HN texts, the relevant text is in the third sibling <tr>:
+            //
+            // <table class="fatitem">
+            //  <tbody>
+            //   <tr id="XXXXXXX" clss="athing">
+            //   <tr> <!-- points, OP, time, action links -->
+            //   <tr> <!-- empty -->
+            //   <tr> <!-- text -->
+            //  </tbody>
+            // <table>
+            //
+            const textRow = currentThing?.nextElementSibling?.nextElementSibling?.nextElementSibling;
+            if (textRow) {
+                return textRow.querySelectorAll('.toptext a');
+            }
+        }
+        // The current thing is a regular comment
+        return currentThing.querySelectorAll('.commtext a');
+    }
+
+    function getThingTop10Links(thing) {
+        return Array.from(getThingLinks(thing)).slice(0, 10);
+    }
+
     function activateThing(thing) {
         if (!thing) {
             return;
         }
         currentThing = thing;
         currentThing.classList.add("activething");
+        getThingTop10Links(currentThing).forEach(link => link.classList.add("numbered-link"));
     }
 
     function deactivateCurrentThing() {
         if (!currentThing) {
             return;
         }
+        getThingTop10Links(currentThing).forEach(link => link.classList.remove("numbered-link"));
         currentThing.classList.remove("activething");
         currentThing = undefined;
     }
