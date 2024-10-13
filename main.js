@@ -174,10 +174,7 @@ chrome.storage.sync.get((options) => {
     const loggedIn = document.getElementById("logout") !== null;
     const things = Array.from(document.getElementsByClassName("athing"));
 
-    let currentThing = document.querySelector(".athing:target");
-    if (currentThing) {
-        currentThing.classList.add("activething");
-    }
+    activateThing(document.querySelector(".athing:target"));
 
     // handle the “XXX more comments” link like a thing
     const morelink = document.getElementsByClassName("morelink")[0];
@@ -188,8 +185,7 @@ chrome.storage.sync.get((options) => {
         morelinkThing.id = "morelink";
         things.push(morelinkThing);
         if (document.location.hash === "#morelink") {
-            currentThing = morelinkThing;
-            currentThing.classList.add("activething");
+            activateThing(morelinkThing);
             currentThing.scrollIntoView(true);
         }
     }
@@ -928,13 +924,26 @@ chrome.storage.sync.get((options) => {
         return thing.classList.contains("noshow");
     }
 
+    function activateThing(thing) {
+        if (!thing) {
+            return;
+        }
+        currentThing = thing;
+        currentThing.classList.add("activething");
+    }
+
+    function deactivateCurrentThing() {
+        if (!currentThing) {
+            return;
+        }
+        currentThing.classList.remove("activething");
+        currentThing = undefined;
+    }
+
     function gotoTop() {
         const l = document.location;
         history.replaceState(null, "", l.pathname + l.search);
-        if (currentThing) {
-            currentThing.classList.remove("activething");
-            currentThing = undefined;
-        }
+        deactivateCurrentThing();
         scrollTo(0, 0);
     }
 
@@ -961,11 +970,8 @@ chrome.storage.sync.get((options) => {
                 thing.scrollIntoView({ block: "nearest" });
                 thing.nextElementSibling.scrollIntoView({ block: "nearest" });
             }
-            if (currentThing) {
-                currentThing.classList.remove("activething");
-            }
-            currentThing = thing;
-            currentThing.classList.add("activething");
+            deactivateCurrentThing();
+            activateThing(thing);
         }
     }
 
@@ -1130,6 +1136,7 @@ chrome.storage.sync.get((options) => {
         } else if (event.key === "J") {
             /* Next sibling thing */
             const currentDepth = thingDepth(currentThing);
+            console.time("NEXT SIBLING");
             let nextThingIndex = currentThingIndex + 1;
             while (
                 nextThingIndex < things.length &&
@@ -1138,6 +1145,7 @@ chrome.storage.sync.get((options) => {
             ) {
                 nextThingIndex++;
             }
+            console.timeEnd("NEXT SIBLING");
             gotoThing(things[nextThingIndex]);
         } else if (event.key === "K") {
             /* Previous sibling thing */
