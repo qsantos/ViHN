@@ -1,4 +1,6 @@
 chrome.storage.sync.get((options) => {
+    let currentThing = undefined;
+
     const maybeSmoothScrolling = {
         block: "nearest",
         behavior: getOption(options, "smoothScrolling") ? "smooth" : "instant",
