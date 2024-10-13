@@ -1017,6 +1017,10 @@ chrome.storage.sync.get((options) => {
                 // Metadata on story
                 gotoThing(el.parentElement.previousElementSibling);
                 break;
+            } else if (el.classList.contains("toptext")) {
+                // Ask HN text
+                gotoThing(el.parentElement.parentElement.parentElement.firstElementChild);
+                break;
             }
         } while ((el = el.parentElement));
     }

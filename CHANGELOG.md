@@ -1,6 +1,7 @@
 # v0.1.25
 
 - Only annotate the first 10 links (the ones with matching number hotkeys) #43
+- Clicking on the text of Ask HNs activates the top element #53
 
 # v0.1.24
 
