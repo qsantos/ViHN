@@ -1,3 +1,7 @@
+# v0.1.26
+
+- Reduce noise in browser history on Chrome #46
+
 # v0.1.25
 
 - Only annotate the first 10 links (the ones with matching number hotkeys) #43
