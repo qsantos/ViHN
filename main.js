@@ -965,18 +965,18 @@ chrome.storage.sync.get((options) => {
         }
         currentThing = thing;
         currentThing.classList.add("activething");
-        getThingTop10Links(currentThing).forEach((link) =>
-            link.classList.add("numbered-link"),
-        );
+        for (const link of getThingTop10Links(currentThing)) {
+            link.classList.add("numbered-link");
+        }
     }
 
     function deactivateCurrentThing() {
         if (!currentThing) {
             return;
         }
-        getThingTop10Links(currentThing).forEach((link) =>
-            link.classList.remove("numbered-link"),
-        );
+        for (const link of getThingTop10Links(currentThing)) {
+            link.classList.remove("numbered-link");
+        }
         currentThing.classList.remove("activething");
         currentThing = undefined;
     }
