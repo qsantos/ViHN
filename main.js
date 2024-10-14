@@ -925,7 +925,11 @@ chrome.storage.sync.get((options) => {
     }
 
     function getThingLinks(thing) {
-        if (currentThing.parentElement.parentElement.classList.contains("fatitem")) {
+        if (
+            currentThing.parentElement.parentElement.classList.contains(
+                "fatitem",
+            )
+        ) {
             // The current thing is the top element
             //
             // For comment pages, the text is still in the .commtext. But, for
@@ -940,13 +944,15 @@ chrome.storage.sync.get((options) => {
             //  </tbody>
             // <table>
             //
-            const textRow = currentThing?.nextElementSibling?.nextElementSibling?.nextElementSibling;
+            const textRow =
+                currentThing?.nextElementSibling?.nextElementSibling
+                    ?.nextElementSibling;
             if (textRow) {
-                return textRow.querySelectorAll('.toptext a');
+                return textRow.querySelectorAll(".toptext a");
             }
         }
         // The current thing is a regular comment
-        return currentThing.querySelectorAll('.commtext a');
+        return currentThing.querySelectorAll(".commtext a");
     }
 
     function getThingTop10Links(thing) {
@@ -959,14 +965,18 @@ chrome.storage.sync.get((options) => {
         }
         currentThing = thing;
         currentThing.classList.add("activething");
-        getThingTop10Links(currentThing).forEach(link => link.classList.add("numbered-link"));
+        getThingTop10Links(currentThing).forEach((link) =>
+            link.classList.add("numbered-link"),
+        );
     }
 
     function deactivateCurrentThing() {
         if (!currentThing) {
             return;
         }
-        getThingTop10Links(currentThing).forEach(link => link.classList.remove("numbered-link"));
+        getThingTop10Links(currentThing).forEach((link) =>
+            link.classList.remove("numbered-link"),
+        );
         currentThing.classList.remove("activething");
         currentThing = undefined;
     }
@@ -1019,7 +1029,10 @@ chrome.storage.sync.get((options) => {
                 break;
             } else if (el.classList.contains("toptext")) {
                 // Ask HN text
-                gotoThing(el.parentElement.parentElement.parentElement.firstElementChild);
+                gotoThing(
+                    el.parentElement.parentElement.parentElement
+                        .firstElementChild,
+                );
                 break;
             }
         } while ((el = el.parentElement));
