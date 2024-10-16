@@ -978,22 +978,12 @@ chrome.storage.sync.get((options) => {
     }
 
     function gotoTop() {
-        const l = document.location;
-        history.replaceState(null, "", l.pathname + l.search);
         deactivateCurrentThing();
         scrollTo(0, 0);
     }
 
-    let historyUpdateTimer = null;
     function gotoThing(thing) {
         if (thing) {
-            // Defer history update to avoid too many uses of the API, when the
-            // user navigates through many things in a short amount of time
-            clearTimeout(historyUpdateTimer);
-            historyUpdateTimer = setTimeout(() => {
-                history.replaceState(null, "", `#${thing.id}`);
-                historyUpdateTimer = null;
-            }, 50);
             // Immediately makes the change visible
             if (
                 thing.classList.contains("comtr") ||

@@ -2,6 +2,7 @@
 
 - Immediately scroll to corresponding item when navigating newest items #54
 - Revert change from v0.1.26 that always put the active item at top of view in normal browsing
+- Do not update current URL when navigating items to avoid polluting browser history #46
 
 # v0.1.26
 
