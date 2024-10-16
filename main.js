@@ -979,11 +979,6 @@ chrome.storage.sync.get((options) => {
 
     function gotoTop() {
         const l = document.location;
-        // NOTE: we use history.replaceState() instead of location.replace() to
-        // avoid a page reload, which would happen since the new URL does not
-        // have a hash. This will result in a new entry in the browser history,
-        // but this only happen for the top element, which limits the number of
-        // entries.
         history.replaceState(null, "", l.pathname + l.search);
         deactivateCurrentThing();
         scrollTo(0, 0);
@@ -996,11 +991,7 @@ chrome.storage.sync.get((options) => {
             // user navigates through many things in a short amount of time
             clearTimeout(historyUpdateTimer);
             historyUpdateTimer = setTimeout(() => {
-                // NOTE: we use location.replace() instead of
-                // history.replaceState() here to avoid adding entries to the
-                // browser history for each navigation. Unfortunately, Firefox
-                // still add entries to the browser history.
-                location.replace(`#${thing.id}`);
+                history.replaceState(null, "", `#${thing.id}`);
                 historyUpdateTimer = null;
             }, 50);
             // Immediately makes the change visible
