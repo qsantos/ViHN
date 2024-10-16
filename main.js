@@ -397,11 +397,7 @@ chrome.storage.sync.get((options) => {
         currentNewestIndex = index;
         const newest = newestList.children[currentNewestIndex];
         newest.classList.add("active-newest");
-        newest.scrollIntoView(maybeSmoothScrolling);
-    }
-
-    function gotoThingFromNewestIndex(newestIndex) {
-        const thingIndex = datedIndexes[newestIndex][1];
+        const thingIndex = datedIndexes[currentNewestIndex][1];
         gotoThingFromIndex(thingIndex);
     }
 
@@ -1404,8 +1400,6 @@ chrome.storage.sync.get((options) => {
         } else if (event.key === "G") {
             /* Last newest */
             gotoNewestIndex(newestList.childElementCount - 1);
-        } else if (event.key === "l") {
-            gotoThingFromNewestIndex(currentNewestIndex);
         } else {
             return;
         }

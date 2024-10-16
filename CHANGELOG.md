@@ -1,3 +1,7 @@
+# v1.27
+
+- Immediately scroll to corresponding item when navigating newest items #54
+
 # v0.1.26
 
 - Reduce noise in browser history on Chrome #46
