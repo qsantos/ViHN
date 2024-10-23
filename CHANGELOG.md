@@ -1,3 +1,7 @@
+# v1.28
+
+- Handle new time format in Hacker News that breaks Newest Items
+
 # v1.27
 
 - Immediately scroll to corresponding item when navigating newest items #54
