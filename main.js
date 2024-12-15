@@ -461,27 +461,35 @@ chrome.storage.sync.get((options) => {
         chrome.runtime.sendMessage({ action: "open", url, active });
     }
 
-    function openThing(thing, active) {
-        if (thing === morelinkThing) {
-            morelink.click();
-            return;
-        }
+    function thingURL(thing) {
         const anchor = thing.querySelector(".titleline>a");
-        const relativeUrl = anchor ? anchor.href : `item?id=${thing.id}`;
-        openURL(relativeUrl, active);
+        return anchor ? anchor.href : `item?id=${thing.id}`;
+    }
+
+    function openThing(thing, active) {
+        if (!thing) {
+        } else if (thing === morelinkThing) {
+            morelink.click();
+        } else {
+            const relativeUrl = thingURL(thing);
+            openURL(relativeUrl, active);
+        }
+    }
+
+    function commentURL(thing) {
+        const subtext = thing.nextElementSibling;
+        if (!subtext || subtext.classList.contains("athing")) {
+            return null;
+        }
+        const anchor = subtext.querySelector(".age>a");
+        return anchor?.href;
     }
 
     function openComments(thing, active) {
-        if (!thing || thing == morelinkThing) {
-            return;
+        const relativeUrl = commentURL(thing);
+        if (relativeUrl) {
+            openURL(relativeUrl, active);
         }
-        const subtext = thing.nextElementSibling;
-        if (!subtext || subtext.classList.contains("athing")) {
-            return;
-        }
-        const anchor = subtext.querySelector(".age>a");
-        const relativeUrl = anchor.href;
-        openURL(relativeUrl, active);
     }
 
     function openCommentLink(thing, linkNumber, active) {
