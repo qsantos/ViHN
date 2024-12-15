@@ -452,6 +452,15 @@ chrome.storage.sync.get((options) => {
         }
     }
 
+    function openURL(relativeUrl, active) {
+        const url = new URL(relativeUrl, document.location).href;
+        const currentUrl = new URL("", document.location).href;
+        if (url === currentUrl) {
+            return;
+        }
+        chrome.runtime.sendMessage({ action: "open", url, active });
+    }
+
     function openThing(thing, active) {
         if (thing === morelinkThing) {
             morelink.click();
@@ -459,12 +468,7 @@ chrome.storage.sync.get((options) => {
         }
         const anchor = thing.querySelector(".titleline>a");
         const relativeUrl = anchor ? anchor.href : `item?id=${thing.id}`;
-        const url = new URL(relativeUrl, document.location).href;
-        // strips the hash part of the current location
-        const currentUrl = new URL("", document.location).href;
-        if (url !== currentUrl) {
-            chrome.runtime.sendMessage({ action: "open", url, active });
-        }
+        openURL(relativeUrl, active);
     }
 
     function openComments(thing, active) {
@@ -477,8 +481,7 @@ chrome.storage.sync.get((options) => {
         }
         const anchor = subtext.querySelector(".age>a");
         const relativeUrl = anchor.href;
-        const url = new URL(relativeUrl, document.location).href;
-        chrome.runtime.sendMessage({ action: "open", url, active });
+        openURL(relativeUrl, active);
     }
 
     function openCommentLink(thing, linkNumber, active) {
@@ -506,12 +509,7 @@ chrome.storage.sync.get((options) => {
             // Ignore reply link when it is part of .commtext (see HN bug fix in main.css)
             return;
         }
-        const url = link.href;
-        // strips the hash part of the current location
-        const currentUrl = new URL("", document.location).href;
-        if (url !== currentUrl) {
-            chrome.runtime.sendMessage({ action: "open", url, active });
-        }
+        openURL(link.href, active);
     }
 
     // Basically from Hacker News's JavaScript
