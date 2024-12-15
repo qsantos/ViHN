@@ -453,6 +453,10 @@ chrome.storage.sync.get((options) => {
     }
 
     function openThing(thing, active) {
+        if (thing === morelinkThing) {
+            morelink.click();
+            return;
+        }
         const anchor = thing.querySelector(".titleline>a");
         const relativeUrl = anchor ? anchor.href : `item?id=${thing.id}`;
         const url = new URL(relativeUrl, document.location).href;
@@ -464,6 +468,9 @@ chrome.storage.sync.get((options) => {
     }
 
     function openComments(thing, active) {
+        if (!thing || thing == morelinkThing) {
+            return;
+        }
         const subtext = thing.nextElementSibling;
         if (!subtext || subtext.classList.contains("athing")) {
             return;
@@ -1227,30 +1234,16 @@ chrome.storage.sync.get((options) => {
             }
         } else if (event.key === "o" || event.key === "O") {
             /* Open thing permalink (l: foreground, L: background) */
-            if (currentThing && currentThing === morelinkThing) {
-                morelink.click();
-            } else {
-                openThing(currentThing || document, event.key === "o");
-            }
+            openThing(currentThing || document, event.key === "o");
         } else if (event.key === "c" || event.key === "C") {
             /* Open comments (c: foreground, C: background) */
             if (currentThing) {
-                if (currentThing === morelinkThing) {
-                    morelink.click();
-                } else {
-                    openComments(currentThing, event.key === "c");
-                }
+                openComments(currentThing, event.key === "c");
             }
         } else if (event.key === "b" || event.key === "B") {
             /* Open both (b: foreground, B: background) */
-            if (currentThing && currentThing === morelinkThing) {
-                morelink.click();
-            } else {
-                openThing(currentThing || document, event.key === "b");
-                if (currentThing) {
-                    openComments(currentThing, event.key === "b");
-                }
-            }
+            openThing(currentThing || document, event.key === "b");
+            openComments(currentThing, event.key === "b");
         } else if (event.key === "g") {
             /* Go to top */
             gotoTop();
