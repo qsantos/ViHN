@@ -97,6 +97,7 @@ chrome.storage.sync.get((options) => {
                 <tbody>
                     <tr><td><kbd>o</kbd></td><td>Open story link/comment</td></tr>
                     <tr><td><kbd>O</kbd></td><td>Open story link/comment in background</td></tr>
+                    <tr><td><kbd>l</kbd></td><td>Copy story link/comment URL to clipboard</td></tr>
                     <tr><td><kbd>c</kbd></td><td>Open comment thread</td></tr>
                     <tr><td><kbd>C</kbd></td><td>Open comment thread in background</td></tr>
                     <tr><td><kbd>b</kbd></td><td>Open both story link and comment thread</td></tr>
@@ -1292,6 +1293,11 @@ chrome.storage.sync.get((options) => {
             } else {
                 voteFromLink(downArrow);
             }
+        } else if (event.key === "l") {
+            /* Copy permalink to clipboard */
+            const relativeUrl = thingURL(currentThing);
+            const permalink = new URL(relativeUrl, document.location).href;
+            navigator.clipboard.writeText(permalink);
         } else if (event.key === "r") {
             /* Comment on story, or reply to comment */
             if (!currentThing || currentThingIndex === 0) {

@@ -1,6 +1,7 @@
 # v1.29
 
 - Save active item when closing tab (adds to history, and restores when reopening)
+- Press l to copy permalink to clipboard
 
 # v1.28
 
