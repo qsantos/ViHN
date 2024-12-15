@@ -1,3 +1,7 @@
+# v1.29
+
+- Save active item when closing tab (adds to history, and restores when reopening)
+
 # v1.28
 
 - Handle new time format in Hacker News that breaks Newest Items

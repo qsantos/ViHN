@@ -1469,4 +1469,13 @@ chrome.storage.sync.get((options) => {
         },
         true,
     );
+
+    // set the URL to the current comment when closing the tab
+    window.addEventListener("beforeunload", () => {
+        if (currentThing) {
+            const url = new URL(document.location);
+            url.hash = currentThing.id;
+            history.pushState(null, "", url);
+        }
+    });
 });
