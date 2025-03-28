@@ -1,10 +1,9 @@
 chrome.storage.sync.get((options) => {
     let currentThing = undefined;
 
-    const maybeSmoothScrolling = {
-        block: "nearest",
-        behavior: getOption(options, "smoothScrolling") ? "smooth" : "instant",
-    };
+    let scrollingBehavior = getOption(options, "smoothScrolling")
+        ? "smooth"
+        : "instant";
     let persistCollapse = getOption(options, "persistentCollapse");
     let enableNewestItems = getOption(options, "newestItems");
 
@@ -12,9 +11,9 @@ chrome.storage.sync.get((options) => {
         // smooth scrolling
         const smoothScrolling = changes.smoothScrolling?.newValue;
         if (smoothScrolling === true) {
-            maybeSmoothScrolling.behavior = "smooth";
+            scrollingBehavior = "smooth";
         } else if (smoothScrolling === false) {
-            maybeSmoothScrolling.behavior = "instant";
+            scrollingBehavior = "instant";
         }
         // persistent collapse
         const persistentCollapse = changes.persistentCollapse?.newValue;
@@ -1005,8 +1004,10 @@ chrome.storage.sync.get((options) => {
             // "nearest"`, the bottom of the thing would be at the bottom of
             // the viewport, and the top of the thing would be hidden. So, we
             // use `block: "start"` to make the top of the thing visible.
-            // TODO: optional smooth
-            thing.scrollIntoView({ block: "start" });
+            thing.scrollIntoView({
+                block: "start",
+                behavior: scrollingBehavior,
+            });
         }
         // Story listings (/news, /newest, user’s submissions, etc.) are of the form:
         //
@@ -1033,7 +1034,10 @@ chrome.storage.sync.get((options) => {
             thing.nextElementSibling.scrollIntoView({ block: "nearest" });
         } else {
             // The thing is a comment, or the “more” link
-            thing.scrollIntoView(maybeSmoothScrolling);
+            thing.scrollIntoView({
+                block: "nearest",
+                behavior: scrollingBehavior,
+            });
         }
         deactivateCurrentThing();
         activateThing(thing);
