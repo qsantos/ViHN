@@ -1000,6 +1000,21 @@ chrome.storage.sync.get((options) => {
         if (!thing) {
             return;
         }
+        // Story listings (/news, /newest, user’s submissions, etc.) are of the form:
+        //
+        // <tbody>
+        //  <tr id="XXXXXXX" class="athing submission"> <!-- Story number, vote arrows, title, domain -->
+        //  <tr>
+        //    <td colspan="2"> <!-- padding for the story number and vote arrows -->
+        //    <td class="subtext"> <!-- points, submitter, time, action links -->
+        //  <tr> <!-- empty -->
+        //  <tr id="YYYYYYY" class="athing submission">
+        //  <tr>
+        //  ...
+        // </tbody>
+        //
+        // If we only scrollIntoView() on a .athing would require scrolling
+        // down, the corresponding .subtext element would remain hidden.
         if (thing.classList.contains("comtr") || !thing.nextElementSibling) {
             // The thing is a comment, or the “more” link
             thing.scrollIntoView(maybeSmoothScrolling);
