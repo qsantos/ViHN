@@ -379,7 +379,6 @@ chrome.storage.sync.get((options) => {
         thingIndex--;
         for (; thingIndex >= 0; thingIndex--) {
             const thing = things[thingIndex];
-            console.log(thing);
             if (
                 thing.parentElement.parentElement.classList.contains("fatitem")
             ) {
@@ -1185,7 +1184,6 @@ chrome.storage.sync.get((options) => {
         } else if (event.key === "J") {
             /* Next sibling thing */
             const currentDepth = thingDepth(currentThing);
-            console.time("NEXT SIBLING");
             let nextThingIndex = currentThingIndex + 1;
             while (
                 nextThingIndex < things.length &&
@@ -1194,7 +1192,6 @@ chrome.storage.sync.get((options) => {
             ) {
                 nextThingIndex++;
             }
-            console.timeEnd("NEXT SIBLING");
             gotoThing(things[nextThingIndex]);
         } else if (event.key === "K") {
             /* Previous sibling thing */
