@@ -1,3 +1,7 @@
+# v1.30
+
+- When scrolling to an item that is higher than the viewport, always scroll to the top of the item
+
 # v1.29
 
 - Save active item when closing tab (adds to history, and restores when reopening)

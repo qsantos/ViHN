@@ -1000,6 +1000,14 @@ chrome.storage.sync.get((options) => {
         if (!thing) {
             return;
         }
+        if (thing.getBoundingClientRect().height > window.innerHeight) {
+            // The thing would not be fully visible; if we use `block:
+            // "nearest"`, the bottom of the thing would be at the bottom of
+            // the viewport, and the top of the thing would be hidden. So, we
+            // use `block: "start"` to make the top of the thing visible.
+            // TODO: optional smooth
+            thing.scrollIntoView({ block: "start" });
+        }
         // Story listings (/news, /newest, user’s submissions, etc.) are of the form:
         //
         // <tbody>
@@ -1015,14 +1023,17 @@ chrome.storage.sync.get((options) => {
         //
         // If we only scrollIntoView() on a .athing would require scrolling
         // down, the corresponding .subtext element would remain hidden.
-        if (thing.classList.contains("comtr") || !thing.nextElementSibling) {
-            // The thing is a comment, or the “more” link
-            thing.scrollIntoView(maybeSmoothScrolling);
-        } else {
+        else if (
+            thing.classList.contains("submission") &&
+            thing.nextElementSibling
+        ) {
             // The thing is a story, also scroll the associated .subtext into view if possible
             // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
             thing.scrollIntoView({ block: "nearest" });
             thing.nextElementSibling.scrollIntoView({ block: "nearest" });
+        } else {
+            // The thing is a comment, or the “more” link
+            thing.scrollIntoView(maybeSmoothScrolling);
         }
         deactivateCurrentThing();
         activateThing(thing);
