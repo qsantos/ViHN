@@ -997,23 +997,20 @@ chrome.storage.sync.get((options) => {
     }
 
     function gotoThing(thing) {
-        if (thing) {
-            // Immediately makes the change visible
-            if (
-                thing.classList.contains("comtr") ||
-                !thing.nextElementSibling
-            ) {
-                // The thing is a comment, or the “more” link
-                thing.scrollIntoView(maybeSmoothScrolling);
-            } else {
-                // The thing is a story, also scroll the associated .subtext into view if possible
-                // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
-                thing.scrollIntoView({ block: "nearest" });
-                thing.nextElementSibling.scrollIntoView({ block: "nearest" });
-            }
-            deactivateCurrentThing();
-            activateThing(thing);
+        if (!thing) {
+            return;
         }
+        if (thing.classList.contains("comtr") || !thing.nextElementSibling) {
+            // The thing is a comment, or the “more” link
+            thing.scrollIntoView(maybeSmoothScrolling);
+        } else {
+            // The thing is a story, also scroll the associated .subtext into view if possible
+            // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
+            thing.scrollIntoView({ block: "nearest" });
+            thing.nextElementSibling.scrollIntoView({ block: "nearest" });
+        }
+        deactivateCurrentThing();
+        activateThing(thing);
     }
 
     function gotoThingAt(x, y) {
