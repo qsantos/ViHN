@@ -1028,10 +1028,27 @@ chrome.storage.sync.get((options) => {
             thing.classList.contains("submission") &&
             thing.nextElementSibling
         ) {
-            // The thing is a story, also scroll the associated .subtext into view if possible
-            // NOTE: smooth scrolling does not allow scrollIntoView on multiple elements
-            thing.scrollIntoView({ block: "nearest" });
-            thing.nextElementSibling.scrollIntoView({ block: "nearest" });
+            // We cannot use scrollIntoView with smooth scrolling on multiple
+            // elements, so we select the target element depending on the case.
+            if (thing.getBoundingClientRect().y < 0) {
+                // We would need to scroll up, so target the .athing itself
+                thing.scrollIntoView({
+                    block: "start",
+                    behavior: scrollingBehavior,
+                });
+            } else {
+                // We would need to scroll down, so target the <tr> that contains the .subtext
+                const subtextTr = thing.nextElementSibling;
+                if (
+                    subtextTr.getBoundingClientRect().bottom >
+                    window.innerHeight
+                ) {
+                    subtextTr.scrollIntoView({
+                        block: "end",
+                        behavior: scrollingBehavior,
+                    });
+                }
+            }
         } else {
             // The thing is a comment, or the “more” link
             thing.scrollIntoView({
