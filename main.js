@@ -1005,6 +1005,24 @@ chrome.storage.sync.get((options) => {
         scrollTo(0, 0);
     }
 
+    let historyUpdateTimer = null;
+    function updateLocationToThing(thing) {
+        if (!updateLocation) {
+            return;
+        }
+        // Do not update faster than every 50 ms to avoid being blocked by API rate limiting when
+        // user navigates through many things in a short amount of time
+        const delay = Math.max(updateLocationDelay * 1000, 50);
+        clearTimeout(historyUpdateTimer);
+        historyUpdateTimer = setTimeout(() => {
+            // Using location.replace instead of history.replaceState
+            // avoids cluttering the history in Chrome. There is no
+            // difference in Firefox.
+            location.replace(`#${thing.id}`);
+            historyUpdateTimer = null;
+        }, delay);
+    }
+
     function scrollToThing(thing) {
         if (thing.getBoundingClientRect().height > window.innerHeight) {
             // The thing would not be fully visible; if we use `block:
@@ -1065,25 +1083,12 @@ chrome.storage.sync.get((options) => {
         }
     }
 
-    let historyUpdateTimer = null;
     function gotoThing(thing) {
         if (!thing) {
             return;
         }
-        // Update location hash in the URL bar
-        if (updateLocation) {
-            // Do not update faster than every 50 ms to avoid being blocked by API rate limiting when
-            // user navigates through many things in a short amount of time
-            const delay = Math.max(updateLocationDelay * 1000, 50);
-            clearTimeout(historyUpdateTimer);
-            historyUpdateTimer = setTimeout(() => {
-                // Using location.replace instead of history.replaceState
-                // avoids cluttering the history in Chrome. There is no
-                // difference in Firefox.
-                location.replace(`#${thing.id}`);
-                historyUpdateTimer = null;
-            }, delay);
-        }
+        // The location update might not happen immediately to avoid throttling, so we handle scrolling ourselves
+        updateLocationToThing(thing);
         scrollToThing(thing);
         deactivateCurrentThing();
         activateThing(thing);
