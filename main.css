@@ -71,7 +71,7 @@
     position: fixed;
     top:0;
     left:0;
-    border-left:2px solid white;
+    border-left:5px solid white;
 }
 #newest-items ul {
     list-style: none;
@@ -95,7 +95,7 @@
     bottom: 0px;
 }
 #newest-items.active-newest-items {
-    border-left:2px solid var(--top-color);
+    border-left:5px solid var(--top-color);
 }
 #newest-items.active-newest-items h3 {
     color: var(--top-color);
