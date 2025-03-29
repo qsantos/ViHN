@@ -30,94 +30,94 @@
             <li>
                 <label>
                     <input type="checkbox" name="updateLocation"><strong>Update hash in URL after <input type="number" name="updateLocationDelay" min="0" step="0.1"> seconds</strong>
-                    <p>
-                        When navigating a thread or submission listing, the URL in the location bar is updated to point directly to that item.
-                        For instance, the URL for comment <code>67890</code> in submission <code>12345</code> would be:
-                        <pre><code>https://news.ycombinator.com/item?id=12345#67890</code></pre>
-                        This update of the URL adds an entry to the browser history, but it does <strong>not</strong> cause a page reload.
-                        This makes it easy to resume reading a thread after reloading the page, or when transferring tabs from one device to another.
-                    </p>
-                        However, this can clutter the history with many entries, including when using the Back and Next buttons of your browser.
-                        As a compromise, you can set a delay for the update to only happen after you have stayed on the item for a while.
-                        This can let you navigate from one item to another without saving the intermediate steps to your history.
-                    </p>
-                    <ul>
-                        <li>With this option <strong>enabled</strong>, and…
-                            <ul>
-                                <li>…a delay of <strong>0 seconds</strong>, all items will appear in the history.</li>
-                                <li>…a <strong>non-zero delay</strong>, items on which you stayed for that duration will appear in the history.</li>
-                            </ul>
-                        <li>With this option <strong>disabled</strong>, only the original URL of the page will appear in the history.</li>
-                    </ul>
                 </label>
+                <p>
+                    When navigating a thread or submission listing, the URL in the location bar is updated to point directly to that item.
+                    For instance, the URL for comment <code>67890</code> in submission <code>12345</code> would be:
+                    <pre><code>https://news.ycombinator.com/item?id=12345#67890</code></pre>
+                    This update of the URL adds an entry to the browser history, but it does <strong>not</strong> cause a page reload.
+                    This makes it easy to resume reading a thread after reloading the page, or when transferring tabs from one device to another.
+                </p>
+                    However, this can clutter the history with many entries, including when using the Back and Next buttons of your browser.
+                    As a compromise, you can set a delay for the update to only happen after you have stayed on the item for a while.
+                    This can let you navigate from one item to another without saving the intermediate steps to your history.
+                </p>
+                <ul>
+                    <li>With this option <strong>enabled</strong>, and…
+                        <ul>
+                            <li>…a delay of <strong>0 seconds</strong>, all items will appear in the history.</li>
+                            <li>…a <strong>non-zero delay</strong>, items on which you stayed for that duration will appear in the history.</li>
+                        </ul>
+                    <li>With this option <strong>disabled</strong>, only the original URL of the page will appear in the history.</li>
+                </ul>
             </li>
             <li>
                 <label>
                     <input type="checkbox" name="updateLocationOnClose"><strong>Update hash in URL when closing tab</strong>
-                    <p>
-                        Independently from the previous option, ViHN can update the URL when closing the tab.
-                        You might want this if you want to avoid cluttering your browser history, but want to resume after accidentally closing the tab.
-                    </p>
-                    <ul>
-                        <li>With this option <strong>enabled</strong>, the URL will be updated when closing the tab.</li>
-                        <li>With this option <strong>disabled</strong>, the URL will not be updated when closing the tab.</li>
-                    </ul>
-                    <p>
-                        <strong>Note:</strong>
-                        This might not work all the time.
-                        For instance, if your browser crashes, or if your computer stops unexpectedly or fails to resume after suspending, the URL will not be updated.
-                        If you want to be sure to avoid losing your place, you might want to use the previous option.
-                    </p>
                 </label>
+                <p>
+                    Independently from the previous option, ViHN can update the URL when closing the tab.
+                    You might want this if you want to avoid cluttering your browser history, but want to resume after accidentally closing the tab.
+                </p>
+                <ul>
+                    <li>With this option <strong>enabled</strong>, the URL will be updated when closing the tab.</li>
+                    <li>With this option <strong>disabled</strong>, the URL will not be updated when closing the tab.</li>
+                </ul>
+                <p>
+                    <strong>Note:</strong>
+                    This might not work all the time.
+                    For instance, if your browser crashes, or if your computer stops unexpectedly or fails to resume after suspending, the URL will not be updated.
+                    If you want to be sure to avoid losing your place, you might want to use the previous option.
+                </p>
             <li>
                 <label>
                     <input type="checkbox" name="smoothScrolling"><strong>Smooth scrolling</strong>
-                    <p>
-                        When navigating moving from an item to another, the viewport is automatically scrolled to make the item visible.
-                        Smooth scrolling can help get a better understanding of where the viewport was scrolled to, but can cause dizziness.
-                    </p>
-                    <ul>
-                        <li>With this option <strong>enabled</strong>, you will briefly see the page move.</li>
-                        <li>With this option <strong>disabled</strong>, the view will jump immediately to the item, with no transition.</li>
-                    </ul>
-                    <p>
-                        <strong>Note:</strong>
-                        Smooth scrolling will only work if it is also globally enabled in your browser.
-                    </p>
                 </label>
+                <p>
+                    When navigating moving from an item to another, the viewport is automatically scrolled to make the item visible.
+                    Smooth scrolling can help get a better understanding of where the viewport was scrolled to, but can cause dizziness.
+                </p>
+                <ul>
+                    <li>With this option <strong>enabled</strong>, you will briefly see the page move.</li>
+                    <li>With this option <strong>disabled</strong>, the view will jump immediately to the item, with no transition.</li>
+                </ul>
+                <p>
+                    <strong>Note:</strong>
+                    Smooth scrolling will only work if it is also globally enabled in your browser.
+                </p>
             </li>
             <li>
                 <label>
                     <input type="checkbox" name="persistentCollapse"><strong>Persistent collapsed threads</strong>
-                    <p>
-                        When collapsing or uncollapsing comment threads, the effect is performed locally immediately.
-                        However, when logged in, a request is also sent to Hacker News.
-                        This allows Hacker News to persist the state of threads you have collapsed when reloading the page.
-                    </p>
-                    <ul>
-                        <li>With this option <strong>enabled</strong>, the threads you have collapsed will stay collapsed when visiting the page again.</li>
-                        <li>With this option <strong>disabled</strong>, you will still be able to collapse threads when navigating the page, but not be kept when reloading the page.</li>
-                    </ul>
-                    <p>
-                        <strong>Note:</strong>
-                        Hacker News only remembers collapsed threads for a while. This extensions does not attempt to keep them longer.
-                    </p>
                 </label>
+                <p>
+                    When collapsing or uncollapsing comment threads, the effect is performed locally immediately.
+                    However, when logged in, a request is also sent to Hacker News.
+                    This allows Hacker News to persist the state of threads you have collapsed when reloading the page.
+                </p>
+                <ul>
+                    <li>With this option <strong>enabled</strong>, the threads you have collapsed will stay collapsed when visiting the page again.</li>
+                    <li>With this option <strong>disabled</strong>, you will still be able to collapse threads when navigating the page, but not be kept when reloading the page.</li>
+                </ul>
+                <p>
+                    <strong>Note:</strong>
+                    Hacker News only remembers collapsed threads for a while. This extensions does not attempt to keep them longer.
+                </p>
             </li>
             <li>
                 <label>
                     <input type="checkbox" name="newestItems"><strong>“Newest Items” aside</strong>
-                    <p>
-                        ViHN adds an aside to quickly navigate the comments or stories depending on their age.
-                        However, you might not be using this, or that feature might cause visual clutter, or even performance issues.
-                        If the aside does not look right, or if it causes performance issues, this is a bug;
-                        please <a href="https://github.com/qsantos/ViHN/issues/new/choose">report it</a> with your browser/screen resolution so that we can fix it.
-                    </p>
-                    <ul>
-                        <li>With this option <strong>enabled</strong>, “Newest Items” will be shown towards the left of the screen if there is room, or overlaid when hitting <kbd>n</kbd>.</li>
-                        <li>With this option <strong>disabled</strong>, “Newest Items” will never be shown.</li>
-                    </ul>
                 </label>
+                <p>
+                    ViHN adds an aside to quickly navigate the comments or stories depending on their age.
+                    However, you might not be using this, or that feature might cause visual clutter, or even performance issues.
+                    If the aside does not look right, or if it causes performance issues, this is a bug;
+                    please <a href="https://github.com/qsantos/ViHN/issues/new/choose">report it</a> with your browser/screen resolution so that we can fix it.
+                </p>
+                <ul>
+                    <li>With this option <strong>enabled</strong>, “Newest Items” will be shown towards the left of the screen if there is room, or overlaid when hitting <kbd>n</kbd>.</li>
+                    <li>With this option <strong>disabled</strong>, “Newest Items” will never be shown.</li>
+                </ul>
             </li>
         </ul>
     </body>
