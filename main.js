@@ -1509,8 +1509,6 @@ chrome.storage.sync.get((options) => {
         const url = new URL(el.href, document.location);
         if (url.pathname === "/vote") {
             voteFromLink(el);
-            event.stopPropagation();
-            event.preventDefault();
             return true;
         } else if (el.classList.contains("togg")) {
             const thing = findThingInAscendants(el);
