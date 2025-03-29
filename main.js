@@ -1024,7 +1024,8 @@ chrome.storage.sync.get((options) => {
     }
 
     function scrollToThing(thing) {
-        if (thing.getBoundingClientRect().height > window.innerHeight) {
+        const thingRect = thing.getBoundingClientRect();
+        if (thingRect.height > window.innerHeight) {
             // The thing would not be fully visible; if we use `block:
             // "nearest"`, the bottom of the thing would be at the bottom of
             // the viewport, and the top of the thing would be hidden. So, we
@@ -1055,7 +1056,7 @@ chrome.storage.sync.get((options) => {
         ) {
             // We cannot use scrollIntoView with smooth scrolling on multiple
             // elements, so we select the target element depending on the case.
-            if (thing.getBoundingClientRect().y < 0) {
+            if (thingRect.top < 0) {
                 // We would need to scroll up, so target the .athing itself
                 thing.scrollIntoView({
                     block: "start",
@@ -1064,10 +1065,8 @@ chrome.storage.sync.get((options) => {
             } else {
                 // We would need to scroll down, so target the <tr> that contains the .subtext
                 const subtextTr = thing.nextElementSibling;
-                if (
-                    subtextTr.getBoundingClientRect().bottom >
-                    window.innerHeight
-                ) {
+                const subtextTrRect = subtextTr.getBoundingClientRect();
+                if (subtextTrRect.bottom > window.innerHeight) {
                     subtextTr.scrollIntoView({
                         block: "end",
                         behavior: scrollingBehavior,
