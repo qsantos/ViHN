@@ -6,7 +6,8 @@
         <link rel="stylesheet" type="text/css" href="main.css">
         <style>
         #options { list-style-type: none; }
-        #options input { width:20px; margin-left:-25px; margin-right:5px; padding:0; }
+        #options input[type=checkbox] { width:20px; margin-left:-25px; margin-right:5px; padding:0; }
+        #options input[type=number] { width: 5em; text-align: right; }
         #options>li { margin-bottom: 2em; } 
         /*
          * NOTE:
@@ -26,6 +27,30 @@
             no need to reload Hacker News pages.
         </p>
         <ul id="options">
+            <li>
+                <label>
+                    <input type="checkbox" name="updateLocation"><strong>Update hash in URL after <input type="number" name="updateLocationDelay" min="0" step="0.1"> seconds</strong>
+                    <p>
+                        When navigating a thread or submission listing, the URL in the location bar is updated to point directly to that item.
+                        For instance, the URL for comment <code>67890</code> in submission <code>12345</code> would be:
+                        <pre><code>https://news.ycombinator.com/item?id=12345#67890</code></pre>
+                        This update of the URL adds an entry to the browser history, but it does <strong>not</strong> cause a page reload.
+                        This makes it easy to resume reading a thread after reloading the page, or when transferring tabs from one device to another.
+                    </p>
+                        However, this can clutter the history with many entries, including when using the Back and Next buttons of your browser.
+                        As a compromise, you can set a delay for the update to only happen after you have stayed on the item for a while.
+                        This can let you navigate from one item to another without saving the intermediate steps to your history.
+                    </p>
+                    <ul>
+                        <li>With this option <strong>enabled</strong>, and…
+                            <ul>
+                                <li>…a delay of <strong>0 seconds</strong>, all items will appear in the history.</li>
+                                <li>…a <strong>non-zero delay</strong>, items on which you stayed for that duration will appear in the history.</li>
+                            </ul>
+                        <li>With this option <strong>disabled</strong>, only the original URL of the page will appear in the history.</li>
+                    </ul>
+                </label>
+            </li>
             <li>
                 <label>
                     <input type="checkbox" name="smoothScrolling"><strong>Smooth scrolling</strong>

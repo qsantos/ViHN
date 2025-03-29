@@ -6,8 +6,14 @@ chrome.storage.sync.get((options) => {
         : "instant";
     let persistentCollapse = getOption(options, "persistentCollapse");
     let enableNewestItems = getOption(options, "newestItems");
+    let updateLocation = getOption(options, "updateLocation");
+    let updateLocationDelay = getOption(options, "updateLocationDelay");
 
     chrome.storage.sync.onChanged.addListener((changes) => {
+        // update location
+        updateLocation = changes.updateLocation?.newValue ?? updateLocation;
+        updateLocationDelay =
+            changes.updateLocationDelay?.newValue ?? updateLocationDelay;
         // smooth scrolling
         const smoothScrolling = changes.smoothScrolling?.newValue;
         if (smoothScrolling === true) {
@@ -989,14 +995,29 @@ chrome.storage.sync.get((options) => {
     }
 
     function gotoTop() {
+        const l = document.location;
+        history.replaceState(null, "", l.pathname + l.search);
         deactivateCurrentThing();
         scrollTo(0, 0);
     }
 
+    let historyUpdateTimer = null;
     function gotoThing(thing) {
         if (!thing) {
             return;
         }
+        // Update location hash in the URL bar
+        if (updateLocation) {
+            // Do not update faster than every 50 ms to avoid being blocked by API rate limiting when
+            // user navigates through many things in a short amount of time
+            const delay = Math.max(updateLocationDelay * 1000, 50);
+            clearTimeout(historyUpdateTimer);
+            historyUpdateTimer = setTimeout(() => {
+                history.replaceState(null, "", `#${thing.id}`);
+                historyUpdateTimer = null;
+            }, delay);
+        }
+        // Scroll to the thing
         if (thing.getBoundingClientRect().height > window.innerHeight) {
             // The thing would not be fully visible; if we use `block:
             // "nearest"`, the bottom of the thing would be at the bottom of
