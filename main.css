@@ -83,7 +83,7 @@
 #newest-items.active-newest-items h3 {
     color: var(--top-color);
 }
-@media (min-width:1600px) {
+@media (min-width:900px) {
     #newest-items {
         position: fixed;
         top:0;
@@ -104,7 +104,7 @@
         bottom: 0px;
     }
 }
-@media (max-width:1599px) {
+@media (max-width:899px) {
     #newest-items {
         display: none;
         border-right: 2px solid var(--top-color);

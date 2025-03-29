@@ -1,6 +1,7 @@
 # v1.32
 
 - Clicking inside/outside newest items activates/deactivates it
+- Display newest items list for screen width ≥900px instead of ≥1600px
 
 # v1.31
 
