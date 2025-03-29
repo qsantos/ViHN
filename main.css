@@ -25,7 +25,9 @@
     position: absolute;
     left:-3px;
     width:2px;
-    /* Extend the bar slightly upwards and downwards to bridge the table cell borders between <tr>s */
+    /* Extend the bar slightly upwards and downwards to bridge the table cell
+     * borders between <tr>s; if we just use 0px/0px, a gap is visible in the
+     * orange bar, between the story and the textarea comment form */
     top:-1px;
     bottom:-1px;
 }
