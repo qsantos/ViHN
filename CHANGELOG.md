@@ -1,3 +1,7 @@
+# v1.31
+
+- Fix needless scroll when clicking in the active item
+
 # v1.30
 
 - When scrolling to an item that is higher than the viewport, always scroll to the top of the item

@@ -1086,6 +1086,10 @@ chrome.storage.sync.get((options) => {
         if (!thing) {
             return;
         }
+        if (thing === currentThing) {
+            // Nothing to do
+            return;
+        }
         // The location update might not happen immediately to avoid throttling, so we handle scrolling ourselves
         updateLocationToThing(thing);
         scrollToThing(thing);
