@@ -1015,10 +1015,22 @@ chrome.storage.sync.get((options) => {
         const delay = Math.max(updateLocationDelay * 1000, 50);
         clearTimeout(historyUpdateTimer);
         historyUpdateTimer = setTimeout(() => {
-            // Using location.replace instead of history.replaceState
-            // avoids cluttering the history in Chrome. There is no
-            // difference in Firefox.
+            // Using location.replace instead of history.replaceState avoids
+            // cluttering the history in Chrome. However, this forces a scroll
+            // in Firefox. And, no, we are not going to check the user agent
+            // string.
+            //
+            // To avoid this, we save and restore the old scroll position. Note
+            // that a smooth scroll might be happening, so we also need to
+            // restore that, but only after restoring the immediate scroll
+            // position.
+            const oldScrollX = window.scrollX;
+            const oldScrollY = window.scrollY;
             location.replace(`#${thing.id}`);
+            scrollTo(oldScrollX, oldScrollY);
+            if (currentThing) {
+                scrollToThing(currentThing);
+            }
             historyUpdateTimer = null;
         }, delay);
     }

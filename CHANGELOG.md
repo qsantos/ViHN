@@ -1,6 +1,7 @@
 # v1.31
 
 - Fix needless scroll when clicking in the active item
+- Fix needless scroll when updating the URL in Firefox
 
 # v1.30
 
