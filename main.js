@@ -317,7 +317,6 @@ chrome.storage.sync.get((options) => {
 
     // Newest Items
     let newestItemsContainer;
-    let datedIndexes = [];
     let newestItems;
     let focusNewest = false;
     let currentNewestIndex = 0;
@@ -327,7 +326,7 @@ chrome.storage.sync.get((options) => {
             return;
         }
         newestItemsContainer = document.createElement("DIV");
-        datedIndexes = Array.from(document.getElementsByClassName("age"))
+        const datedIndexes = Array.from(document.getElementsByClassName("age"))
             .map((age, index) => [age.title, index])
             // Chrome is very slow without an explicit comparison function
             .sort((a1, a2) => (a1[0] < a2[0] ? -1 : a1[0] === a2[0] ? 0 : 1))
@@ -422,7 +421,7 @@ chrome.storage.sync.get((options) => {
         currentNewestIndex = index;
         const newest = newestItems[currentNewestIndex];
         newest.classList.add("active-newest");
-        const thingIndex = datedIndexes[currentNewestIndex][1];
+        const thingIndex = Number.parseInt(newest.dataset.thingIndex);
         gotoThingFromIndex(thingIndex);
     }
 
