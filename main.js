@@ -4,7 +4,7 @@ chrome.storage.sync.get((options) => {
     let scrollingBehavior = getOption(options, "smoothScrolling")
         ? "smooth"
         : "instant";
-    let persistCollapse = getOption(options, "persistentCollapse");
+    let persistentCollapse = getOption(options, "persistentCollapse");
     let enableNewestItems = getOption(options, "newestItems");
 
     chrome.storage.sync.onChanged.addListener((changes) => {
@@ -16,10 +16,8 @@ chrome.storage.sync.get((options) => {
             scrollingBehavior = "instant";
         }
         // persistent collapse
-        const persistentCollapse = changes.persistentCollapse?.newValue;
-        if (persistentCollapse !== undefined) {
-            persistCollapse = persistentCollapse;
-        }
+        persistentCollapse =
+            changes.persistentCollapse?.newValue ?? persistentCollapse;
         // newest items
         const newestItemsOption = changes.newestItems?.newValue;
         if (newestItemsOption === true) {
@@ -527,7 +525,7 @@ chrome.storage.sync.get((options) => {
         }
         const coll = !thing.classList.contains("coll");
 
-        if (loggedIn && persistCollapse) {
+        if (loggedIn && persistentCollapse) {
             // This is non critical, so no point in blocking the collapsing on getting
             // a result. We just do best effort. Do use hnfetch() to handle the user
             // {,un}collapsing many things in a row.
