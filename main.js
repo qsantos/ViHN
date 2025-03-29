@@ -379,6 +379,7 @@ chrome.storage.sync.get((options) => {
                 event.target.dataset.newestIndex,
             );
             if (!Number.isNaN(newestIndex)) {
+                activateNewestItems();
                 gotoNewestIndex(newestIndex);
             }
         });
@@ -387,6 +388,16 @@ chrome.storage.sync.get((options) => {
     }
     if (enableNewestItems) {
         initNewestItems();
+    }
+
+    function activateNewestItems() {
+        focusNewest = true;
+        newestItemsContainer.classList.add("active-newest-items");
+    }
+
+    function deactivateNewestItems() {
+        focusNewest = false;
+        newestItemsContainer.classList.remove("active-newest-items");
     }
 
     function thingIndexParent(thingIndex) {
@@ -1122,10 +1133,12 @@ chrome.storage.sync.get((options) => {
             if (el.classList.contains("athing")) {
                 // Story or comment
                 gotoThing(el);
+                deactivateNewestItems();
                 break;
             } else if (el.classList.contains("subtext")) {
                 // Metadata on story
                 gotoThing(el.parentElement.previousElementSibling);
+                deactivateNewestItems();
                 break;
             } else if (el.classList.contains("toptext")) {
                 // Ask HN text
@@ -1133,6 +1146,7 @@ chrome.storage.sync.get((options) => {
                     el.parentElement.parentElement.parentElement
                         .firstElementChild,
                 );
+                deactivateNewestItems();
                 break;
             }
         } while ((el = el.parentElement));
@@ -1434,8 +1448,7 @@ chrome.storage.sync.get((options) => {
         } else if (event.key === "n") {
             /* Switch to Newest Items */
             if (enableNewestItems) {
-                focusNewest = true;
-                newestItemsContainer.classList.add("active-newest-items");
+                activateNewestItems();
                 gotoNewestIndex(currentNewestIndex);
             }
         } else if (48 <= event.keyCode && event.keyCode <= 57) {
@@ -1455,8 +1468,7 @@ chrome.storage.sync.get((options) => {
     function newestEvent(event) {
         if (event.key === "n") {
             /* Switch back from Newest Items */
-            focusNewest = false;
-            newestItemsContainer.classList.remove("active-newest-items");
+            deactivateNewestItems();
         } else if (event.key === "j") {
             /* Next newest */
             if (currentNewestIndex < newestItems.length - 1) {
@@ -1556,6 +1568,7 @@ chrome.storage.sync.get((options) => {
             // use link
             if (el?.href) {
                 if (handleLinkClick(el)) {
+                    deactivateNewestItems();
                     event.stopPropagation();
                     event.preventDefault();
                     return;

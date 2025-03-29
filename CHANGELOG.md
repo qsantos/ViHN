@@ -1,3 +1,7 @@
+# v1.32
+
+- Clicking inside/outside newest items activates/deactivates it
+
 # v1.31
 
 - Fix needless scroll when clicking in the active item
