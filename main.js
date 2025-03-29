@@ -1005,26 +1005,7 @@ chrome.storage.sync.get((options) => {
         scrollTo(0, 0);
     }
 
-    let historyUpdateTimer = null;
-    function gotoThing(thing) {
-        if (!thing) {
-            return;
-        }
-        // Update location hash in the URL bar
-        if (updateLocation) {
-            // Do not update faster than every 50 ms to avoid being blocked by API rate limiting when
-            // user navigates through many things in a short amount of time
-            const delay = Math.max(updateLocationDelay * 1000, 50);
-            clearTimeout(historyUpdateTimer);
-            historyUpdateTimer = setTimeout(() => {
-                // Using location.replace instead of history.replaceState
-                // avoids cluttering the history in Chrome. There is no
-                // difference in Firefox.
-                location.replace(`#${thing.id}`);
-                historyUpdateTimer = null;
-            }, delay);
-        }
-        // Scroll to the thing
+    function scrollToThing(thing) {
         if (thing.getBoundingClientRect().height > window.innerHeight) {
             // The thing would not be fully visible; if we use `block:
             // "nearest"`, the bottom of the thing would be at the bottom of
@@ -1082,6 +1063,28 @@ chrome.storage.sync.get((options) => {
                 behavior: scrollingBehavior,
             });
         }
+    }
+
+    let historyUpdateTimer = null;
+    function gotoThing(thing) {
+        if (!thing) {
+            return;
+        }
+        // Update location hash in the URL bar
+        if (updateLocation) {
+            // Do not update faster than every 50 ms to avoid being blocked by API rate limiting when
+            // user navigates through many things in a short amount of time
+            const delay = Math.max(updateLocationDelay * 1000, 50);
+            clearTimeout(historyUpdateTimer);
+            historyUpdateTimer = setTimeout(() => {
+                // Using location.replace instead of history.replaceState
+                // avoids cluttering the history in Chrome. There is no
+                // difference in Firefox.
+                location.replace(`#${thing.id}`);
+                historyUpdateTimer = null;
+            }, delay);
+        }
+        scrollToThing(thing);
         deactivateCurrentThing();
         activateThing(thing);
     }
