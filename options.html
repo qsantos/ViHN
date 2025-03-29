@@ -35,13 +35,8 @@
                     When navigating a thread or submission listing, the URL in the location bar is updated to point directly to that item.
                     For instance, the URL for comment <code>67890</code> in submission <code>12345</code> would be:
                     <pre><code>https://news.ycombinator.com/item?id=12345#67890</code></pre>
-                    This update of the URL adds an entry to the browser history, but it does <strong>not</strong> cause a page reload.
                     This makes it easy to resume reading a thread after reloading the page, or when transferring tabs from one device to another.
-                </p>
-                    However, this can clutter the history with many entries, including when using the Back and Next buttons of your browser.
-                    As a compromise, you can set a delay for the update to only happen after you have stayed on the item for a while.
-                    This can let you navigate from one item to another without saving the intermediate steps to your history.
-                </p>
+                    This does <strong>not</strong> cause a page reload.
                 <ul>
                     <li>With this option <strong>enabled</strong>, and…
                         <ul>
@@ -50,6 +45,13 @@
                         </ul>
                     <li>With this option <strong>disabled</strong>, only the original URL of the page will appear in the history.</li>
                 </ul>
+                <p>
+                    <strong>Note:</strong>
+                    On Firefox, this adds an history entry for each item you visit.
+                    This can resulting in a cluttered history, and interfere with the Back and Next buttons.
+                    As a compromise, you can set a delay for the update to only happen after you have stayed on the item for a while.
+                    This lets you navigate from one item to another without saving the intermediate steps to your history.
+                </p>
             </li>
             <li>
                 <label>

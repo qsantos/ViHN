@@ -999,6 +999,7 @@ chrome.storage.sync.get((options) => {
 
     function gotoTop() {
         const l = document.location;
+        // NOTE: using location.replace(l.pathname + l.search) causes a page reload
         history.replaceState(null, "", l.pathname + l.search);
         deactivateCurrentThing();
         scrollTo(0, 0);
@@ -1016,7 +1017,10 @@ chrome.storage.sync.get((options) => {
             const delay = Math.max(updateLocationDelay * 1000, 50);
             clearTimeout(historyUpdateTimer);
             historyUpdateTimer = setTimeout(() => {
-                history.replaceState(null, "", `#${thing.id}`);
+                // Using location.replace instead of history.replaceState
+                // avoids cluttering the history in Chrome. There is no
+                // difference in Firefox.
+                location.replace(`#${thing.id}`);
                 historyUpdateTimer = null;
             }, delay);
         }
