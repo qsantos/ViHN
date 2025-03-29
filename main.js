@@ -418,6 +418,7 @@ chrome.storage.sync.get((options) => {
         newestItems[currentNewestIndex].classList.remove("active-newest");
         currentNewestIndex = index;
         const newest = newestItems[currentNewestIndex];
+        newest.scrollIntoView({ block: "center", behavior: scrollingBehavior });
         newest.classList.add("active-newest");
         const thingIndex = Number.parseInt(newest.dataset.thingIndex);
         gotoThingFromIndex(thingIndex);

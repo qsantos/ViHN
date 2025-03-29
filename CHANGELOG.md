@@ -2,6 +2,7 @@
 
 - Clicking inside/outside newest items activates/deactivates it
 - Display newest items list for screen width ≥900px instead of ≥1600px
+- Automatically scroll newest items list
 
 # v1.31
 
