@@ -2,6 +2,7 @@
 
 - When scrolling to an item that is higher than the viewport, always scroll to the top of the item
 - Enable optional smooth scrolling on submission listings as well
+- Fixed issue where clicking between submissions would do nothing, also causing H/M/L to not work
 
 # v1.29
 

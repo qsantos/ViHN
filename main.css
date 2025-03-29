@@ -229,3 +229,25 @@ a.numbered-link::after {
     /* Avoid showing a link count on reply link (see remark above) */
     content: none !important;
 }
+
+/* In submission listings (/news, /newest, user’s submissions, etc.), items are
+ * separated by an empty <tr> (full code below). They still take vertical
+ * space, but no horizontal space. Thus, when the user clicks between two
+ * submissions, document.elementFromPoint() returns the parent <table>. To
+ * avoid this, we replace the empty spacer <tr> with a padding in the previous
+ * <tr>. This way, clicking on the spacer will select the previous submission.
+ *
+ * The orange bar on active elements needs to be adjusted to compensate for the
+ * extra artificial padding.
+ *
+ * <tr class="spacer" style="height:5px"></tr>
+ */
+.spacer {
+    display:none;
+}
+tr:has(+.spacer)>td {
+    padding-bottom:5px;
+}
+.activething+tr:has(+.spacer) td+td:last-child::before {
+    bottom:4px !important;
+}
