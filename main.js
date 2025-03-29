@@ -353,16 +353,13 @@ chrome.storage.sync.get((options) => {
             // slice should be slightly more robust to change than split
             const day = datetime.slice(0, 10);
             const time = datetime.slice(11, 19);
-            if (day === lastDay) {
-                parts.push(
-                    `<li data-thing-index="${thingIndex}" data-newest-index="${newestIndex}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${time}</li>`,
-                );
-            } else {
+            if (day !== lastDay) {
+                parts.push(`<br><strong>${day}</strong>`);
                 lastDay = day;
-                parts.push(
-                    `<li data-thing-index="${thingIndex}" data-newest-index="${newestIndex}">${day} ${time}</li>`,
-                );
             }
+            parts.push(
+                `<li data-thing-index="${thingIndex}" data-newest-index="${newestIndex}">${time}</li>`,
+            );
         }
         parts.push("</ul>");
         // SECURITY: ${index} is a local index, ${day} and ${time} come from the
