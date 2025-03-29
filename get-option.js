@@ -4,6 +4,7 @@ const defaultOptions = {
     newestItems: true,
     updateLocation: true,
     updateLocationDelay: 2.0,
+    updateLocationOnClose: true,
 };
 
 function getOption(options, key) {

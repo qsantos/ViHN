@@ -53,6 +53,24 @@
             </li>
             <li>
                 <label>
+                    <input type="checkbox" name="updateLocationOnClose"><strong>Update hash in URL when closing tab</strong>
+                    <p>
+                        Independently from the previous option, ViHN can update the URL when closing the tab.
+                        You might want this if you want to avoid cluttering your browser history, but want to resume after accidentally closing the tab.
+                    </p>
+                    <ul>
+                        <li>With this option <strong>enabled</strong>, the URL will be updated when closing the tab.</li>
+                        <li>With this option <strong>disabled</strong>, the URL will not be updated when closing the tab.</li>
+                    </ul>
+                    <p>
+                        <strong>Note:</strong>
+                        This might not work all the time.
+                        For instance, if your browser crashes, or if your computer stops unexpectedly or fails to resume after suspending, the URL will not be updated.
+                        If you want to be sure to avoid losing your place, you might want to use the previous option.
+                    </p>
+                </label>
+            <li>
+                <label>
                     <input type="checkbox" name="smoothScrolling"><strong>Smooth scrolling</strong>
                     <p>
                         When navigating moving from an item to another, the viewport is automatically scrolled to make the item visible.

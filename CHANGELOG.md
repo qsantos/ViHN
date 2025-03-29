@@ -4,6 +4,7 @@
 - Enable optional smooth scrolling on submission listings as well
 - Fixed issue where clicking between submissions would do nothing, also causing H/M/L to not work
 - Add options to update the URL when navigating items: immediately, after a delay, or not at all
+- Add option to update the URL when closing the tab
 
 # v1.29
 

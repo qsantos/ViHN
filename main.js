@@ -8,12 +8,15 @@ chrome.storage.sync.get((options) => {
     let enableNewestItems = getOption(options, "newestItems");
     let updateLocation = getOption(options, "updateLocation");
     let updateLocationDelay = getOption(options, "updateLocationDelay");
+    let updateLocationOnClose = getOption(options, "updateLocationOnClose");
 
     chrome.storage.sync.onChanged.addListener((changes) => {
         // update location
         updateLocation = changes.updateLocation?.newValue ?? updateLocation;
         updateLocationDelay =
             changes.updateLocationDelay?.newValue ?? updateLocationDelay;
+        updateLocationOnClose =
+            changes.updateLocationOnClose?.newValue ?? updateLocationOnClose;
         // smooth scrolling
         const smoothScrolling = changes.smoothScrolling?.newValue;
         if (smoothScrolling === true) {
@@ -1537,7 +1540,7 @@ chrome.storage.sync.get((options) => {
 
     // set the URL to the current comment when closing the tab
     window.addEventListener("beforeunload", () => {
-        if (currentThing) {
+        if (updateLocationOnClose && currentThing) {
             const url = new URL(document.location);
             url.hash = currentThing.id;
             history.pushState(null, "", url);
