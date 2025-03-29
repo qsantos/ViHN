@@ -339,9 +339,9 @@ chrome.storage.sync.get((options) => {
             document.location.search.indexOf("&p=") > 0;
         newestItemsContainer.id = "newest-items";
         // Setting innerHTML is still faster than doing DOM
-        const parts = ["<h3><u>N</u>ewest Items</u></h3>"];
+        const parts = ["<h3><u>N</u>ewest<br>Items</h3>"];
         if (hasOtherPages) {
-            parts.push("<p>(items on this page)</p>");
+            parts.push("<p>(this page)</p>");
         }
         parts.push("<ul>");
         let lastDay = null;
