@@ -235,3 +235,8 @@ tr:has(+.spacer)>td {
 .activething+tr:has(+.spacer) td+td:last-child::before {
     bottom:4px !important;
 }
+
+/* Hide the quick reply form in collapsed comments */
+.coll .quickReply {
+    display: none;
+}

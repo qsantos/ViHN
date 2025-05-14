@@ -1,3 +1,7 @@
+# v1.33
+
+- Fix quick reply form still visible in collapsed comments
+
 # v1.32
 
 - Clicking inside/outside newest items activates/deactivates it

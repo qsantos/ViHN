@@ -1181,7 +1181,7 @@ chrome.storage.sync.get((options) => {
         const container = document.createElement("tbody");
         // SECURITY: this is static HTML content
         container.innerHTML = `
-            <tr>
+            <tr class="quickReply">
                 <td colspan="2"></td>
                 <td>
                     <form action="comment" method="post">
