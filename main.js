@@ -1042,7 +1042,9 @@ chrome.storage.sync.get((options) => {
             // position.
             const oldScrollX = window.scrollX;
             const oldScrollY = window.scrollY;
+            const oldActive = document.activeElement;
             location.replace(`#${thing.id}`);
+            oldActive?.focus();
             scrollTo(oldScrollX, oldScrollY);
             if (currentThing) {
                 scrollToThing(currentThing);

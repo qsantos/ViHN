@@ -1,6 +1,7 @@
 # v1.33
 
 - Fix quick reply form still visible in collapsed comments
+- Fix quick reply form losing focus when URL is updated
 
 # v1.32
 
