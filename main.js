@@ -385,6 +385,11 @@ chrome.storage.sync.get((options) => {
     }
     if (enableNewestItems) {
         initNewestItems();
+    } else {
+        // dummy element to avoid having to check for null-ness everywhere
+        newestItemsContainer = document.createElement("DIV");
+        // dummy call to generate an empty NodeList
+        newestItems = newestItemsContainer.querySelectorAll("li");
     }
 
     function activateNewestItems() {

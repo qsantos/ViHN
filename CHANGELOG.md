@@ -1,3 +1,7 @@
+# v1.44
+
+- Fix disabling newest items breaking collapsing threads with the mouse #59
+
 # v1.33
 
 - Fix quick reply form still visible in collapsed comments
