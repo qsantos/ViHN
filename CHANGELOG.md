@@ -1,4 +1,4 @@
-# v1.44
+# v1.34
 
 - Fix disabling newest items breaking collapsing threads with the mouse #59
 
