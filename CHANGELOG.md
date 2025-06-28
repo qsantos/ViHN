@@ -1,3 +1,7 @@
+# v1.35
+
+- Fix navigating to top sometimes not clearing the hash in the URL
+
 # v1.34
 
 - Fix disabling newest items breaking collapsing threads with the mouse #59

@@ -1019,6 +1019,8 @@ chrome.storage.sync.get((options) => {
     }
 
     function gotoTop() {
+        // prevent a delayed update from putting a hash back in the URL
+        clearTimeout(historyUpdateTimer);
         const l = document.location;
         // NOTE: using location.replace(l.pathname + l.search) causes a page reload
         history.replaceState(null, "", l.pathname + l.search);
