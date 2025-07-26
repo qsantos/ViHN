@@ -1,3 +1,7 @@
+# v1.36
+
+- Fix opening numbered links not working in top item
+
 # v1.35
 
 - Fix navigating to top sometimes not clearing the hash in the URL

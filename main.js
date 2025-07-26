@@ -523,20 +523,9 @@ chrome.storage.sync.get((options) => {
         if (!thing) {
             return;
         }
-        let textElement = thing.getElementsByClassName("commtext")[0];
-        if (!textElement) {
-            // maybe a story with text
-            const subtext = thing?.nextElementSibling;
-            const spacer = subtext?.nextElementSibling;
-            const toptext = spacer?.nextElementSibling;
-            textElement = toptext?.getElementsByClassName("toptext")[0];
-        }
-        if (!textElement) {
-            return;
-        }
-        /* Map 0 to 10th link */
+        const links = getThingTop10Links(thing);
         const n = linkNumber === 0 ? 10 : linkNumber;
-        const link = textElement.getElementsByTagName("a")[n - 1];
+        const link = links[n - 1];
         if (!link) {
             return;
         }
@@ -982,8 +971,7 @@ chrome.storage.sync.get((options) => {
             // <table>
             //
             const textRow =
-                currentThing?.nextElementSibling?.nextElementSibling
-                    ?.nextElementSibling;
+                currentThing?.nextElementSibling?.nextElementSibling;
             if (textRow) {
                 return textRow.querySelectorAll(".toptext a");
             }
