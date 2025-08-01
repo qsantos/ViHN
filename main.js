@@ -956,25 +956,43 @@ chrome.storage.sync.get((options) => {
                 "fatitem",
             )
         ) {
-            // The current thing is the top element
+            // A .fatitem contains either
             //
-            // For comment pages, the text is still in the .commtext. But, for
-            // Ask HN texts, the relevant text is in the third sibling <tr>:
+            // 1. A submission with text (e.g. Ask HN), whose structure is:
             //
             // <table class="fatitem">
             //  <tbody>
-            //   <tr id="XXXXXXX" clss="athing">
+            //   <tr id="XXXXXXX" class="athing"> <!-- title, link -->
             //   <tr> <!-- points, OP, time, action links -->
-            //   <tr> <!-- empty -->
             //   <tr> <!-- text -->
+            //   <tr style="height:6px"> <!-- padding -->
+            //   <tr> <!-- reply form -->
             //  </tbody>
             // <table>
             //
-            const textRow =
-                currentThing?.nextElementSibling?.nextElementSibling;
-            if (textRow) {
-                return textRow.querySelectorAll(".toptext a");
+            // links need to be found in the text, i.e. the second sibling <tr>.
+            //
+            // 2. The comment being linked to, whose structure is:
+            //
+            // <table class="fatitem">
+            //  <tbody>
+            //   <tr id="XXXXXXX" class="athing"> <!-- comment -->
+            //   <tr> <!-- empty -->
+            //   <tr style="height:6px"> <!-- padding -->
+            //   <tr> <!-- reply form -->
+            //  </tbody>
+            // <table>
+            //
+            // links need to be found in .athing .commtext, as for other comments.
+            //
+            // To handle all cases, we try to find links in a in the second
+            // sibling. If there are no such links, we fallback to looking for
+            // .commtext in descendants.
+            const links = currentThing?.nextElementSibling?.nextElementSibling?.querySelectorAll('.toptext a');
+            if (links?.length) {
+                return links;
             }
+            // “fall-through”
         }
         // The current thing is a regular comment
         return currentThing.querySelectorAll(".commtext a");

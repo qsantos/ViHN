@@ -1,6 +1,10 @@
+# v1.37
+
+- Fix numbered links not working in linked comment
+
 # v1.36
 
-- Fix opening numbered links not working in top item
+- Fix numbered links not working in top item
 
 # v1.35
 
