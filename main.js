@@ -988,7 +988,10 @@ chrome.storage.sync.get((options) => {
             // To handle all cases, we try to find links in a in the second
             // sibling. If there are no such links, we fallback to looking for
             // .commtext in descendants.
-            const links = currentThing?.nextElementSibling?.nextElementSibling?.querySelectorAll('.toptext a');
+            const links =
+                currentThing?.nextElementSibling?.nextElementSibling?.querySelectorAll(
+                    ".toptext a",
+                );
             if (links?.length) {
                 return links;
             }
