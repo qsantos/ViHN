@@ -251,7 +251,7 @@ chrome.storage.sync.get((options) => {
     function hnfetch(url, options) {
         // Note: There are no race conditions because this is JavaScript
         const now = new Date();
-        // We always make a new Promise, so that we can delay the request if we get 503
+        // We always make a new Promise, so that we can delay the request if we get 429
         const promise = new Promise((resolve, reject) => {
             requestQueue.push([url, options, resolve, reject]);
         });
@@ -274,7 +274,7 @@ chrome.storage.sync.get((options) => {
         lastRequestTime = new Date();
         fetch(url, options)
             .then((response) => {
-                if (response.status === 503) {
+                if (response.status === 429) {
                     // Still too fast, try again
                     requestQueue.unshift([url, options, resolve, reject]);
                     if (!requestTimer) {
