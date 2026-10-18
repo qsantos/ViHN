@@ -47,8 +47,8 @@ But <kbd>J</kbd> means hitting <kbd>j</kbd> key with either <kbd>Caps Lock</kbd>
 | <kbd>M</kbd> | Focus on story/comment in the **m**iddle of the screen
 | <kbd>L</kbd> | Focus on story/comment at the bottom of the screen (**l**ow)
 | <kbd>n</kbd> | Switch to Newest Items
-| <kbd>h</kbd> | Parent comment/story (see [#follow-links](Follow Links))
-| <kbd>p</kbd> | Parent comment/story (see [#follow-links](Follow Links))
+| <kbd>h</kbd> | Parent comment/story (see [Follow Links](#follow-links))
+| <kbd>p</kbd> | Parent comment/story (see [Follow Links](#follow-links))
 
 **Note:**
 You can also select an item by clicking in its bounding box.
