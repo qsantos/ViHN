@@ -1,5 +1,5 @@
 chrome.storage.sync.get((options) => {
-    let currentThing = undefined;
+    let currentThing;
 
     let scrollingBehavior = getOption(options, "smoothScrolling")
         ? "smooth"
