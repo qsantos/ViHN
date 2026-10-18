@@ -1,3 +1,7 @@
+# v1.39
+
+- Use exponential backoff
+
 # v1.38
 
 - Hacker News now returns 429 for Too Many Requests
