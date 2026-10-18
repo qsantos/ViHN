@@ -248,6 +248,7 @@ chrome.storage.sync.get((options) => {
     const requestQueue = [];
     let lastRequestTime = null;
     let requestTimer = null;
+    let retryDelay = 0;
     function hnfetch(url, options) {
         // Note: There are no race conditions because this is JavaScript
         const now = new Date();
@@ -275,12 +276,15 @@ chrome.storage.sync.get((options) => {
         fetch(url, options)
             .then((response) => {
                 if (response.status === 429) {
-                    // Still too fast, try again
+                    // Still too fast, try again with exponential backoff
+                    retryDelay = retryDelay ? retryDelay * 2 : 2000;
                     requestQueue.unshift([url, options, resolve, reject]);
-                    if (!requestTimer) {
-                        requestTimer = setTimeout(handleRequest, 2000);
-                    }
-                } else if (response.status === 200) {
+                    clearTimeout(requestTimer);
+                    requestTimer = setTimeout(handleRequest, retryDelay);
+                    return;
+                }
+                retryDelay = 0;
+                if (response.status === 200) {
                     // Good!
                     response
                         .text()
