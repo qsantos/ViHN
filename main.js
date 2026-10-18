@@ -380,6 +380,7 @@ chrome.storage.sync.get((options) => {
         newestItemsContainer.addEventListener("click", (event) => {
             const newestIndex = Number.parseInt(
                 event.target.dataset.newestIndex,
+                10,
             );
             if (!Number.isNaN(newestIndex)) {
                 activateNewestItems();
@@ -431,7 +432,7 @@ chrome.storage.sync.get((options) => {
         const newest = newestItems[currentNewestIndex];
         newest.scrollIntoView({ block: "center", behavior: scrollingBehavior });
         newest.classList.add("active-newest");
-        const thingIndex = Number.parseInt(newest.dataset.thingIndex);
+        const thingIndex = Number.parseInt(newest.dataset.thingIndex, 10);
         gotoThingFromIndex(thingIndex);
     }
 
@@ -949,7 +950,7 @@ chrome.storage.sync.get((options) => {
         if (!indentTd) {
             return 0;
         }
-        return Number.parseInt(indentTd.getAttribute("indent")) || 0;
+        return Number.parseInt(indentTd.getAttribute("indent"), 10) || 0;
     }
 
     function thingIsHidden(thing) {
