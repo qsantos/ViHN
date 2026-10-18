@@ -1,7 +1,7 @@
 {
   "scripts": {
     "lint": "npx @biomejs/biome check *.js",
-    "fix": "npx @biomejs/biome check --apply *.js"
+    "fix": "npx @biomejs/biome check --write *.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
