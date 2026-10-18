@@ -313,7 +313,9 @@ chrome.storage.sync.get((options) => {
     }
 
     const thingIndexes = [];
-    things.forEach((thing, index) => (thingIndexes[thing.id] = index));
+    things.forEach((thing, index) => {
+        thingIndexes[thing.id] = index;
+    });
 
     // Newest Items
     let newestItemsContainer;

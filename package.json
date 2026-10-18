@@ -4,7 +4,7 @@
     "fix": "npx @biomejs/biome check --write *.js"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
+    "@biomejs/biome": "^2.5.15",
     "web-ext": "^7.12.0"
   }
 }
