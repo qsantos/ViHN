@@ -161,7 +161,7 @@ chrome.storage.sync.get((options) => {
         helpInner.addEventListener("click", (event) => {
             event.stopPropagation();
         });
-        helpOuter.addEventListener("click", (event) => {
+        helpOuter.addEventListener("click", () => {
             hideHelp();
         });
         // Initialize visible state
@@ -1181,7 +1181,7 @@ chrome.storage.sync.get((options) => {
             "afterend",
             newCommentFormPreview,
         );
-        newCommentFormTextarea.addEventListener("input", (event) => {
+        newCommentFormTextarea.addEventListener("input", () => {
             // SECURITY: see SECURITY comment inside formatComment
             newCommentFormPreview.innerHTML = formatComment(
                 newCommentFormTextarea.value,
@@ -1231,7 +1231,7 @@ chrome.storage.sync.get((options) => {
             container.getElementsByClassName("preview")[0];
         quickReplyFormSubmit = container.querySelector('[type="submit"]');
         quickReplyFormError = container.getElementsByClassName("error")[0];
-        quickReplyFormTextarea.addEventListener("input", (event) => {
+        quickReplyFormTextarea.addEventListener("input", () => {
             // SECURITY: see SECURITY comment inside formatComment
             quickReplyFormPreview.innerHTML = formatComment(
                 quickReplyFormTextarea.value,
@@ -1276,7 +1276,7 @@ chrome.storage.sync.get((options) => {
         editFormTextarea = container.getElementsByTagName("textarea")[0];
         editFormPreview = container.getElementsByClassName("preview")[0];
         editFormSubmit = container.querySelector('[type="submit"]');
-        editFormTextarea.addEventListener("input", (event) => {
+        editFormTextarea.addEventListener("input", () => {
             // SECURITY: see SECURITY comment inside formatComment
             editFormPreview.innerHTML = formatComment(editFormTextarea.value);
         });
