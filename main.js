@@ -951,11 +951,7 @@ chrome.storage.sync.get((options) => {
     }
 
     function getThingLinks(thing) {
-        if (
-            currentThing.parentElement.parentElement.classList.contains(
-                "fatitem",
-            )
-        ) {
+        if (thing.parentElement.parentElement.classList.contains("fatitem")) {
             // A .fatitem contains either
             //
             // 1. A submission with text (e.g. Ask HN), whose structure is:
@@ -989,7 +985,7 @@ chrome.storage.sync.get((options) => {
             // sibling. If there are no such links, we fallback to looking for
             // .commtext in descendants.
             const links =
-                currentThing?.nextElementSibling?.nextElementSibling?.querySelectorAll(
+                thing.nextElementSibling?.nextElementSibling?.querySelectorAll(
                     ".toptext a",
                 );
             if (links?.length) {
@@ -998,7 +994,7 @@ chrome.storage.sync.get((options) => {
             // “fall-through”
         }
         // The current thing is a regular comment
-        return currentThing.querySelectorAll(".commtext a");
+        return thing.querySelectorAll(".commtext a");
     }
 
     function getThingTop10Links(thing) {
