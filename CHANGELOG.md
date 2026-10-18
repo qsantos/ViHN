@@ -1,6 +1,6 @@
 # v1.38
 
-- Hacker News now returns 429 for Too Many Requests 
+- Hacker News now returns 429 for Too Many Requests
 
 # v1.37
 
