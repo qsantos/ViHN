@@ -981,7 +981,7 @@ chrome.storage.sync.get((options) => {
             //
             // links need to be found in .athing .commtext, as for other comments.
             //
-            // To handle all cases, we try to find links in a in the second
+            // To handle all cases, we try to find links in the second
             // sibling. If there are no such links, we fallback to looking for
             // .commtext in descendants.
             const links =
