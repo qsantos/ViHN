@@ -236,7 +236,7 @@ chrome.storage.sync.get((options) => {
                 // URL regex inspired from https://stackoverflow.com/a/6041965/4457767
                 // plus ugly hack at the end to avoid parsing escaped '>' as part of search parameters
                 const linkified = italicized.replace(
-                    /https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])(?!(?<=&gt);|(?<=&g)t;|(?<=&)gt;)/g,
+                    /https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])(?!(?<=&gt);|(?<=&g)t;|(?<=&)gt;)/g,
                     '<a href="$&">$&</a>',
                 );
                 return `<p>${linkified}</p>`;
