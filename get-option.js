@@ -7,6 +7,7 @@ const defaultOptions = {
     updateLocationOnClose: true,
 };
 
+// biome-ignore lint/correctness/noUnusedVariables: used by main.js and options.js
 function getOption(options, key) {
     const option = options?.[key];
     return option !== undefined ? option : defaultOptions[key];
